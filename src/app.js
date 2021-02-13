@@ -1,5 +1,7 @@
 import './styles.scss';
 
+import './scripts/crypto';
+
 // import { render } from 'react-dom';
 //
 // const App = () => {
