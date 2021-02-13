@@ -1,0 +1,38 @@
+@use '../abstract/variables';
+@use '../abstract/mixins';
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-top: 1px solid variables.$color-dark;
+  width: 100%;
+  z-index: 2;
+
+  @include mixins.responsive(phone) {
+    align-self: center;
+    border: none;
+  }
+
+  &__nav {
+    margin-left: auto;
+  }
+
+  &__menu {
+    display: flex;
+  }
+
+  &__item {
+    margin: 0 1rem;
+
+    @include mixins.responsive(phone) {
+      margin: 0 4rem;
+    }
+  }
+
+  &__link {
+    &:hover {
+      color: variables.$color-primary-dark;
+    }
+  }
+}

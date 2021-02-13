@@ -1,0 +1,32 @@
+@use '../abstract/mixins';
+
+.intro {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+  z-index: 2;
+
+  @include mixins.responsive(portrait) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+  }
+
+  &__header {
+    @include mixins.responsive(phone) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &__step {
+    @include mixins.responsive(portrait) {
+      display: inline;
+      margin-right: 1rem;
+    }
+  }
+}

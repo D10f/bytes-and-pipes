@@ -1,0 +1,27 @@
+
+/* COLORS */
+
+$color-primary: #55c57a;
+$color-primary-light: #7ed56f;
+$color-primary-dark: #28b485;
+
+$color-secondary-light: #ffb900;
+$color-secondary-dark: #ff7730;
+
+$color-light: #f7f7f7;
+$color-gray-light: #eee;
+$color-gray: #ddd;
+$color-gray-dark: #eee;
+$color-dark: #333;
+
+/* TYPOGRAPHY */
+
+/* EFFECTS */
+
+$shadow: 0 1.5rem 3rem rgba($color-dark, .2);
+// $shadow: 0 1.5rem 3rem rgba($color-dark, .3);
+$background-gradient: linear-gradient(to right bottom, rgba($color-primary-light, .9) 20%, rgba($color-primary, .8) 75%, rgba($color-primary-dark, .8));
+
+/* LAYOUT - column width, grid gaps, etc */
+
+$max-width: 100rem;

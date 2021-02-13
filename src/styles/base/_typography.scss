@@ -1,0 +1,14 @@
+@use '../abstract/variables';
+
+::selection {
+  background: variables.$color-primary;
+  color: variables.$color-light;
+}
+
+.accent {
+  color: variables.$color-primary;
+
+  &:hover {
+    color: variables.$color-primary-dark; 
+  }
+}

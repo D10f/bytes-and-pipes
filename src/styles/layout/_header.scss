@@ -1,0 +1,43 @@
+@use '../abstract/variables';
+@use '../abstract/mixins';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background-image: variables.$background-gradient;
+  border-radius: 5px;
+  border-bottom: 2px solid variables.$color-primary-dark;
+  box-shadow: variables.$shadow;
+  z-index: 2;
+
+  @include mixins.responsive(phone) {
+    flex-direction: column;
+  }
+
+  &__nav {
+    @include mixins.responsive(phone) {
+      width: 100%;
+      align-self: flex-start;
+    }
+  }
+
+  &__menu {
+    display: flex;
+
+    @include mixins.responsive(phone) {
+      justify-content: space-around;
+    }
+  }
+
+  &__item {
+    margin: 0 1rem;
+  }
+
+  &__link {
+    &:hover {
+      color: variables.$color-light;
+    }
+  }
+}
