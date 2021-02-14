@@ -1,4 +1,6 @@
 @use '../abstract/mixins';
+@use '../abstract/variables';
+@use 'sass:color';
 
 .intro {
   display: flex;
@@ -21,6 +23,10 @@
       justify-content: center;
       align-items: center;
     }
+  }
+
+  &__headline {
+    // color: color.adjust(variables.$color-primary-dark, $blackness: 30%);
   }
 
   &__step {

@@ -6,6 +6,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
+  margin-top: 2rem;
   background-image: variables.$background-gradient;
   border-radius: 5px;
   border-bottom: 2px solid variables.$color-primary-dark;
@@ -14,6 +15,16 @@
 
   @include mixins.responsive(phone) {
     flex-direction: column;
+  }
+
+  &__logo {
+    font-family: galdwinlight;
+    position: relative;
+    background-image: variables.$title-gradient;
+    background-clip: text;
+    color: transparent;
+    margin-left: 1rem;
+    margin-top: .2rem;
   }
 
   &__nav {
@@ -36,6 +47,8 @@
   }
 
   &__link {
+    color: variables.$color-primary-darker;
+
     &:hover {
       color: variables.$color-light;
     }

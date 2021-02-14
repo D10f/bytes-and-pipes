@@ -1,5 +1,6 @@
 @use '../abstract/variables';
 @use '../abstract/mixins';
+@use 'sass:color';
 
 .landing {
   position: relative;
@@ -32,7 +33,7 @@
     background-color: variables.$color-gray-light;
     clip-path: polygon(2rem 0, 10rem 75%, 100% 100%, 0 100%, 0 0);
   }
-  
+
   &::after {
     content: '';
     position: absolute;

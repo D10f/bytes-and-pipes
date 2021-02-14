@@ -8,7 +8,7 @@ let mode = 'development';
 let target = 'web';
 let devtool = 'source-map';
 let plugins = [
-  new HtmlWebpackPlugin({ template: './src/index.html' }),
+  new HtmlWebpackPlugin({ template: './src/public/index.html' }),
   new MiniCssExtractPlugin({ filename: "[name].[contenthash].css" })
 ];
 
@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   mode: mode,
   target: target,
-  entry: './src/app.js',
+  entry: './src/public/app.js',
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),

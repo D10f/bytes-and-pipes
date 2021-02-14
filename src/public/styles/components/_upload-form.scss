@@ -46,10 +46,14 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+
+    &:hover {
+      cursor: pointer;
+      color: variables.$color-primary;
+    }
   }
 
   &__btn {
-    display: none;
     position: relative;
     padding: 0.5rem 1.5rem;
     border: 2px solid variables.$color-primary;
@@ -70,5 +74,10 @@
 
   &__input {
     display: none;
+  }
+
+  &__error {
+    display: block;
+    color: orangered;
   }
 }
