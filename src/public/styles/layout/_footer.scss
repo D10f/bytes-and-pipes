@@ -1,5 +1,6 @@
 @use '../abstract/variables';
 @use '../abstract/mixins';
+@use '../components/button';
 
 .footer {
   display: flex;
@@ -31,6 +32,8 @@
   }
 
   &__link {
+    @extend %button;
+
     &:hover {
       color: variables.$color-primary-dark;
     }

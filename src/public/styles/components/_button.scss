@@ -1,0 +1,14 @@
+@use '../abstract/variables';
+
+%button {
+  color: variables.$color-dark;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-family: ubuntu;
+  outline: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

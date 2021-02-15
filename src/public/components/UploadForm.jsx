@@ -14,7 +14,7 @@ const UploadForm = () => {
       return;
     }
 
-    if (selected.size > 1024 * 1)  {
+    if (selected.size > 1024 * 1024)  {
       setError('File size cannot be greater than 100MB');
       return;
     }

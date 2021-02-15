@@ -8,13 +8,15 @@
   height: 40vh;
   flex-basis: 50%;
   display: flex;
-  flex-direction: column;
+  gap: 2rem;
   justify-content: center;
   align-items: center;
   transition: background-color 0.2s;
 
   @include mixins.responsive(portrait) {
+    flex-direction: column;
     height: 20vh;
+    padding: 2rem;
   }
 
   &:hover,
@@ -46,11 +48,11 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-
-    &:hover {
-      cursor: pointer;
-      color: variables.$color-primary;
-    }
+    //
+    // &:hover {
+    //   cursor: pointer;
+    //   color: variables.$color-primary;
+    // }
   }
 
   &__btn {
@@ -64,11 +66,14 @@
 
     &:hover {
       cursor: pointer;
+      background-color: variables.$color-primary;
+      color: variables.$color-light;
     }
 
     &:active {
-      background-color: variables.$color-primary;
+      background-color: variables.$color-primary-dark;
       color: variables.$color-light;
+      border: 2px solid variables.$color-primary-dark;
     }
   }
 

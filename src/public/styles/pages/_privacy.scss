@@ -1,0 +1,5 @@
+@use '../components/document';
+
+.privacy {
+  @extend %document;
+}

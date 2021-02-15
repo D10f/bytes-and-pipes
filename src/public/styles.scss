@@ -7,14 +7,21 @@
 
 /* COMPONENTS */
 @use './styles/components/upload-form';
+@use './styles/components/document';
+@use './styles/components/button';
+@use './styles/components/svg';
 
 /* LAYOUT */
 @use './styles/layout/landing';
 @use './styles/layout/header';
-@use './styles/layout/intro';
 @use './styles/layout/footer';
 
 /* PAGES */
+@use './styles/pages/intro';
+@use './styles/pages/about';
+@use './styles/pages/how-it-works';
+@use './styles/pages/terms';
+@use './styles/pages/privacy';
 
 /* THEMES */
 

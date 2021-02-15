@@ -1,23 +1,39 @@
-import './styles.scss';
-
 import { render } from 'react-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Intro from './components/Intro';
 import Footer from './components/Footer';
+import Document from './components/Document';
+
+import data from './data';
+import './styles.scss';
 
 const App = () => {
 
-  const title = 'Bytes And Pipes';
-  const headline = 'Share Your Files In Privacy';
-  const headerNav = ['About', 'How It Works', 'Contact'];
-  const footerNav = ['Source Code', 'Privacy Policy', 'Terms And Conditions'];
-
   return (
-    <>
-      <Header title={title} navLinks={headerNav} />
-      <Intro headline={headline} />
-      <Footer navLinks={footerNav} />
-    </>
+    <Router>
+      <Header />
+
+      <Switch>
+        <Route path="/about">
+          <Document text={data.about} />
+        </Route>
+        <Route path="/how-it-works">
+          <Document text={data.howItWorks} />
+        </Route>
+        <Route path="/terms">
+          <Document text={data.terms} />
+        </Route>
+        <Route path="/privacy">
+          <Document text={data.privacy} />
+        </Route>
+        <Route path="/">
+          <Intro />
+        </Route>
+      </Switch>
+
+      <Footer />
+    </Router>
   );
 };
 

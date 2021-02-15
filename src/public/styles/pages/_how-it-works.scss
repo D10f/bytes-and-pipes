@@ -1,0 +1,5 @@
+@use '../components/document';
+
+.how-it-works {
+  @extend %document;
+}
