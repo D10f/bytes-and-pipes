@@ -1,5 +1,7 @@
 @use '../abstract/variables';
 @use '../abstract/mixins';
+@use '../components/input';
+@use '../components/button';
 
 .upload-form {
   position: relative;
@@ -12,9 +14,9 @@
   justify-content: center;
   align-items: center;
   transition: background-color 0.2s;
+  flex-direction: column;
 
   @include mixins.responsive(portrait) {
-    flex-direction: column;
     height: 20vh;
     padding: 2rem;
   }
@@ -48,37 +50,64 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    //
-    // &:hover {
-    //   cursor: pointer;
-    //   color: variables.$color-primary;
-    // }
-  }
-
-  &__btn {
-    position: relative;
-    padding: 0.5rem 1.5rem;
-    border: 2px solid variables.$color-primary;
-    border-radius: 5px;
-    transition: all 0.2;
-    appearance: none;
-    outline: none;
 
     &:hover {
       cursor: pointer;
-      background-color: variables.$color-primary;
-      color: variables.$color-light;
+      color: variables.$color-primary;
     }
+  }
 
-    &:active {
-      background-color: variables.$color-primary-dark;
-      color: variables.$color-light;
-      border: 2px solid variables.$color-primary-dark;
-    }
+  &__btn {
+    @extend %button-action;
+    position: relative;
+    // padding: 0.5rem 1.5rem;
+    // border: 2px solid variables.$color-primary;
+    // border-radius: 5px;
+    // transition: all 0.2;
+    // appearance: none;
+    // outline: none;
+    //
+    // &:hover {
+    //   cursor: pointer;
+    //   background-color: variables.$color-primary;
+    //   color: variables.$color-light;
+    // }
+    //
+    // &:active {
+    //   background-color: variables.$color-primary-dark;
+    //   color: variables.$color-light;
+    //   border: 2px solid variables.$color-primary-dark;
+    // }
   }
 
   &__input {
     display: none;
+  }
+
+  &__password {
+    position: relative;
+
+    &--input {
+      @extend %input;
+      padding-right: 3rem;
+    }
+
+    &--toggle {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      fill: variables.$color-dark;
+
+      &:hover {
+        cursor: pointer;
+        fill: variables.$color-primary;
+      }
+    }
   }
 
   &__error {

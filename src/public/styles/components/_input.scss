@@ -1,0 +1,14 @@
+@use '../abstract/variables';
+
+%input {
+  background-color: variables.$color-gray-light;
+  color: variables.$color-dark;
+  padding: 1rem 1.5rem;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+
+  &:focus:empty {
+    outline: 2px solid variables.$color-primary;
+  }
+}
