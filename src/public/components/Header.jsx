@@ -1,20 +1,41 @@
-import { motion } from 'framer-motion';
+import { connect } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import SVGFileInput from './SVGFileInput';
-import SVGFileOutput from './SVGFileOutput';
+import { logout } from '../redux/actions/user';
+import ErrorMsg from '../components/ErrorMsg';
+import FileInput from './icons/FileInput';
+import FileOutput from './icons/FileOutput';
 
-const Header = () => {
+const dropdownAnimation = {
+  initial: { y: -200 },
+  visible: { y: 0 },
+  exit: { y: -200 },
+  transition: { delay: 0.2 }
+};
+
+const Header = ({ user, error, logout }) => {
 
   const title = 'Bytes And Pipes';
 
+  const handleClick = () => {
+    logout();
+    // redirect to main page
+  };
+
   return (
     <motion.header className="header"
-      initial={{ y: -200 }}
-      animate={{ y: 0 }}
-      transition={{ delay: 0.2 }}
+      variants={dropdownAnimation}
+      initial="initial"
+      animate="visible"
+      exit="initial"
     >
-      <SVGFileInput />
-      <Link to="/">
+      <FileInput />
+      <AnimatePresence>
+        { error && (
+          <ErrorMsg error={error} />
+        )}
+      </AnimatePresence>
+      <Link to="/" tabIndex="-1">
         <motion.h1 className="header__logo"
           initial={{ scale: 0 }}
           animate={{ scale: 1.1 }}
@@ -25,29 +46,39 @@ const Header = () => {
       </Link>
       <nav className="header__nav">
         <ul className="header__menu">
-
-          <li className="header__item">
-            <Link to="/about">
-              <button className="header__link">About</button>
-            </Link>
-          </li>
-
-          <li className="header__item">
-            <Link to="/how-it-works">
-              <button className="header__link">How It Works</button>
-            </Link>
-          </li>
-
-          <li className="header__item">
-            <Link to="/contact">
-              <button className="header__link">Contact</button>
-            </Link>
-          </li>
+          { user ?
+            <>
+              <li className="header__item">
+                <span>{user.username}</span>
+              </li>
+              <li className="header__item">
+                <span>{user.storage}</span>
+              </li>
+              <li className="header__item">
+                <button onClick={handleClick} className="header__link">Logout</button>
+              </li>
+            </>
+            :
+            <li className="header__item">
+              <Link to="/login" tabIndex="-1">
+                <button className="header__link">Login</button>
+              </Link>
+            </li>
+          }
         </ul>
       </nav>
-      <SVGFileOutput />
+      <FileOutput />
     </motion.header>
   );
 };
 
-export default Header;
+const mapStateToProps = (state) => ({
+  user: state.user.user,
+  error: state.error
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  logout: () => dispatch(logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

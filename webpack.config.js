@@ -81,8 +81,6 @@ module.exports = {
       aggregateTimeout: 1000,
       ignored: /node_modules/
     },
-    hot: true,
-    // host: '0.0.0.0',
-    // https: true
+    hot: true
   }
 };

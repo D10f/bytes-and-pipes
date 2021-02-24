@@ -7,8 +7,8 @@ $color-primary-light: #7ed56f;
 $color-primary-dark: #28b485;
 $color-primary-darker: color.adjust($color-primary-dark, $blackness: 45%);
 
-$color-secondary-light: #ffb900;
-$color-secondary-dark: #ff7730;
+// $color-secondary-light: #ffb900;
+// $color-secondary-dark: #ff7730;
 
 $color-light: #f7f7f7;
 $color-gray-light: #eee;
@@ -23,6 +23,7 @@ $color-dark: #333;
 $shadow: 0 1.5rem 3rem rgba($color-dark, .2);
 $shadow-thick: 0 1rem 2rem rgba($color-dark, .3);
 $background-gradient: linear-gradient(to right bottom, rgba($color-primary-light, .9) 20%, rgba($color-primary, .8) 75%, rgba($color-primary-dark, .8));
+$background-gradient-error: linear-gradient(to right bottom, rgba(248, 80, 50, 0.7) 20%, rgba(231, 56, 39, 0.9));
 $title-gradient: linear-gradient(to bottom right, $color-primary-dark, $color-primary-darker);
 
 /* LAYOUT - column width, grid gaps, etc */

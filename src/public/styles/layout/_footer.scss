@@ -26,15 +26,16 @@
   &__item {
     margin: 0 1rem;
 
-    @include mixins.responsive(phone) {
-      margin: 0 4rem;
-    }
+    // @include mixins.responsive(phone) {
+    //   margin: 0;
+    // }
   }
 
   &__link {
     @extend %button;
 
-    &:hover {
+    &:hover,
+    &:focus {
       color: variables.$color-primary-dark;
     }
   }

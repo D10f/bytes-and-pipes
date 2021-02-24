@@ -7,6 +7,7 @@
   outline: none;
   border: none;
   border-radius: 5px;
+  outline: 2px solid variables.$color-dark;
 
   &:focus:empty {
     outline: 2px solid variables.$color-primary;

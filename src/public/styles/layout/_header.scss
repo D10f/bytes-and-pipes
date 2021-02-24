@@ -55,7 +55,8 @@
   &__link {
     @extend %button;
 
-    &:hover {
+    &:hover,
+    &:focus {
       color: variables.$color-light;
     }
   }

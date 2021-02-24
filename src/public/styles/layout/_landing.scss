@@ -17,7 +17,7 @@
     padding: 1rem 10rem;
   }
   @include mixins.responsive(phone) {
-    justify-content: center;
+    // justify-content: center;
     padding: 1rem 5rem;
   }
   @include mixins.responsive(narrow) {

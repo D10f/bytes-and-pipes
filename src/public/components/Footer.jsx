@@ -12,17 +12,27 @@ const Footer = () => {
       <nav className="footer__nav">
         <ul className="footer__menu">
           <li className="footer__item">
-            <Link to="https://github.com/herokunt/bytes-and-pipes" >
+            <Link tabIndex="-1" to="https://github.com/herokunt/bytes-and-pipes" >
               <button className="footer__link">Source Code</button>
             </Link>
           </li>
           <li className="footer__item">
-            <Link to="/privacy" >
+            <Link to="/about" tabIndex="-1">
+              <button className="footer__link">About</button>
+            </Link>
+          </li>
+          <li className="footer__item">
+            <Link to="/how-it-works" tabIndex="-1">
+              <button className="footer__link">How It Works</button>
+            </Link>
+          </li>
+          <li className="footer__item">
+            <Link tabIndex="-1" to="/privacy" >
               <button className="footer__link">Privacy Policy</button>
             </Link>
           </li>
           <li className="footer__item">
-            <Link to="/terms" >
+            <Link tabIndex="-1" to="/terms" >
               <button className="footer__link">Terms And Conditions</button>
             </Link>
           </li>
