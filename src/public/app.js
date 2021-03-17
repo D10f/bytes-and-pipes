@@ -1,4 +1,5 @@
 import { render } from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store/store';
 
@@ -8,7 +9,9 @@ import './styles.scss';
 
 const App = () => (
   <Provider store={store}>
-    <AppRouter />
+    <Router>
+      <AppRouter />
+    </Router>
   </Provider>
 );
 

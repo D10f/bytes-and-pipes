@@ -24,6 +24,10 @@ $shadow: 0 1.5rem 3rem rgba($color-dark, .2);
 $shadow-thick: 0 1rem 2rem rgba($color-dark, .3);
 $background-gradient: linear-gradient(to right bottom, rgba($color-primary-light, .9) 20%, rgba($color-primary, .8) 75%, rgba($color-primary-dark, .8));
 $background-gradient-error: linear-gradient(to right bottom, rgba(248, 80, 50, 0.7) 20%, rgba(231, 56, 39, 0.9));
+$background-gradient-warning: linear-gradient(to right bottom, rgba(251, 219, 96, 0.9) 20%, rgba(208, 197, 36, 0.8) 75%, rgba(206, 164, 0, 0.8));
+$background-gradient-info: linear-gradient(to right bottom, rgba(111, 199, 213, 0.9) 20%, rgba(85, 145, 197, 0.8) 75%, rgba(40, 128, 180, 0.84));
+
+
 $title-gradient: linear-gradient(to bottom right, $color-primary-dark, $color-primary-darker);
 
 /* LAYOUT - column width, grid gaps, etc */

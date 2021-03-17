@@ -84,18 +84,18 @@
 
     &--input {
       @extend %input;
-      padding-right: 3rem;
-      background: none;
+      padding-right: 5rem;
+      // background: none;
     }
 
-    &--toggle {
+    &--toggle,
+    &--generate {
       position: absolute;
       top: 50%;
-      right: 1rem;
       width: 1.6rem;
       height: 1.6rem;
       transform: translateY(-50%);
-      background: none;
+      background: variables.$color-light;
       border: none;
       fill: variables.$color-dark;
 
@@ -104,6 +104,13 @@
         cursor: pointer;
         fill: variables.$color-primary;
       }
+    }
+
+    &--toggle {
+      right: 1rem;
+    }
+    &--generate {
+      right: 3.5rem;
     }
   }
 

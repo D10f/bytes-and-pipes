@@ -1,9 +1,11 @@
 @use '../abstract/variables';
 
 %input {
-  background-color: variables.$color-gray-light;
+  // background-color: variables.$color-gray-light;
+  background: none;
   color: variables.$color-dark;
   padding: 1rem 1.5rem;
+  padding-right: 5rem;
   outline: none;
   border: none;
   border-radius: 5px;

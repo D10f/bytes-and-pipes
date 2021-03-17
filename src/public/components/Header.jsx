@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { logout } from '../redux/actions/user';
 import ErrorMsg from '../components/ErrorMsg';
-import FileInput from './icons/FileInput';
-import FileOutput from './icons/FileOutput';
+// import FileInput from './icons/FileInput';
+// import FileOutput from './icons/FileOutput';
 
 const dropdownAnimation = {
   initial: { y: -200 },
@@ -29,7 +29,6 @@ const Header = ({ user, error, logout }) => {
       animate="visible"
       exit="initial"
     >
-      <FileInput />
       <AnimatePresence>
         { error && (
           <ErrorMsg error={error} />
@@ -67,7 +66,6 @@ const Header = ({ user, error, logout }) => {
           }
         </ul>
       </nav>
-      <FileOutput />
     </motion.header>
   );
 };

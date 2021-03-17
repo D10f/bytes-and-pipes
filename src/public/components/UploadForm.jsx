@@ -8,6 +8,17 @@ import FileInfo from './FileInfo';
 import FilePassword from './FilePassword';
 import FilePicker from './FilePicker';
 
+const pageVariant = {
+  initial: {
+    scale: 0,
+    opacity: 0
+  },
+  visible: {
+    scale: 1,
+    opacity: 1
+  }
+};
+
 const UploadForm = ({ file, error, password, setError, setFile }) => {
 
   const [dragged, setDragged] = useState(false);
@@ -55,9 +66,10 @@ const UploadForm = ({ file, error, password, setError, setFile }) => {
       onDrop={handleDrop}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
+      variants={pageVariant}
+      initial="initial"
+      animate="visible"
+      exit="initial"
     >
       <FileInfo file={file} />
       <FilePicker />

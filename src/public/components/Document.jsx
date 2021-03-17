@@ -32,9 +32,9 @@ const Document = ({ location }) => {
   return (
     <motion.article className="about" dangerouslySetInnerHTML={{ __html: text }}
       variants={pageVariant}
-      initial='initial'
-      animate='visible'
-      exit='exit'
+      initial="initial"
+      animate="visible"
+      exit="exit"
     ></motion.article>
   );
 };

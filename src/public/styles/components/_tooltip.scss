@@ -1,0 +1,53 @@
+@use '../abstract/variables';
+
+.tooltip {
+  position: absolute;
+  left: 110%;
+  width: 10rem;
+  height: 4rem;
+
+  color: variables.$color-light;
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  font-family: ubuntu;
+  line-height: 1.1;
+  outline: none;
+  text-align: center;
+
+  border: none;
+  border-radius: 5px;
+  box-shadow: variables.$shadow;
+  padding: 1rem 2rem;
+  appearance: none;
+  outline: none;
+
+  display: none;
+
+  &--terrible {
+    border-bottom: 2px solid rgba(231, 56, 39, 0.9);
+    background-image: variables.$background-gradient-error;
+    display: inline-block;
+  }
+  &--poor {
+    border-bottom: 2px solid rgba(231, 56, 39, 0.9);
+    background-image: variables.$background-gradient-error;
+    display: inline-block;
+  }
+  &--weak {
+    border-bottom: 2px solid #d2b726;
+    background-image: variables.$background-gradient-warning;
+    color: variables.$color-dark;
+    display: inline-block;
+  }
+  &--okay {
+    border-bottom: 2px solid #2886b4;
+    background-image: variables.$background-gradient-info;
+    display: inline-block;
+  }
+  &--strong {
+    border-bottom: 2px solid variables.$color-primary-dark;
+    background-image: variables.$background-gradient;
+    display: inline-block;
+  }
+}

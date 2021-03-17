@@ -1,23 +1,53 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { connect } from 'react-redux';
 import { setError } from '../redux/actions/error';
+import useRandomPassword from '../hooks/useRandomPassword';
+import DiceIcon from './icons/DiceIcon';
 import EyeIcon from './icons/EyeIcon';
 import EyeBlockIcon from './icons/EyeBlockIcon';
+import zxcvbn from '../scripts/zxcvbn';
 
 const actionsEnum = {
   login: 'Login',
   signup: 'Signup'
 };
 
+const passwordEnum = {
+  0: 'terrible',
+  1: 'poor',
+  2: 'weak',
+  3: 'okay',
+  4: 'strong'
+};
+
+const pageVariant = {
+  initial: {
+    scale: 0,
+    opacity: 0
+  },
+  visible: {
+    scale: 1,
+    opacity: 1
+  }
+};
+
 const Login = ({ setError }) => {
 
   const { login, signup } = actionsEnum;
 
+  const generateRandomPassword = useRandomPassword(16);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordScore, setPasswordScore] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [action, setAction] = useState(login);
+
+  useEffect(() => {
+    const { score } = zxcvbn(password);
+    setPasswordScore(passwordEnum[score]);
+  }, [password]);
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -55,10 +85,12 @@ const Login = ({ setError }) => {
   };
 
   return (
-    <motion.article className="login"
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ delay: 0.2 }}
+    <motion.article
+      variants={pageVariant}
+      initial="initial"
+      animate="visible"
+      exit="initial"
+      className="login"
     >
       <form
         className="login__form"
@@ -83,6 +115,20 @@ const Login = ({ setError }) => {
             placeholder="Password"
             value={password}
           />
+          { action === signup && (
+            <button
+              className="login__generate"
+              type="button"
+              onClick={() => setPassword(generateRandomPassword())}
+            >
+              { <DiceIcon /> }
+            </button>
+          )}
+          { action === signup && (
+            <span className={password ? `tooltip tooltip--${passwordScore}` : 'tooltip'}>
+              {passwordScore}
+            </span>
+          )}
           <button
             className="login__toggle"
             type="button"

@@ -24,14 +24,14 @@
     @extend %input;
   }
 
-  &__toggle {
+  &__toggle,
+  &__generate {
     position: absolute;
     top: 50%;
-    right: 1rem;
     width: 1.6rem;
     height: 1.6rem;
     transform: translateY(-50%);
-    background: none;
+    background-color: variables.$color-light;
     border: none;
     fill: variables.$color-dark;
 
@@ -40,6 +40,14 @@
       cursor: pointer;
       fill: variables.$color-primary;
     }
+  }
+
+  &__toggle {
+    right: 1rem;
+  }
+
+  &__generate {
+    right: 3.5rem;
   }
 
   &__btn {

@@ -1,15 +1,17 @@
-const express = require('express')
-const fs = require('fs')
-const auth = require('../../middleware/auth')
-const uploader = require('../../middleware/uploader/uploader')
-const File = require('../models/file')
+const express = require('express');
+const fs = require('fs');
 
-const convertBytes = require('../utils/convertbytes')
+const auth = require('../../middleware/auth');
+const uploader = require('../../middleware/uploader/uploader');
+const File = require('../models/file');
+const convertBytes = require('../utils/convertbytes');
 
-const router = express.Router()
+const router = express.Router();
 
 router.post('/upload/:filename/:seq', auth, uploader, async (req, res) => {
-  const file = new File(req.file)
+
+  const file = new File(req.file);
+
   try {
     await file.save()
     req.user.updateUsedStorage(file.filesize)

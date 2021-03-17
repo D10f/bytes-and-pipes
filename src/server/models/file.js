@@ -4,9 +4,9 @@ const fs = require('fs')
 const User = require('./user')
 const Schema = mongoose.Schema
 
-const deleteFile = promisify(fs.unlink)
-const readdir = promisify(fs.readdir)
-const stat = promisify(fs.stat)
+const deleteFile = promisify(fs.unlink);
+// const readdir = promisify(fs.readdir)
+// const stat = promisify(fs.stat)
 
 const fileSchema = new Schema({
   filename: {
@@ -30,22 +30,22 @@ const fileSchema = new Schema({
     required: true,
     ref: 'User'
   }
-}, { timestamps: true })
+}, { timestamps: true });
 
 // fileSchema.index({ expireAfterSeconds: 30 })
 
 fileSchema.virtual('downloadUrl').get(function(){
-  return `http://localhost:3000/download/${this._id}`
-})
+  return `http://localhost:3000/download/${this._id}`;
+});
 
 fileSchema.virtual('filepath').get(function(){
-  return `${this.directory}/${this.filename}`
-})
+  return `${this.directory}/${this.filename}`;
+});
 
 fileSchema.post('remove', async function(){
-  await deleteFile(this.filepath)
-})
+  await deleteFile(this.filepath);
+});
 
-const File = mongoose.model('Files', fileSchema)
+const File = mongoose.model('Files', fileSchema);
 
-module.exports = File
+module.exports = File;
