@@ -22,6 +22,12 @@
 
   &__input {
     @extend %input;
+
+    &--poor { @extend %input-error; }
+    &--weak { @extend %input-warning; }
+    &--average { @extend %input-warning; }
+    &--okay { @extend %input-info; }
+    &--strong { @extend %input-success; }
   }
 
   &__toggle,

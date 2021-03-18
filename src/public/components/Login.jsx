@@ -1,24 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { connect } from 'react-redux';
 import { setError } from '../redux/actions/error';
-import useRandomPassword from '../hooks/useRandomPassword';
-import DiceIcon from './icons/DiceIcon';
-import EyeIcon from './icons/EyeIcon';
-import EyeBlockIcon from './icons/EyeBlockIcon';
-import zxcvbn from '../scripts/zxcvbn';
+import PasswordInput from './PasswordInput';
 
 const actionsEnum = {
   login: 'Login',
   signup: 'Signup'
-};
-
-const passwordEnum = {
-  0: 'terrible',
-  1: 'poor',
-  2: 'weak',
-  3: 'okay',
-  4: 'strong'
 };
 
 const pageVariant = {
@@ -36,28 +24,9 @@ const Login = ({ setError }) => {
 
   const { login, signup } = actionsEnum;
 
-  const generateRandomPassword = useRandomPassword(16);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordScore, setPasswordScore] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [action, setAction] = useState(login);
-
-  useEffect(() => {
-    const { score } = zxcvbn(password);
-    setPasswordScore(passwordEnum[score]);
-  }, [password]);
-
-  const handleChange = (e) => {
-    const { value, name } = e.target;
-
-    if (name === 'email') {
-      setEmail(value);
-    } else {
-      setPassword(value);
-    }
-  };
 
   const handleClick = (e) => {
     switch (action) {
@@ -98,7 +67,7 @@ const Login = ({ setError }) => {
       >
         <div className="login__control-group">
           <input
-            onChange={handleChange}
+            onChange={e => setEmail(e.target.value)}
             className="login__input"
             placeholder="Email Address"
             value={email}
@@ -107,36 +76,11 @@ const Login = ({ setError }) => {
           />
         </div>
 
-        <div className="login__control-group">
-          <input
-            className="login__input"
-            onChange={handleChange}
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            value={password}
-          />
-          { action === signup && (
-            <button
-              className="login__generate"
-              type="button"
-              onClick={() => setPassword(generateRandomPassword())}
-            >
-              { <DiceIcon /> }
-            </button>
-          )}
-          { action === signup && (
-            <span className={password ? `tooltip tooltip--${passwordScore}` : 'tooltip'}>
-              {passwordScore}
-            </span>
-          )}
-          <button
-            className="login__toggle"
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            { showPassword ? <EyeBlockIcon /> : <EyeIcon /> }
-          </button>
-        </div>
+        <PasswordInput
+          password={password}
+          setPassword={setPassword}
+          passwordSuggestions={action === signup}
+        />
 
         <button className="login__btn">
           {action}

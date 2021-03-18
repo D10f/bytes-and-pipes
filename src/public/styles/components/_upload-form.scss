@@ -1,7 +1,7 @@
 @use '../abstract/variables';
 @use '../abstract/mixins';
-@use '../components/input';
-@use '../components/button';
+@use './input';
+@use './button';
 
 .upload-form {
   position: relative;
