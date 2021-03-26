@@ -1,0 +1,56 @@
+@use '../abstract/variables';
+@use '../abstract/mixins';
+@use 'sass:color';
+
+.landing {
+  position: relative;
+  background-color: variables.$color-light;
+  width: 100vw;
+  min-height: 100vh;
+  max-width: 100%; /* Adding this prevents horizontal overflow */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 15rem;
+
+  @include mixins.responsive(portrait) {
+    padding: 1rem 10rem;
+  }
+  @include mixins.responsive(phone) {
+    // justify-content: center;
+    padding: 1rem 5rem;
+  }
+  @include mixins.responsive(narrow) {
+    padding: 1rem 2rem;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: variables.$color-gray-light;
+    clip-path: polygon(2rem 0, 10rem 75%, 100% 100%, 0 100%, 0 0);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100vw;
+    max-width: 100%;
+    background-color: variables.$color-gray;
+    clip-path: polygon(1rem 0, 7rem 100%, 0 100%, 0 0);
+  }
+
+  &::before,
+  &::after {
+    @include mixins.responsive(phone) {
+      display: none;
+    }
+  }
+}

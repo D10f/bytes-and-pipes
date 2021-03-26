@@ -1,0 +1,22 @@
+/**
+ *  MEDIA QUERY REFERENCE
+ *  | Breakpoint     | Pixels |  Em   |
+ *  |----------------|--------|-------|
+ *  | Narrow         | < 400  | 37.5  |
+ *  | Phone          | < 600  | 37.5  |
+ *  | Tablet         | < 768  | 56.25 |
+ *  | Portrait       | < 900  | 56.25 |
+ *  | Landscape      | < 1200 | 75    |
+ *  | Desktop        | < 1800 | 112.5 |
+ *  | Big Desktop    | > 1800 | 112.5 |
+**/
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == narrow       { @media (max-width: 37.5em)  { @content }; }
+  @if $breakpoint == phone        { @media (max-width: 37.5em)  { @content }; }
+  @if $breakpoint == tablet       { @media (max-width: 56.25em) { @content }; }
+  @if $breakpoint == portrait     { @media (max-width: 56.25em) { @content }; }
+  @if $breakpoint == landscape    { @media (max-width: 75em)    { @content }; }
+  @if $breakpoint == desktop      { @media (max-width: 112.5em) { @content }; }
+  @if $breakpoint == big-desktop  { @media (min-width: 112.5em) { @content }; }
+}

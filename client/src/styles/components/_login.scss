@@ -1,0 +1,95 @@
+@use '../abstract/variables';
+@use '../abstract/mixins';
+@use '../components/input';
+@use '../components/button';
+
+.login {
+  margin: 0 auto;
+  border-radius: 5px;
+  border: 3px dashed variables.$color-dark;
+
+  &__form {
+    padding: 5rem;
+  }
+
+  &__control-group {
+    position: relative;
+
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__input {
+    @extend %input;
+
+    &--poor { @extend %input-error; }
+    &--weak { @extend %input-warning; }
+    &--average { @extend %input-warning; }
+    &--okay { @extend %input-info; }
+    &--strong { @extend %input-success; }
+  }
+
+  &__toggle,
+  &__generate {
+    position: absolute;
+    top: 50%;
+    width: 1.6rem;
+    height: 1.6rem;
+    transform: translateY(-50%);
+    background-color: variables.$color-light;
+    border: none;
+    fill: variables.$color-dark;
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      fill: variables.$color-primary;
+    }
+  }
+
+  &__toggle {
+    right: 1rem;
+  }
+
+  &__generate {
+    right: 3.5rem;
+  }
+
+  &__btn {
+    @extend %button-action;
+    margin-bottom: 1rem;
+
+    &:hover,
+    &:focus {
+      color: variables.$color-light;
+    }
+  }
+
+  &__label {
+    display: block;
+    text-align: center;
+    max-width: 30rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    outline: none;
+    border: none;
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      color: variables.$color-primary;
+    }
+  }
+
+  &__footer {
+    font-size: 1.4rem;
+
+    &:hover,
+    &:focus {
+      color: variables.$color-primary;
+      cursor: pointer;
+    }
+  }
+}
