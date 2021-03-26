@@ -10,17 +10,6 @@ const writeFile = promisify(fs.writeFile)
 const stat = promisify(fs.stat)
 const deleteFile = promisify(fs.unlink)
 
-const checkRequestHeaders = (headers) => new Promise((resolve, reject) => {
-  if (!headers.hasOwnProperty('content-parts') || !headers.hasOwnProperty('content-filesize')) {
-    return reject('Missing required headers')
-  }
-
-  resolve({
-    contentParts: headers['content-parts'],
-    expectedFileSize: headers['content-filesize']
-  })
-})
-
 const checkAvailableSpace = (bytes, user) => {
   const availableSpace = user.availableSpace
   if (bytes > availableSpace){
@@ -74,7 +63,6 @@ const reconstructFile = async (files, tempDir, destDir, filename, user) => {
 }
 
 module.exports = {
-  checkRequestHeaders,
   checkAvailableSpace,
   reconstructFile,
   mkdir,

@@ -9,7 +9,7 @@ const deleteFile = promisify(fs.unlink);
 // const stat = promisify(fs.stat)
 
 const fileSchema = new Schema({
-  filename: {
+  name: {
     type: String,
 	  required: true
   },
@@ -17,7 +17,7 @@ const fileSchema = new Schema({
     type: String,
     required: true
   },
-  filesize: {
+  size: {
   	type: Number,
 	  required: true
   },
@@ -35,15 +35,11 @@ const fileSchema = new Schema({
 // fileSchema.index({ expireAfterSeconds: 30 })
 
 fileSchema.virtual('downloadUrl').get(function(){
-  return `http://localhost:3000/download/${this._id}`;
+  return `http://localhost:8080/download/${this._id}`;
 });
 
 fileSchema.virtual('filepath').get(function(){
-  return `${this.directory}/${this.filename}`;
-});
-
-fileSchema.post('remove', async function(){
-  await deleteFile(this.filepath);
+  return `${this.directory}/${this.name}`;
 });
 
 const File = mongoose.model('Files', fileSchema);
