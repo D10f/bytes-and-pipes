@@ -28,6 +28,7 @@ const Login = ({ setError }) => {
   const [password, setPassword] = useState('');
   const [action, setAction] = useState(login);
 
+  // Toggle between login and signup
   const handleClick = (e) => {
     switch (action) {
       case login:  setAction(signup); break;
@@ -45,9 +46,9 @@ const Login = ({ setError }) => {
     let url = '';
 
     if (action === login) {
-      url = 'localhost:8080/login';
+      url = 'localhost:3000/login';
     } else {
-      url = 'localhost:8080/signup';
+      url = 'localhost:3000/signup';
     }
 
     setError(`Cannot reach ${url}`);

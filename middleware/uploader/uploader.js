@@ -12,15 +12,16 @@ const stat = promisify(fs.stat);
 
 const uploader = async (req, res, next) => {
   try {
-    if (!req.headers('Content-parts') || !req.headers('Content-filesize')){
+    if (!req.header('Content-parts') || !req.header('Content-filesize')){
       throw new Error('Missing required headers.');
     }
 
-    if (req.headers('Content-filesize') > 1024 * 1024 * 1024) {
+    if (req.header('Content-filesize') > 1024 * 1024 * 1024) {
       throw new Error('Files larger than 1GB are not allowed.')
     }
 
-    if (req.headers('Content-filesize') > req.user.availableSpace){
+    // if (req.header('Content-filesize') > req.user.availableSpace){
+    if (req.header('Content-filesize') > 1024 * 1024 * 1024){
       throw new Error('Not enough storage space available');
     }
 
@@ -28,7 +29,8 @@ const uploader = async (req, res, next) => {
 
     // Define temporary and destination directories
     const tempDir = path.resolve(os.tmpdir(), filename);
-    const destDir = path.resolve(__dirname, '../../../uploads', req.user._id.toString());
+    // const destDir = path.resolve(__dirname, '../../../uploads', req.user._id.toString());
+    const destDir = path.resolve(__dirname, '../../uploads');
 
     // Create directories if they do not exist
     await mkdir(tempDir, { recursive: true });
@@ -42,36 +44,36 @@ const uploader = async (req, res, next) => {
       const files = await readdir(tempDir);
 
       // If not all chunks have uploaded, return
-      if (files.length !== Number(req.headers('Content-parts'))) {
+      if (files.length !== Number(req.header('Content-parts'))) {
         return res.send({ uploaded: currentChunk });
       }
 
       // All chunks uploaded, reconstruct chunks into single file
-      const path = path.join(destDir, filename);
+      const newFilepath = path.join(destDir, filename);
       files
         .sort((a,b) => Number(a) - Number(b))
         .forEach(file => {
           const data = fs.readFileSync(path.join(tempDir, file));
-          fs.writeFileSync(path, data, { flag: 'a' });
-          fs.unlink(path.join(tempDir, file));
+          fs.writeFileSync(newFilepath, data, { flag: 'a' });
+          unlink(path.join(tempDir, file));
         });
 
-      const { size } = await stat(path);
+      const { size } = await stat(newFilepath);
 
       req.file = {
-        owner: user._id,
+        // owner: user._id,
         name: filename,
         directory: destDir,
         size: size
       };
 
-      next()
+      next();
     })
 
   } catch (e) {
-    console.log(e)
-    return res.status(400).send(e)
+    console.log(e.message);
+    return res.status(400).send(e.message);
   }
 }
 
-module.exports = uploader
+module.exports = uploader;

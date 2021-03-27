@@ -13,5 +13,7 @@ const PUBLIC_DIR = path.resolve(__dirname, '../../public');
 app.use(bodyParser.raw({ limit: '10mb' }));
 app.use(bodyParser.json());
 app.use(express.static(PUBLIC_DIR));
-app.use(require('./routes/user');
-app.use(require('./routes/file');
+app.use(require('./routes/user'));
+app.use(require('./routes/file'));
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`))

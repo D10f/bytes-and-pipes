@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { motion } from 'framer-motion';
 import { setError } from '../redux/actions/error';
-
 import FileInfo from './FileInfo';
 import FilePicker from './FilePicker';
 import PasswordInput from './PasswordInput';
+import encryptionStream from '../scripts/encryptionStream';
 
 const pageVariant = {
   initial: {
@@ -18,7 +18,7 @@ const pageVariant = {
   }
 };
 
-const UploadForm = ({ error, setError }) => {
+const UploadForm = ({ authToken, error, setError }) => {
 
   const [dragged, setDragged] = useState(false);
   const [file, setFile] = useState(null);
@@ -32,8 +32,8 @@ const UploadForm = ({ error, setError }) => {
     // If no file was dropped, do nothing
     if (!file) return;
 
-    if (file.size > 1024 * 1024)  {
-      setError('File size cannot be greater than 1MB');
+    if (file.size > 1024 * 1024 * 1024)  {
+      setError('File size cannot be greater than 1GB');
       return;
     }
 
@@ -54,12 +54,17 @@ const UploadForm = ({ error, setError }) => {
   const handleFileUpload = (e) => {
     e.preventDefault();
 
+    if (!file) {
+      setError('You must select a file to upload!');
+      return;
+    }
+
     if (!password) {
       setError('You must type in a password!');
       return;
     }
 
-    useEncryptionStream(file, password);
+    encryptionStream(file, password, authToken);
   };
 
   return (
@@ -81,12 +86,13 @@ const UploadForm = ({ error, setError }) => {
         setPassword={setPassword}
         passwordSuggestions={true}
       /> }
-      { file && <button className="upload-form__btn" type="button" onClick={handleFileUpload}>Upload</button> }
+      { file && <button className="upload-form__btn" type="submit">Upload</button> }
     </motion.form>
   );
 };
 
 const mapStateToProps = (state) => ({
+  authToken: state.user.jwt,
   error: state.error,
 });
 

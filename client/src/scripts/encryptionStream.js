@@ -1,21 +1,15 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { generateCryptoKey, encryptData, sha1sum } from '../scripts/crypto';
+import { generateCryptoKey, encryptData, sha1sum } from './crypto';
 
-const useEncryptionStream = async (file, password) => {
-
-  const [currentChunk, setCurrentChunk] = useState(1);
-  const [progress, setProgress] = useState(0);
+const encryptionStream = async (file, password, authToken) => {
 
   // Upload in chunks of 1MB, and total chunks to upload
-  const chunkSize = 1024 * 1024 * 1;
+  const chunkSize = 1024 * 1024;
   const totalChunks = Math.ceil(file.size / chunkSize);
+  let currentChunk = 1;
 
   // Generate random salt, and encryption key
   const salt = crypto.getRandomValues(new Uint8Array(32));
   const key = await generateCryptoKey(password, salt);
-
-  const authToken = useSelector(state => state.user.jwt);
 
   const requestOptions = {
     method: 'POST',
@@ -23,7 +17,7 @@ const useEncryptionStream = async (file, password) => {
       "Content-type": "application/octet-stream",
       "Content-parts": totalChunks,
       "Content-filesize": file.size,
-      "Authorization": `Bearer ${authToken}`
+      // "Authorization": `Bearer ${authToken}`
     }
   };
 
@@ -56,27 +50,26 @@ const useEncryptionStream = async (file, password) => {
   }
 
   function uploader(stream) {
-    async function* _uploader() {
+    async function _uploader() {
       for await (const chunk of stream()) {
 
         requestOptions['body'] = chunk;
-        const endpoint = `http://localhost:8080/upload/${filenameHash}/${currentChunk}`;
+        const endpoint = `http://localhost:3000/upload/${filenameHash}/${currentChunk}`;
 
         try {
+          console.log(currentChunk);
           const res = await fetch(endpoint, requestOptions);
           const url = await res.json();
 
-          setCurrentChunk(currentChunk + 1);
-
-          yield;
+          currentChunk++;
 
         } catch (e) {
           console.error(e);
         }
       }
     }
-    return _uploader;
+    _uploader();
   }
 };
 
-export default useEncryptionStream;
+export default encryptionStream;

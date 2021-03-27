@@ -13,8 +13,8 @@ const FilePicker = ({ file, setFile, setError }) => {
       return;
     }
 
-    if (selected.size > 1024 * 1024)  {
-      setError('File size cannot be greater than 1MB');
+    if (selected.size > 1024 * 1024 * 1024)  {
+      setError('File size cannot be greater than 1GB');
       return;
     }
 

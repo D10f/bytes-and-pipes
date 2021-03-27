@@ -15,13 +15,13 @@ export const generateRandomPassword = (length = 16) => {
   return password;
 };
 
-// export const sha1sum = async msg => {
-//   const msgUint8 = new TextEncoder().encode(msg);
-//   const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);
-//   const hashArray = Array.from(new Uint8Array(hashBuffer));
-//   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-//   return hashHex;
-// };
+export const sha1sum = async msg => {
+  const msgUint8 = new TextEncoder().encode(msg);
+  const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+};
 
 export const generateCryptoKey = async (password, salt) => {
 

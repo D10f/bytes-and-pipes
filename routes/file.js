@@ -1,28 +1,32 @@
 const express = require('express');
 const fs = require('fs');
 
-const auth = require('../../middleware/auth');
-const uploader = require('../../middleware/uploader/uploader');
+const auth = require('../middleware/auth');
+const uploader = require('../middleware/uploader/uploader');
 const File = require('../models/file');
 const convertBytes = require('../utils/convertbytes');
 
 const router = express.Router();
 
-router.post('/upload/:filename/:seq', auth, uploader, async (req, res) => {
+// router.post('/upload/:filename/:seq', auth, uploader, async (req, res) => {
+router.post('/upload/:filename/:currentChunk', uploader, async (req, res) => {
 
   const file = new File(req.file);
 
   try {
     await file.save()
-    req.user.updateUsedStorage(file.filesize)
-    await req.user.save()
+    // req.user.updateUsedStorage(file.filesize)
+    // await req.user.save()
 
-    res.status(201).send({
-      usedStorage: req.user.usedStorage,
-      downloadUrl: file.downloadUrl
-    })
+    // res.status(201).send({
+    //   usedStorage: req.user.usedStorage,
+    //   downloadUrl: file.downloadUrl
+    // });
+
+    res.status(201).send('Success!');
   } catch (e) {
-    res.status(400).send()
+    console.log(e.message);
+    res.status(400).send(e.message);
   }
 })
 

@@ -1,12 +1,16 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const crypto = require('crypto')
-const File = require('./file')
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const File = require('./file');
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+  username: {
+    type: String,
+    trim: true
+  },
   email: {
     type: String,
     required: [true, 'Please provide a valid email address.'],
@@ -29,6 +33,14 @@ const userSchema = new Schema({
       }
     }
   },
+  active: {
+    type: Boolean,
+    default: false
+  },
+  activationToken: {
+    type: String,
+    default: crypto.createHash('sha512').update(crypto.randomBytes(32)).digest('hex')
+  },
   tokens: [{
     token: {
       type: String,
@@ -42,83 +54,89 @@ const userSchema = new Schema({
   usedStorage: {
     type: Number,
     min: 0,
-    max: 250000000,
-    required: false,
-    default: 0
+    max: 1_073_741_824,
+    default: 0,
+    required: false
   },
   maxStorage: {
     type: Number,
     min: 0,
-    max: 250000000,
-    required: false,
-    default: 250000000
+    max: 1_073_741_824,
+    default: 1_073_741_824,
+    required: false
   }
-}, { timestamps: true })
+}, { timestamps: true });
 
 userSchema.virtual('files', {
   ref: 'File',
   localField: '_id',
   foreignField: 'owner'
-})
+});
 
 userSchema.virtual('availableSpace').get(function(){
-  return this.maxStorage - this.usedStorage
-})
-
-userSchema.virtual('salt').get(function(){
-  return crypto.randomBytes(32)
-})
+  return this.maxStorage - this.usedStorage;
+});
 
 userSchema.methods.generateAuthToken = async function() {
-  const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET)
-  this.tokens = [...this.tokens, {token}]
-  return token
-}
+  const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET);
+  this.tokens = [...this.tokens, {token}];
+  return token;
+};
+
+userSchema.methods.activateUser = function() {
+  this.active = true;
+  this.activationToken = '';
+};
 
 userSchema.methods.updateUsedStorage = function(filesize){
-  this.usedStorage = this.usedStorage + filesize
-}
+  this.usedStorage = this.usedStorage + filesize;
+};
 
 userSchema.methods.toJSON = function() {
-  const userObject = this.toObject()
+  const userObject = this.toObject();
 
-  delete userObject._id
-  delete userObject.password
-  delete userObject.tokens
-  delete userObject.createdAt
-  delete userObject.updatedAt
-  delete userObject.__v
+  delete userObject._id;
+  delete userObject.password;
+  delete userObject.tokens;
+  delete userObject.active;
+  delete userObject.activationToken;
+  delete userObject.createdAt;
+  delete userObject.updatedAt;
+  delete userObject.__v;
 
-  userObject.salt = this.salt
+  userObject.salt = this.salt;
 
-  return userObject
-}
+  return userObject;
+};
 
 userSchema.statics.findByCredentials = async (email, password) => {
-  const user = await User.findOne({ email: email })
-  if(!user){
-    throw new Error('Invalid credentials')
+  const user = await User.findOne({ email: email });
+
+  if (!user || !user.active){
+    throw new Error('Invalid credentials');
   }
 
-  const isMatch = await bcrypt.compare(password, user.password)
-  if(!isMatch){
-    throw new Error('Invalid credentials')
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch){
+    throw new Error('Invalid credentials');
   }
-  return user
-}
+
+  return user;
+};
 
 userSchema.pre('save', async function(next) {
   if (this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, 10)
+    this.password = await bcrypt.hash(this.password, 10);
   }
-  next()
+  next();
 })
 
 userSchema.pre('remove', async function(next) {
-  await File.deleteMany({ owner: this._id })
-  next()
+  await File.deleteMany({ owner: this._id });
+  next();
 })
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema);
 
-module.exports = User
+module.exports = User;
