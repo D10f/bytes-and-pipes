@@ -16,7 +16,7 @@ const uploader = async (req, res, next) => {
       throw new Error('Missing required headers.');
     }
 
-    if (req.header('Content-filesize') > 1024 * 1024 * 1024) {
+    if (req.header('Content-filesize') > 1024 * 1024 * 10) {
       throw new Error('Files larger than 1GB are not allowed.')
     }
 
@@ -71,7 +71,6 @@ const uploader = async (req, res, next) => {
     })
 
   } catch (e) {
-    console.log(e.message);
     return res.status(400).send(e.message);
   }
 }

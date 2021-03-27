@@ -1,10 +1,14 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware,  compose } from 'redux';
 import thunk from 'redux-thunk';
 import errorReducer from '../reducers/errorReducer';
+import urlReducer from '../reducers/urlReducer';
 import userReducer from '../reducers/userReducer';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   error: errorReducer,
+  url: urlReducer,
   user: userReducer
 });
 
@@ -15,7 +19,7 @@ const initialState = {};
 const store = createStore(
   rootReducer,
   initialState,
-  applyMiddleware(...middleware)
+  composeEnhancers(applyMiddleware(...middleware))
 );
 
 export default store;

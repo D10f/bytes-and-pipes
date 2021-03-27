@@ -1,7 +1,7 @@
 import { generateCryptoKey, encryptData, sha1sum } from './crypto';
+import { setError } from '../redux/actions/error';
 
-const encryptionStream = async (file, password, authToken) => {
-
+const encryptionStream = async (file, password, authToken, setError, setUrl) => {
   // Upload in chunks of 1MB, and total chunks to upload
   const chunkSize = 1024 * 1024;
   const totalChunks = Math.ceil(file.size / chunkSize);
@@ -24,8 +24,6 @@ const encryptionStream = async (file, password, authToken) => {
   const filenameHash = await sha1sum(file.name);
 
   const pipe = (...fns) => data => fns.reduce((val, fn) => fn(val), data);
-
-  // Run the following generator functions
   pipe(reader, encrypter, uploader)(file);
 
   function reader(file) {
@@ -56,16 +54,21 @@ const encryptionStream = async (file, password, authToken) => {
         requestOptions['body'] = chunk;
         const endpoint = `http://localhost:3000/upload/${filenameHash}/${currentChunk}`;
 
-        try {
-          console.log(currentChunk);
-          const res = await fetch(endpoint, requestOptions);
-          const url = await res.json();
+        const res = await fetch(endpoint, requestOptions);
 
-          currentChunk++;
-
-        } catch (e) {
-          console.error(e);
+        // If server returns an error, stop streaming
+        if (!res.ok) {
+          const error = await res.text();
+          setError(error);
+          return;
         }
+
+        if (res.status === 201) {
+          const url = await res.text();
+          setUrl(url);
+        }
+
+        currentChunk++;
       }
     }
     _uploader();

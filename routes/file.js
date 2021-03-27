@@ -23,7 +23,7 @@ router.post('/upload/:filename/:currentChunk', uploader, async (req, res) => {
     //   downloadUrl: file.downloadUrl
     // });
 
-    res.status(201).send('Success!');
+    res.status(201).send(file.downloadUrl);
   } catch (e) {
     console.log(e.message);
     res.status(400).send(e.message);

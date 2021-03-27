@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { motion } from 'framer-motion';
 import { setError } from '../redux/actions/error';
+import { setUrl } from '../redux/actions/url';
 import FileInfo from './FileInfo';
 import FilePicker from './FilePicker';
 import PasswordInput from './PasswordInput';
@@ -18,11 +19,11 @@ const pageVariant = {
   }
 };
 
-const UploadForm = ({ authToken, error, setError }) => {
+const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
 
   const [dragged, setDragged] = useState(false);
-  const [file, setFile] = useState(null);
   const [password, setPassword] = useState('');
+  const [file, setFile] = useState(null);
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -64,7 +65,12 @@ const UploadForm = ({ authToken, error, setError }) => {
       return;
     }
 
-    encryptionStream(file, password, authToken);
+    encryptionStream(file, password, authToken, setError, (url) => {
+      setFile(null);
+      setPassword('');
+      setError('');
+      setUrl(url);
+    });
   };
 
   return (
@@ -94,10 +100,12 @@ const UploadForm = ({ authToken, error, setError }) => {
 const mapStateToProps = (state) => ({
   authToken: state.user.jwt,
   error: state.error,
+  url: state.url
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setError: (msg) => dispatch(setError(msg)),
+  setUrl: (url) => dispatch(setUrl(url))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadForm);

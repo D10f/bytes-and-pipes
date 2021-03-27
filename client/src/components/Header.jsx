@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { logout } from '../redux/actions/user';
 import ErrorMsg from '../components/ErrorMsg';
+import SuccessMsg from '../components/SuccessMsg';
 // import FileInput from './icons/FileInput';
 // import FileOutput from './icons/FileOutput';
 
@@ -13,7 +14,7 @@ const dropdownAnimation = {
   transition: { delay: 0.2 }
 };
 
-const Header = ({ user, error, logout }) => {
+const Header = ({ user, error, logout, url }) => {
 
   const title = 'Bytes And Pipes';
 
@@ -32,6 +33,9 @@ const Header = ({ user, error, logout }) => {
       <AnimatePresence>
         { error && (
           <ErrorMsg error={error} />
+        )}
+        { url && (
+          <SuccessMsg msg={url} />
         )}
       </AnimatePresence>
       <Link to="/" tabIndex="-1">
@@ -72,7 +76,8 @@ const Header = ({ user, error, logout }) => {
 
 const mapStateToProps = (state) => ({
   user: state.user.user,
-  error: state.error
+  error: state.error,
+  url: state.url
 });
 
 const mapDispatchToProps = (dispatch) => ({

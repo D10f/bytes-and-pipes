@@ -1,0 +1,29 @@
+@use '../abstract/variables';
+
+.success {
+  position: absolute;
+  left: 50%;
+  min-width: calc(content + 1rem);
+  padding: 1rem 2.5rem;
+  border-radius: 3px;
+  border-bottom: 2px solid variables.$color-primary-dark;
+  box-shadow: variables.$shadow;
+  color: variables.$color-light;
+  background-image: variables.$background-gradient;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__msg {
+    margin-right: 1rem;
+  }
+
+  &__close {
+    font-size: 2.6rem;
+
+    &:hover {
+      cursor: pointer;
+      color: variables.$color-dark;
+    }
+  }
+}
