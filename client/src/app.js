@@ -7,6 +7,14 @@ import AppRouter from './router/appRouter';
 
 import './styles.scss';
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./serviceWorker.js')
+      .then(registration => console.log('registration successful', registration))
+      .catch(err => console.error(err));
+  });
+}
+
 const App = () => (
   <Provider store={store}>
     <Router>

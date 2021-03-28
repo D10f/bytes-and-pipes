@@ -25,9 +25,6 @@ export const sha1sum = async msg => {
 
 export const generateCryptoKey = async (password, salt) => {
 
-  // const encoder = new TextEncoder();
-  // const encodedPassword = encoder.encode(password);
-
   const encodedPassword = new TextEncoder().encode(password);
 
   try {
@@ -104,8 +101,8 @@ export const decryptData = async (encryptedBuffer) => {
   const encryptedBytes = new Uint8Array(encryptedBuffer);
 
   const salt = encryptedBytes.slice(0, 32);
-  const iv = encryptedBytes.slice(32, 32 + 12);
-  const data = encryptedBytes.slice(32 + 12);
+  const iv = encryptedBytes.slice(32, 32 + 16);
+  const data = encryptedBytes.slice(32 + 16);
 
   const { key } = await deriveKey(salt);
 
