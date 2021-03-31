@@ -23,6 +23,10 @@ const Header = ({ user, error, logout, url }) => {
     // redirect to main page
   };
 
+  // { url && (
+  //   <SuccessMsg msg={url} />
+  // )}
+
   return (
     <motion.header className="header"
       variants={dropdownAnimation}
@@ -34,9 +38,7 @@ const Header = ({ user, error, logout, url }) => {
         { error && (
           <ErrorMsg error={error} />
         )}
-        { url && (
-          <SuccessMsg msg={url} />
-        )}
+        <SuccessMsg msg={url} />
       </AnimatePresence>
       <Link to="/" tabIndex="-1">
         <motion.h1 className="header__logo"

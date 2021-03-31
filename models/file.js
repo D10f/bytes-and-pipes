@@ -35,7 +35,7 @@ const fileSchema = new Schema({
 // fileSchema.index({ expireAfterSeconds: 30 })
 
 fileSchema.virtual('downloadUrl').get(function(){
-  return `http://localhost:8080/download/${this._id}`;
+  return `http://localhost:3000/download/${this._id}`;
 });
 
 fileSchema.virtual('filepath').get(function(){

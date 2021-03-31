@@ -22,7 +22,7 @@ const pageVariant = {
 const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
 
   const [dragged, setDragged] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('watermelon');
   const [file, setFile] = useState(null);
 
   const handleDrop = (e) => {

@@ -7,6 +7,11 @@
   </head>
   <body>
     <main class="landing" id="root"></main>
+    <script type="text/javascript">
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+      }
+    </script>
     <!-- <main class="landing">
 
       <header class="header">

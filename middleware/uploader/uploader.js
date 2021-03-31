@@ -30,7 +30,7 @@ const uploader = async (req, res, next) => {
     // Define temporary and destination directories
     const tempDir = path.resolve(os.tmpdir(), filename);
     // const destDir = path.resolve(__dirname, '../../../uploads', req.user._id.toString());
-    const destDir = path.resolve(__dirname, '../../uploads');
+    const destDir = path.resolve(__dirname, '../../client/dist/download');
 
     // Create directories if they do not exist
     await mkdir(tempDir, { recursive: true });

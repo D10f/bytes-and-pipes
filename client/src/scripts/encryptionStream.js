@@ -14,6 +14,7 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
   const requestOptions = {
     method: 'POST',
     headers: {
+      "Access-Control-Request-Headers": "Content-type,Content-parts,Content-filesize",
       "Content-type": "application/octet-stream",
       "Content-parts": totalChunks,
       "Content-filesize": file.size,

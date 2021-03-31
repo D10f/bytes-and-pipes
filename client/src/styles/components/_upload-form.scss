@@ -17,7 +17,7 @@
   flex-direction: column;
 
   @include mixins.responsive(portrait) {
-    height: 20vh;
+    min-height: 20vh;
     padding: 2rem;
   }
 

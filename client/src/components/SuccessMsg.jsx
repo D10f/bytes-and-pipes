@@ -9,23 +9,30 @@ const dropdownAnimation = {
   transition: { delay: 0.3 }
 };
 
-const SuccessMsg = ({ msg, setUrl  }) => (
-  <motion.aside
-    key="successmsg"
-    variants={dropdownAnimation}
-    initial="initial"
-    exit="initial"
-    animate="visible"
-    className="success"
-  >
-    <p className="success__msg">{msg}</p>
-    <span
-      className="success__close"
-      onClick={() => setUrl('')}
-    >&times;
-    </span>
-  </motion.aside>
-);
+const SuccessMsg = ({ msg, setUrl  }) => {
+  return (
+    <motion.aside
+      key="successmsg"
+      variants={dropdownAnimation}
+      initial="initial"
+      exit="initial"
+      animate="visible"
+      className="success"
+    >
+      <a
+        className="success__msg"
+        href={'http://localhost:3000/download/testfile.zip'}
+        download="filename.mp3"
+      >Download
+      </a>
+      <span
+        className="success__close"
+        onClick={() => setUrl('')}
+      >&times;
+      </span>
+    </motion.aside>
+  )
+};
 
 const mapDispatchToProps = (dispatch) => ({
   setUrl: (url) => dispatch(setUrl(url))

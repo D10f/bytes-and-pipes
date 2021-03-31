@@ -31,11 +31,26 @@ router.post('/upload/:filename/:currentChunk', uploader, async (req, res) => {
 })
 
 router.get('/download/:id', async (req, res) => {
-  // const file = await File.findById(req.params.id)
-  const reader = fs.createReadStream('/home/zenzen/Desktop/rsync')
-  reader.pipe(res)
-  res.send()
-})
+  try {
+    const file = await File.findById(req.params.id);
+
+    if (!file) {
+      throw new Error('Resource does not exist.')
+    }
+
+    const path = file.filepath;
+
+    // const path = '/home/wallabye/Projects/bytes-and-pipes/uploads/52470318d4bf87e70d859fcea434c025019f70ca';
+    const reader = fs.createReadStream(path);
+    reader.pipe(res);
+
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+  // const reader = fs.createReadStream('/home/zenzen/Desktop/rsync')
+  // reader.pipe(res)
+  // res.send()
+});
 
 router.delete('/files/delete/:id', auth, async (req, res) => {
   try {

@@ -13,10 +13,32 @@ let plugins = [
 ];
 
 if (process.env.NODE_ENV === 'production') {
+
+  const { pipeline } = require('stream');
+  const fs = require('fs');
+
+  class RunAfterCompile{
+    apply(compiler){
+      compiler.hooks.done.tap('Copy serviceWorker.js', function(){
+        pipeline(
+          fs.createReadStream(path.resolve(__dirname, 'public', 'serviceWorker.js')),
+          fs.createWriteStream(path.resolve(__dirname, 'dist', 'serviceWorker.js')),
+          console.error
+        );
+        pipeline(
+          fs.createReadStream(path.resolve(__dirname, 'public', 'testfile.mp3')),
+          fs.createWriteStream(path.resolve(__dirname, 'dist', 'testfile.mp3')),
+          console.error
+        );
+      });
+    }
+  };
+
   mode = 'production';
   target = 'browserslist';
   devtool = false;
   plugins.push(new CleanWebpackPlugin());
+  plugins.push(new RunAfterCompile());
 }
 
 
@@ -81,7 +103,6 @@ module.exports = {
       aggregateTimeout: 1000,
       ignored: /node_modules/
     },
-    hot: true,
-    https: true
+    hot: true
   }
 };
