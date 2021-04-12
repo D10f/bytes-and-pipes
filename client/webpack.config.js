@@ -21,8 +21,10 @@ if (process.env.NODE_ENV === 'production') {
     apply(compiler){
       compiler.hooks.done.tap('Copy serviceWorker.js', function(){
         pipeline(
-          fs.createReadStream(path.resolve(__dirname, 'public', 'serviceWorker.js')),
-          fs.createWriteStream(path.resolve(__dirname, 'dist', 'serviceWorker.js')),
+          // fs.createReadStream(path.resolve(__dirname, 'public', 'serviceWorker.js')),
+          // fs.createWriteStream(path.resolve(__dirname, 'dist', 'serviceWorker.js')),
+          fs.createReadStream(path.resolve(__dirname, 'public', 'serviceWorkerDup.js')),
+          fs.createWriteStream(path.resolve(__dirname, 'dist', 'serviceWorkerDup.js')),
           console.error
         );
         pipeline(

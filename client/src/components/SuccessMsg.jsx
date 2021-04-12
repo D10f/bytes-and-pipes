@@ -21,8 +21,8 @@ const SuccessMsg = ({ msg, setUrl  }) => {
     >
       <a
         className="success__msg"
-        href={'http://localhost:3000/download/testfile.zip'}
-        download="filename.mp3"
+        href={msg}
+        download={msg}
       >Download
       </a>
       <span

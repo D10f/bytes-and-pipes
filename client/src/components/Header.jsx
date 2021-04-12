@@ -38,7 +38,9 @@ const Header = ({ user, error, logout, url }) => {
         { error && (
           <ErrorMsg error={error} />
         )}
-        <SuccessMsg msg={url} />
+        { url && (
+          <SuccessMsg msg={url} />
+        )}
       </AnimatePresence>
       <Link to="/" tabIndex="-1">
         <motion.h1 className="header__logo"
