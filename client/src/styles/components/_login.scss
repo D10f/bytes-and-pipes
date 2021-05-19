@@ -14,6 +14,8 @@
 
   &__control-group {
     position: relative;
+    width: min-content;
+    margin: 0 auto;
 
     &:not(:last-child) {
       margin-bottom: 2rem;

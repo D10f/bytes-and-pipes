@@ -1,0 +1,11 @@
+@use '../abstract/variables';
+@use './button';
+
+.cta {
+  @extend %button-action;
+
+  &:hover,
+  &:focus {
+    color: variables.$color-light;
+  }
+}

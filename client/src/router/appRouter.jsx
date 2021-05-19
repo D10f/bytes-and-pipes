@@ -1,10 +1,14 @@
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Header from '../components/Header';
-import Intro from '../components/Intro';
+import Intro from '../components/pages/Intro';
 import Footer from '../components/Footer';
-import Document from '../components/Document';
-import Login from '../components/Login';
+import About from '../components/pages/About';
+import Terms from '../components/pages/Terms';
+import Privacy from '../components/pages/Privacy';
+import HowItWorks from '../components/pages/HowItWorks';
+import Download from '../components/pages/Download';
+import Login from '../components/pages/Login';
 
 const AppRouter = () => {
   const location = useLocation();
@@ -14,12 +18,13 @@ const AppRouter = () => {
       <Header />
       <AnimatePresence exitBeforeEnter>
         <Switch location={location} key={location.key}>
-          <Route path="/about" component={Document} />
-          <Route path="/how-it-works" component={Document} />
-          <Route path="/terms" component={Document} />
-          <Route path="/privacy" component={Document} />
-          <Route path="/login" component={Login} />
           <Route path="/" exact component={Intro} />
+          <Route path="/d" component={Download} />
+          <Route path="/about" component={About} />
+          <Route path="/how-it-works" component={HowItWorks} />
+          <Route path="/terms" component={Terms} />
+          <Route path="/privacy" component={Privacy} />
+          <Route path="/login" component={Login} />
         </Switch>
       </AnimatePresence>
       <Footer />
@@ -27,10 +32,4 @@ const AppRouter = () => {
   );
 };
 
-export default AppRouter
-
-// <Route path="/" component={Dashboard} exact />
-// <Route path="/create" component={AddExpensePage} />
-// <Route path="/edit/:id" component={EditExpensePage} />
-// <Route path="/help" component={HelpPage} />
-// <Route component={NotFound} />
+export default AppRouter;

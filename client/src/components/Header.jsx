@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import { logout } from '../redux/actions/user';
 import ErrorMsg from '../components/ErrorMsg';
 import SuccessMsg from '../components/SuccessMsg';
-// import FileInput from './icons/FileInput';
-// import FileOutput from './icons/FileOutput';
 
 const dropdownAnimation = {
   initial: { y: -200 },
@@ -22,10 +20,6 @@ const Header = ({ user, error, logout, url }) => {
     logout();
     // redirect to main page
   };
-
-  // { url && (
-  //   <SuccessMsg msg={url} />
-  // )}
 
   return (
     <motion.header className="header"

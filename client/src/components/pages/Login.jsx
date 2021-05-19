@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { connect } from 'react-redux';
-import { setError } from '../redux/actions/error';
-import PasswordInput from './PasswordInput';
+import { setError } from '../../redux/actions/error';
+import PasswordInput from '../PasswordInput';
 
 const actionsEnum = {
   login: 'Login',

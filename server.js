@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 });
 
 // Used to process incoming raw (binary) data
-app.use(bodyParser.raw({ limit: '10mb' }));
+app.use(bodyParser.raw({ limit: '10gb' }));
 app.use(bodyParser.json());
 app.use(express.static(PUBLIC_DIR));
 app.use(require('./routes/user'));

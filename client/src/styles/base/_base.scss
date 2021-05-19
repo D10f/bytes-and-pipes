@@ -26,6 +26,7 @@ body {
   color: variables.$color-dark;
   box-sizing: border-box;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 ul {

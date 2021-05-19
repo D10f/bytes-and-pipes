@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const fs = require('fs');
 
 const auth = require('../middleware/auth');
@@ -23,12 +24,30 @@ router.post('/upload/:filename/:currentChunk', uploader, async (req, res) => {
     //   downloadUrl: file.downloadUrl
     // });
 
-    res.status(201).send(file.downloadUrl);
+    res.status(201).send({ url: file.downloadUrl, id: file._id });
   } catch (e) {
     console.log(e.message);
     res.status(400).send(e.message);
   }
-})
+});
+
+router.put('/upload/meta/:id', async (req, res) => {
+  try {
+    const file = await File.findById(req.params.id);
+
+    if (!file) {
+      throw new Error('Resource does not exist.')
+    }
+
+    file.encryptedMetadata = req.body;
+    await file.save();
+
+    res.status(202).send('');
+  } catch (e) {
+    console.log(e.message);
+    res.status(400).send(e.message);
+  }
+});
 
 router.get('/download/:id', async (req, res) => {
   try {
@@ -38,18 +57,27 @@ router.get('/download/:id', async (req, res) => {
       throw new Error('Resource does not exist.')
     }
 
-    const path = file.filepath;
-
-    // const path = '/home/wallabye/Projects/bytes-and-pipes/uploads/52470318d4bf87e70d859fcea434c025019f70ca';
-    const reader = fs.createReadStream(path);
+    const reader = fs.createReadStream(file.filepath);
     reader.pipe(res);
 
   } catch (err) {
     res.status(400).send(err.message);
   }
-  // const reader = fs.createReadStream('/home/zenzen/Desktop/rsync')
-  // reader.pipe(res)
-  // res.send()
+});
+
+router.get('/download/meta/:id', async (req, res) => {
+  try {
+    const file = await File.findById(req.params.id);
+
+    if (!file) {
+      throw new Error('Resource does not exist.')
+    }
+
+    res.send(file.encryptedMetadata);
+
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
 });
 
 router.delete('/files/delete/:id', auth, async (req, res) => {

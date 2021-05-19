@@ -13,6 +13,9 @@ const fileSchema = new Schema({
     type: String,
 	  required: true
   },
+  encryptedMetadata: {
+    type: Buffer
+  },
   directory: {
     type: String,
     required: true
@@ -35,7 +38,7 @@ const fileSchema = new Schema({
 // fileSchema.index({ expireAfterSeconds: 30 })
 
 fileSchema.virtual('downloadUrl').get(function(){
-  return `http://localhost:3000/download/${this._id}`;
+  return `http://localhost:3000/d/${this._id}`;
 });
 
 fileSchema.virtual('filepath').get(function(){

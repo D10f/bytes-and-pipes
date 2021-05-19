@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import UploadForm from './UploadForm';
-import Step from  './Step';
+import UploadForm from '../UploadForm';
+import Step from  '../Step';
 
 const steps = [
   'Select a file',

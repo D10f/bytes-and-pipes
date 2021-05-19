@@ -1,5 +1,10 @@
-// import { get., set } from 'idb-keyval';
+import { get, set } from 'idb-keyval';
 
+/**
+* Creates a password using a cryptographically strong random generator function
+* @param  {integer} length  Length of the password, defaults to 16
+* @return {string}          Password.
+*/
 export const generateRandomPassword = (length = 16) => {
   const decoder = new TextDecoder();
   let password = '';
@@ -15,102 +20,138 @@ export const generateRandomPassword = (length = 16) => {
   return password;
 };
 
-export const sha1sum = async msg => {
+/**
+* Creates a checksum of a message using a hash function
+* @param  {string} msg  Message to be computed into a hash
+* @return {string}      Hexadecimal hash digest of 64 characters in length
+*/
+export const sha256sum = async msg => {
   const msgUint8 = new TextEncoder().encode(msg);
-  const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   return hashHex;
 };
 
-export const generateCryptoKey = async (password, salt) => {
+/**
+* Creates an cryptographic key used for encryption
+* @param  {string}      password  User input used to derive the encryption key
+* @param  {Uint8Array}  salt      Array of random values used to derive the key
+* @return {CryptoKey}             Cryptographic key used for encryption
+*/
+export const deriveEncryptionKey = async (password, salt) => {
 
-  const encodedPassword = new TextEncoder().encode(password);
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(password),
+    'PBKDF2',
+    false,
+    [ 'deriveKey' ]
+  );
 
-  try {
-    const keyMaterial = await crypto.subtle.importKey(
-      "raw",
-      encodedPassword,
-      "PBKDF2",
-      false,
-      ['deriveKey']
-    );
-
-    const key = await crypto.subtle.deriveKey(
-      {
-        name: "PBKDF2",
-        salt: salt,
-        iterations: 250000,
-        hash: "SHA-256"
-      },
-      keyMaterial,
-      { name: "AES-GCM", length: 256 },
-      false,
-      [ "encrypt", "decrypt" ]
-    );
-
-    return key;
-
-  } catch (e) {
-    console.error(e.message)
-  }
+  return await crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt: salt,
+      iterations: 250000,
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    {
+      name: 'AES-GCM',
+      length: 256
+    },
+    false,
+    [ 'encrypt' ]
+  );
 };
 
-// export const deriveKey = async (salt = crypto.getRandomValues(new Uint8Array(32))) => {
-//
-//   // Retrieve key material from store
-//   // const keyMaterial = await get('cryptoKey');
-//
-//   const key = await crypto.subtle.deriveKey(
-//     {
-//       name: "PBKDF2",
-//       salt: salt,
-//       iterations: 250000,
-//       hash: "SHA-256"
-//     },
-//     keyMaterial,
-//     { name: "AES-GCM", length: 256 },
-//     false,
-//     [ "encrypt", "decrypt" ]
-//   );
-//
-//   return { key, salt };
-// };
+/**
+* Creates an cryptographic key used for decryption
+* @param  {string}      password  User input used to derive the encryption key
+* @param  {Uint8Array}  salt      Array of random values used to derive the key
+* @return {CryptoKey}             Cryptographic key used for decryption
+*/
+export const deriveDecryptionKey = async (password, salt) => {
+  // Attempts to retrieve existing key material from IndexedDB first
+  let keyMaterial = await get('cryptoKey');
 
-export const encryptData = async (data, key, salt) => {
+  if (!keyMaterial) {
+    keyMaterial = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(password),
+      'PBKDF2',
+      false,
+      [ 'deriveKey' ]
+    );
 
-  // Initialization vector is different everytime
+    await set('cryptoKey', keyMaterial);
+  }
+
+  return await crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt: salt,
+      iterations: 250000,
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    {
+      name: 'AES-GCM',
+      length: 256
+    },
+    false,
+    [ 'decrypt' ]
+  );
+};
+
+/**
+* Encrypts data
+* @param  {buffer}      plaintext Data to be encrypted in ArrayBuffer, TypedArray of ArrayBufferView form
+* @param  {CryptoKey}   key       Cryptographic key used to encrypt the data
+* @param  {Uint8Array}  salt      Random value used to derive the encryption key; appended to the output result.
+* @return {Uint8Array}            Array of unsigned int containing the salt, IV and encrypted content.
+*/
+export const encryptData = async (plaintext, key, salt) => {
+
   const iv = crypto.getRandomValues(new Uint8Array(16));
-  // const { key, salt } = await deriveKey();
 
-  const encryptedBuffer = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
+  const ciphertext = await crypto.subtle.encrypt(
+    {
+      name: 'AES-GCM',
+      iv
+    },
     key,
-    data
+    plaintext
   );
 
   return new Uint8Array([
     ...salt,
     ...iv,
-    ...new Uint8Array(encryptedBuffer)
+    ...new Uint8Array(ciphertext)
   ]);
 };
 
-export const decryptData = async (encryptedBuffer) => {
+/**
+* Decrypt data
+* @param  {buffer}      plaintext Data to be encrypted in ArrayBuffer, TypedArray of ArrayBufferView form
+* @param  {string}      password  User input used to derive the encryption key
+* @return {buffer}                Decrypted data in ArrayBuffer form
+*/
+export const decryptData = async (ciphertext, password) => {
 
-  const encryptedBytes = new Uint8Array(encryptedBuffer);
+  const salt            = ciphertext.slice(0, 32);
+  const iv              = ciphertext.slice(32, 32 + 16);
+  const encryptedBytes  = ciphertext.slice(32 + 16);
 
-  const salt = encryptedBytes.slice(0, 32);
-  const iv = encryptedBytes.slice(32, 32 + 16);
-  const data = encryptedBytes.slice(32 + 16);
+  const key = await deriveDecryptionKey(password, salt);
 
-  const { key } = await deriveKey(salt);
-
-  const decryptedBuffer = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
+  return await crypto.subtle.decrypt(
+    {
+      name: 'AES-GCM',
+      iv
+    },
     key,
-    data
+    encryptedBytes
   );
-
-  return decryptedBuffer;
 };

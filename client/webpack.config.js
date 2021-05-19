@@ -1,41 +1,30 @@
 const path = require('path');
+const fs = require('fs');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+class RunAfterCompile{
+  apply(compiler){
+    compiler.hooks.done.tap('Copy serviceWorker.js', function(){
+      ['serviceWorker.js', 'idb-keyval.js'].forEach(file => {
+        fs.copyFile(`./public/${file}`, `./dist/${file}`, (err) => {
+          if (err) throw err;
+        });
+      });
+    });
+  }
+};
+
 let mode = 'development';
 let target = 'web';
 let devtool = 'source-map';
 let plugins = [
-  new HtmlWebpackPlugin({ template: './public/index.html' }),
-  new MiniCssExtractPlugin({ filename: "[name].[contenthash].css" })
+  new HtmlWebpackPlugin({ template: './public/index.html' })
 ];
 
 if (process.env.NODE_ENV === 'production') {
-
-  const { pipeline } = require('stream');
-  const fs = require('fs');
-
-  class RunAfterCompile{
-    apply(compiler){
-      compiler.hooks.done.tap('Copy serviceWorker.js', function(){
-        pipeline(
-          // fs.createReadStream(path.resolve(__dirname, 'public', 'serviceWorker.js')),
-          // fs.createWriteStream(path.resolve(__dirname, 'dist', 'serviceWorker.js')),
-          fs.createReadStream(path.resolve(__dirname, 'public', 'serviceWorkerDup.js')),
-          fs.createWriteStream(path.resolve(__dirname, 'dist', 'serviceWorkerDup.js')),
-          console.error
-        );
-        pipeline(
-          fs.createReadStream(path.resolve(__dirname, 'public', 'testfile.mp3')),
-          fs.createWriteStream(path.resolve(__dirname, 'dist', 'testfile.mp3')),
-          console.error
-        );
-      });
-    }
-  };
-
   mode = 'production';
   target = 'browserslist';
   devtool = false;
@@ -43,6 +32,9 @@ if (process.env.NODE_ENV === 'production') {
   plugins.push(new RunAfterCompile());
 }
 
+plugins.push(new MiniCssExtractPlugin({
+  filename: mode === 'production' ? "[name].[contenthash].css" : "[name].css"
+}));
 
 module.exports = {
   mode: mode,
@@ -105,6 +97,7 @@ module.exports = {
       aggregateTimeout: 1000,
       ignored: /node_modules/
     },
+    https: true,
     hot: true
   }
 };

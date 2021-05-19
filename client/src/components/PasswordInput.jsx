@@ -19,7 +19,9 @@ const PasswordInput = ({ password, setPassword, passwordSuggestions }) => {
   let zxcvbn;
 
   // 830Kb script loaded lazily when component is mounted
-  import('zxcvbn').then(m => zxcvbn = m.default);
+  if (passwordSuggestions) {
+    import('zxcvbn').then(m => zxcvbn = m.default);
+  }
 
   const getPasswordScore = (password) => {
     const { score } = zxcvbn(password);

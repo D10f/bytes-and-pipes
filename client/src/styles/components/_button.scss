@@ -49,8 +49,14 @@
   outline: none;
   transition: transform 0.2s;
 
-    &:active {
+  &:active {
     transform: translateY(.5rem);
     box-shadow: variables.$shadow-thick;
+  }
+
+  &:disabled {
+    background-image: none;
+    border-bottom: 2px solid variables.$color-dark;
+    background-color: variables.$color-gray-dark;
   }
 }

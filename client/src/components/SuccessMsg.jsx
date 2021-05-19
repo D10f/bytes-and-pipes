@@ -9,6 +9,14 @@ const dropdownAnimation = {
   transition: { delay: 0.3 }
 };
 
+// This should be the link to be shared, not downloaded directly
+// <a
+//   className="success__msg"
+//   href={msg}
+//   download={msg}
+// >{msg}
+// </a>
+
 const SuccessMsg = ({ msg, setUrl  }) => {
   return (
     <motion.aside
@@ -22,8 +30,7 @@ const SuccessMsg = ({ msg, setUrl  }) => {
       <a
         className="success__msg"
         href={msg}
-        download={msg}
-      >Download
+      >{msg}
       </a>
       <span
         className="success__close"

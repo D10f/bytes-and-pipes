@@ -4,6 +4,7 @@
 /* BASE */
 @use './styles/base/base';
 @use './styles/base/typography';
+@use './styles/base/utilities';
 
 /* COMPONENTS */
 @use './styles/components/upload-form';
@@ -15,6 +16,7 @@
 @use './styles/components/error';
 @use './styles/components/success';
 @use './styles/components/svg';
+@use './styles/components/cta';
 
 /* LAYOUT */
 @use './styles/layout/landing';
@@ -27,6 +29,7 @@
 @use './styles/pages/how-it-works';
 @use './styles/pages/terms';
 @use './styles/pages/privacy';
+@use './styles/pages/download';
 
 /* THEMES */
 

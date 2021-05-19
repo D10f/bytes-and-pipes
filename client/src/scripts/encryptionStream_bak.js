@@ -1,4 +1,4 @@
-import { deriveEncryptionKey, encryptData, sha256sum } from './crypto';
+import { generateCryptoKey, encryptData, sha1sum } from './crypto';
 import { setError } from '../redux/actions/error';
 
 const encryptionStream = async (file, password, authToken, setError, setUrl) => {
@@ -9,7 +9,7 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
 
   // Generate random salt, and encryption key
   const salt = crypto.getRandomValues(new Uint8Array(32));
-  const key = await deriveEncryptionKey(password, salt);
+  const key = await generateCryptoKey(password, salt);
 
   const requestOptions = {
     method: 'POST',
@@ -22,7 +22,7 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
     }
   };
 
-  const filenameHash = await sha256sum(file.name);
+  const filenameHash = await sha1sum(file.name);
 
   const pipe = (...fns) => data => fns.reduce((val, fn) => fn(val), data);
   pipe(reader, encrypter, uploader)(file);
@@ -67,13 +67,12 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
         if (res.status === 201) {
           const { url, id } = await res.json();
 
-          // Encrypt metadata: name, size and type as JSON string.
-          const fileMetadata = JSON.stringify({ name: file.name, size: file.size, type: file.type });
-          const encoded = new TextEncoder().encode(fileMetadata);
-          const encryptedMetadata = await encryptData(encoded, key, salt);
+          // Encrypt name of the file
+          const filenameBuffer = await encryptData(new TextEncoder().encode(file.name).buffer, key, salt);
+          const encryptedFilenameBytes = new TextDecoder().decode(filenameBuffer);
 
           requestOptions['method'] = 'PUT';
-          requestOptions['body'] = encryptedMetadata;
+          requestOptions['body'] = encryptedFilenameBytes;
           await fetch(`http://localhost:3000/upload/meta/${id}`, requestOptions);
 
           setUrl(url);

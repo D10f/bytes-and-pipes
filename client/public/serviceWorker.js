@@ -1,44 +1,35 @@
-/*
-fetch(e.request.url)
-  .then(res => {
-    return new Response(decryptionStream, {
-      headers: {
-        'Accept-Ranges': 'bytes',
-        'Content-Disposition': 'attachment; filename="filename.mp3"; filename*="filename.mp3"',
-        'Content-Type': 'application/octet-stream',
-        'X-Content-Type-Options': 'nosniff'
-      }
-    }
-  })
-  .catch(console.error)
-)
-*/
+importScripts('/idb-keyval.js');
 
-self.addEventListener('install', e => {
+self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
+self.addEventListener('activate', () => {
   clients.claim()
   .then(() => console.log('All pages now using this Service Worker'))
-  .catch();
+  .catch(console.error);
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.url.startsWith('http://localhost:3000/download/')) {
-    event.respondWith(downloadStream(event.request.url));
-  }
+  const url = new URL(event.request.url);
+  console.log(typeof url);
+  console.log(event.request.url);
+  event.respondWith(async function(){
+    if (event.request.url.startsWith('http://localhost:3000/download/')) {
+      return downloadStream(url, event);
+    }
+  }());
 });
 
-async function downloadStream(url) {
-  
-  const response = await fetch(url);
-  const slicedStream = sliceStream(response.body);
+async function downloadStream(url, event) {
+
+  const resource = await fetch(url);
+  const slicedStream = sliceStream(resource.body);
   const decryptedStream = decryptionStream(slicedStream);
-  
+
   const headers = {
     'Accept-Ranges': 'bytes',
-    'Content-Disposition': 'attachment; filename*=filename.mp3',
+    'Content-Disposition': `attachment; filename=${Math.random()}; filename*=${Math.random()}`,
     'Content-Type': 'application/octet-stream',
     'X-Content-Type-Options': 'nosniff'
   };
@@ -52,7 +43,7 @@ function sliceStream(readable) {
 
   return new ReadableStream({
     start(controller) {
-      chunkSize = (1024 ** 2) + 64;
+      chunkSize = (1024 ** 2) * 10 + 64;
       buffer = new Uint8Array(chunkSize);
       console.log('starting slicing...');
     },
@@ -110,6 +101,7 @@ function sliceStream(readable) {
 
 function decryptionStream(readable) {
   const reader = readable.getReader();
+
   return new ReadableStream({
     async start(controller) {
       console.log('starting decryption');

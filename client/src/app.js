@@ -6,12 +6,21 @@ import AppRouter from './router/appRouter';
 
 import './styles.scss';
 
-const App = () => (
-  <Provider store={store}>
-    <Router>
-      <AppRouter />
-    </Router>
-  </Provider>
-);
+const App = () => {
+
+  // if ('serviceWorker' in navigator) {
+  //   navigator.serviceWorker.register('./serviceWorker.js')
+  //   .then(console.log)
+  //   .catch(console.error);
+  // }
+
+  return (
+    <Provider store={store}>
+      <Router>
+        <AppRouter />
+      </Router>
+    </Provider>
+  );
+};
 
 render(<App />, document.getElementById('root'));
