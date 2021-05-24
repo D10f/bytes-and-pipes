@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { del } from 'idb-keyval';
 import { setError } from '../redux/actions/error';
 import PasswordInput from './PasswordInput';
 import Button from './Button';
-import { decryptData, deriveDecryptionKey } from '../scripts/crypto';
+import { decryptData } from '../scripts/crypto';
 
 const DownloadMetadata = ({ fileMetadata, setFileMetadata, decryptionKey, setKey, path, setError }) => {
 
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('watermelon');
 
   // useEffect(() => {
   //   if (decryptionKey) {
@@ -23,14 +22,14 @@ const DownloadMetadata = ({ fileMetadata, setFileMetadata, decryptionKey, setKey
     if (e.target.disabled) return;
 
     try {
-      const decryptedBuffer = await decryptData(fileMetadata, password);
+      const { decryptedBuffer, key } = await decryptData(fileMetadata, password);
       const decryptedFileMetadata = new TextDecoder().decode(decryptedBuffer);
       setFileMetadata(JSON.parse(decryptedFileMetadata));
-      setKey(true);
+      setKey(key);
     } catch (e) {
+      console.error(e);
       setError('Invalid decryption key');
       setPassword('');
-      del('cryptoKey');
     }
   };
 

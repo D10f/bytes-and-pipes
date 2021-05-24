@@ -29,8 +29,7 @@ const uploader = async (req, res, next) => {
 
     // Define temporary and destination directories
     const tempDir = path.resolve(os.tmpdir(), filename);
-    // const destDir = path.resolve(__dirname, '../../../uploads', req.user._id.toString());
-    const destDir = path.resolve(__dirname, '../../client/dist/download');
+    const destDir = path.resolve(__dirname, '../../uploads');
 
     // Create directories if they do not exist
     await mkdir(tempDir, { recursive: true });
@@ -53,10 +52,14 @@ const uploader = async (req, res, next) => {
       files
         .sort((a,b) => Number(a) - Number(b))
         .forEach(file => {
+          // read and write synchronously to guarantee file integrity
           const data = fs.readFileSync(path.join(tempDir, file));
           fs.writeFileSync(newFilepath, data, { flag: 'a' });
           unlink(path.join(tempDir, file));
         });
+
+      // Remove the now empty temporary directory
+      fs.rmdir(tempDir, console.error);
 
       const { size } = await stat(newFilepath);
 

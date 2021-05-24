@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import FileInfo from '../FileInfo';
 import DownloadMetadata from '../DownloadMetadata';
-import DownloadFile from '../DownloadFile';
+import DownloadOptions from '../DownloadOptions';
 
 const pageVariant = {
   initial: {
@@ -25,7 +26,7 @@ const Download = ({ location }) => {
     const id = location.pathname.match(/\/d\/(\w*)$/i)[1];
     setFileId(id);
 
-    fetch(`http://localhost:3000/download/meta/${id}`)
+    fetch(`http://localhost:3000/d/meta/${id}`)
       .then(res => {
         if (res.status !== 200) {
           throw new Error('File does not exist or has expired.');
@@ -35,19 +36,7 @@ const Download = ({ location }) => {
       .catch(err => {
         setFileError(err);
       })
-
-    // For randomly generated keys (not supported yet!)
-    // if (location.hash) {
-    //   const hash = location.hash.slice(1);
-    //   setDecryptionKey(hash);
-    // }
   }, []);
-
-
-  // const next = (fileMetadata) => {
-  //   setFileMetadata(fileMetadata);
-  //   setStep(step + 1);
-  // };
 
   // 1. Check URL. File exists ? proceed : error.
   // 2. Check key required, take user input if needed. Attempt to decrypt fileMetadata. Success ? proceed : error.
@@ -78,18 +67,18 @@ const Download = ({ location }) => {
         }
         {
           (fileMetadata && decryptionKey) &&
-          <DownloadFile
-            file={fileMetadata}
-            downloadUrl={`http://localhost:3000/download/${fileId}`}
-          />
+          <>
+            <FileInfo file={fileMetadata} />
+            <DownloadOptions
+              file={fileMetadata}
+              decryptionKey={decryptionKey}
+              downloadUrl={`http://localhost:3000/download/${fileId}`}
+            />
+          </>
         }
       </article>
     </motion.section>
   );
 };
-
-// { fileMetadata && key &&
-//   <DownloadFile fileMetadata={fileMetadata} key={decryptionKey} fileId=fileId />
-// }
 
 export default Download;

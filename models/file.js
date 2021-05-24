@@ -38,7 +38,8 @@ const fileSchema = new Schema({
 // fileSchema.index({ expireAfterSeconds: 30 })
 
 fileSchema.virtual('downloadUrl').get(function(){
-  return `http://localhost:3000/d/${this._id}`;
+  // return `http://localhost:3000/d/${this._id}`;
+  return `${process.env.DOMAIN}/d/${this._id}`;
 });
 
 fileSchema.virtual('filepath').get(function(){

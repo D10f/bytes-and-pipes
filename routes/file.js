@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const auth = require('../middleware/auth');
-const uploader = require('../middleware/uploader/uploader');
+const uploader = require('../middleware/uploader');
 const File = require('../models/file');
 const convertBytes = require('../utils/convertbytes');
 
@@ -31,7 +31,7 @@ router.post('/upload/:filename/:currentChunk', uploader, async (req, res) => {
   }
 });
 
-router.put('/upload/meta/:id', async (req, res) => {
+router.put('/u/meta/:id', async (req, res) => {
   try {
     const file = await File.findById(req.params.id);
 
@@ -60,12 +60,14 @@ router.get('/download/:id', async (req, res) => {
     const reader = fs.createReadStream(file.filepath);
     reader.pipe(res);
 
+    // delete file
+
   } catch (err) {
     res.status(400).send(err.message);
   }
 });
 
-router.get('/download/meta/:id', async (req, res) => {
+router.get('/d/meta/:id', async (req, res) => {
   try {
     const file = await File.findById(req.params.id);
 

@@ -36,11 +36,6 @@ const Footer = () => {
               <button className="footer__link">Terms And Conditions</button>
             </Link>
           </li>
-          <li className="footer__item">
-            <Link tabIndex="-1" to="/d/123ako" >
-              <button className="footer__link">Download Test</button>
-            </Link>
-          </li>
         </ul>
       </nav>
     </motion.footer>

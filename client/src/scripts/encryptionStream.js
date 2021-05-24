@@ -1,5 +1,5 @@
 import { deriveEncryptionKey, encryptData, sha256sum } from './crypto';
-import { setError } from '../redux/actions/error';
+// import { setError } from '../redux/actions/error';
 
 const encryptionStream = async (file, password, authToken, setError, setUrl) => {
   // Upload in chunks of 10MB, and total chunks to upload
@@ -7,9 +7,12 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
   const totalChunks = Math.ceil(file.size / chunkSize);
   let currentChunk = 1;
 
-  // Generate random salt, and encryption key
+  // Generate random salt and encryption key
   const salt = crypto.getRandomValues(new Uint8Array(32));
   const key = await deriveEncryptionKey(password, salt);
+
+  // Also random filename to avoid overwrites in the server
+  const filename = await sha256sum(`${file.name + Date.now()}`);
 
   const requestOptions = {
     method: 'POST',
@@ -21,8 +24,6 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
       // "Authorization": `Bearer ${authToken}`
     }
   };
-
-  const filenameHash = await sha256sum(file.name);
 
   const pipe = (...fns) => data => fns.reduce((val, fn) => fn(val), data);
   pipe(reader, encrypter, uploader)(file);
@@ -53,7 +54,7 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
       for await (const chunk of stream()) {
 
         requestOptions['body'] = chunk;
-        const endpoint = `http://localhost:3000/upload/${filenameHash}/${currentChunk}`;
+        const endpoint = `http://localhost:3000/upload/${filename}/${currentChunk}`;
 
         const res = await fetch(endpoint, requestOptions);
 
@@ -74,7 +75,7 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
 
           requestOptions['method'] = 'PUT';
           requestOptions['body'] = encryptedMetadata;
-          await fetch(`http://localhost:3000/upload/meta/${id}`, requestOptions);
+          await fetch(`http://localhost:3000/u/meta/${id}`, requestOptions);
 
           setUrl(url);
         }

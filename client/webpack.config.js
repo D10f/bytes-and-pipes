@@ -7,9 +7,9 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 class RunAfterCompile{
   apply(compiler){
-    compiler.hooks.done.tap('Copy serviceWorker.js', function(){
+    compiler.hooks.done.tap('Copy public files', function(){
       ['serviceWorker.js', 'idb-keyval.js'].forEach(file => {
-        fs.copyFile(`./public/${file}`, `./dist/${file}`, (err) => {
+        fs.copyFile(`./public/${file}`, `../dist/${file}`, (err) => {
           if (err) throw err;
         });
       });
@@ -42,7 +42,7 @@ module.exports = {
   entry: './src/app.js',
   output: {
     filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '..', 'dist'),
     assetModuleFilename: 'images/[name][ext][query]'
   },
   module: {

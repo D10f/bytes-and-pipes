@@ -1,4 +1,6 @@
-importScripts('/idb-keyval.js');
+// importScripts('/idb-keyval.js'); // exposes idbKeyval to SW scope
+
+let key, url, file;
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -11,32 +13,47 @@ self.addEventListener('activate', () => {
 });
 
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-  console.log(typeof url);
-  console.log(event.request.url);
-  event.respondWith(async function(){
-    if (event.request.url.startsWith('http://localhost:3000/download/')) {
-      return downloadStream(url, event);
-    }
-  }());
+  if (event.request.url.startsWith('http://localhost:3000/download/')) {
+    event.respondWith(async function(){
+      return downloadStream(event.request.url, event);
+    }());
+  }
 });
 
+self.addEventListener('message', event => {
+  key  = event.data.key;
+  url  = event.data.downloadUrl;
+  file = event.data.file;
+});
+
+/**
+* Downloads a given resource performing on-the-fly decryption.
+* @param  {string}    url   The url of the destination resource
+* @param  {object}    event Automatic event parameter coming from the Service Worker
+* @return {Response}        A Response object containing the decryption stream
+*/
 async function downloadStream(url, event) {
 
   const resource = await fetch(url);
   const slicedStream = sliceStream(resource.body);
   const decryptedStream = decryptionStream(slicedStream);
 
+  // 'Accept-Ranges': 'bytes',
   const headers = {
-    'Accept-Ranges': 'bytes',
-    'Content-Disposition': `attachment; filename=${Math.random()}; filename*=${Math.random()}`,
-    'Content-Type': 'application/octet-stream',
+    'Content-Type': 'application/octet-stream; charset=utf-8',
+    'Content-Disposition': `attachment; filename="${file.name}"; filename*="${file.name}"`,
+    'Content-Length': file.size,
     'X-Content-Type-Options': 'nosniff'
   };
 
   return new Response(decryptedStream, headers);
 }
 
+/**
+* Produces a readable stream of same-sized chunks of data
+* @param  {ReadableStream}  readable  Stream of data e.g., network request
+* @return {ReadableStream}            Another readable stream with chunks of predictable size
+*/
 function sliceStream(readable) {
   const reader = readable.getReader();
   let chunkSize, offset, buffer;
@@ -49,7 +66,6 @@ function sliceStream(readable) {
     },
 
     async pull(controller) {
-      // for await (const chunk of reader.read()) {
       while (true) {
 
         const { value: chunk, done } = await reader.read();
@@ -99,6 +115,11 @@ function sliceStream(readable) {
   });
 };
 
+/**
+* Transforms an input readable stream of data by decrypting it's content
+* @param  {ReadableStream}  readable  Stream of data e.g., network request
+* @return {ReadableStream}            Another readable stream of unencrypted data
+*/
 function decryptionStream(readable) {
   const reader = readable.getReader();
 
@@ -114,8 +135,7 @@ function decryptionStream(readable) {
         if (done) {
           return controller.close();
         }
-
-        const decryptedChunk = await decryptData(chunk);
+        const decryptedChunk = await decryptData(chunk, key);
         controller.enqueue(decryptedChunk);
       }
     },
@@ -125,47 +145,61 @@ function decryptionStream(readable) {
   });
 };
 
-async function deriveKey(salt = crypto.getRandomValues(new Uint8Array(32))) {
-
-  const encodedPassword = new TextEncoder().encode('watermelon');
+/**
+* Creates an cryptographic key used for decryption
+* @param  {string}      password  User input used to derive the encryption key
+* @param  {Uint8Array}  salt      Array of random values used to derive the key
+* @return {CryptoKey}             Cryptographic key used for decryption
+*/
+async function deriveDecryptionKey(password, salt) {
 
   const keyMaterial = await crypto.subtle.importKey(
-    "raw",
-    encodedPassword,
-    "PBKDF2",
+    'raw',
+    new TextEncoder().encode(password),
+    'PBKDF2',
     false,
-    ['deriveKey']
+    [ 'deriveKey' ]
   );
 
-  const key = await crypto.subtle.deriveKey(
+  return await crypto.subtle.deriveKey(
     {
-      name: "PBKDF2",
+      name: 'PBKDF2',
       salt: salt,
       iterations: 250000,
-      hash: "SHA-256"
+      hash: 'SHA-256'
     },
     keyMaterial,
-    { name: "AES-GCM", length: 256 },
+    {
+      name: 'AES-GCM',
+      length: 256
+    },
     false,
-    [ "encrypt", "decrypt" ]
+    [ 'decrypt' ]
   );
-
-  return key;
 };
 
-async function decryptData(encryptedBuffer) {
-  const encryptedBytes = new Uint8Array(encryptedBuffer);
+/**
+* Decrypt data
+* @param  {buffer}      plaintext Data to be encrypted in ArrayBuffer, TypedArray of ArrayBufferView form
+* @param  {string}      password  User input used to derive the encryption key
+* @return {Uint8Array}            Decrypted data in unsigned 8-bit array form
+*/
+async function decryptData(ciphertext, key) {
 
-  const salt = encryptedBytes.slice(0, 32);
-  const iv = encryptedBytes.slice(32, 32 + 16);
-  const data = encryptedBytes.slice(32 + 16);
+  const salt            = ciphertext.slice(0, 32);
+  const iv              = ciphertext.slice(32, 32 + 16);
+  const encryptedBytes  = ciphertext.slice(32 + 16);
 
-  const key = await deriveKey(salt);
-  const decrypted = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
+  // const key = await deriveDecryptionKey(password, salt);
+
+  const decryptedBuffer = await crypto.subtle.decrypt(
+    {
+      name: 'AES-GCM',
+      iv
+    },
     key,
-    data
+    encryptedBytes
   );
 
-  return new Uint8Array(decrypted);
+  return new Uint8Array(decryptedBuffer);
 };

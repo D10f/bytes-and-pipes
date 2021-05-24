@@ -45,29 +45,6 @@ const Header = ({ user, error, logout, url }) => {
           {title}
         </motion.h1>
       </Link>
-      <nav className="header__nav">
-        <ul className="header__menu">
-          { user ?
-            <>
-              <li className="header__item">
-                <span>{user.username}</span>
-              </li>
-              <li className="header__item">
-                <span>{user.storage}</span>
-              </li>
-              <li className="header__item">
-                <button onClick={handleClick} className="header__link">Logout</button>
-              </li>
-            </>
-            :
-            <li className="header__item">
-              <Link to="/login" tabIndex="-1">
-                <button className="header__link">Login</button>
-              </Link>
-            </li>
-          }
-        </ul>
-      </nav>
     </motion.header>
   );
 };
@@ -83,3 +60,27 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
+
+// <nav className="header__nav">
+// <ul className="header__menu">
+// { user ?
+//   <>
+//   <li className="header__item">
+//   <span>{user.username}</span>
+//   </li>
+//   <li className="header__item">
+//   <span>{user.storage}</span>
+//   </li>
+//   <li className="header__item">
+//   <button onClick={handleClick} className="header__link">Logout</button>
+//   </li>
+//   </>
+//   :
+//   <li className="header__item">
+//   <Link to="/login" tabIndex="-1">
+//   <button className="header__link">Login</button>
+//   </Link>
+//   </li>
+// }
+// </ul>
+// </nav>
