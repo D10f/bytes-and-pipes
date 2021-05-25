@@ -48,9 +48,13 @@ const Download = ({ location }) => {
       initial="initial"
       animate="visible"
       exit="initial"
-      className="download"
     >
-      <article className="download__step download__step--active">
+      <motion.article
+        initial="initial"
+        animate="visible"
+        exit="initial"
+        className="download"
+      >
         { !fileMetadata && (
           fileError
             ? <p>Something went wrong... {fileError}</p>
@@ -76,7 +80,7 @@ const Download = ({ location }) => {
             />
           </>
         }
-      </article>
+      </motion.article>
     </motion.section>
   );
 };

@@ -1,8 +1,8 @@
 import { deriveEncryptionKey, encryptData, sha256sum } from './crypto';
 // import { setError } from '../redux/actions/error';
 
-const encryptionStream = async (file, password, authToken, setError, setUrl) => {
-  // Upload in chunks of 10MB, and total chunks to upload
+const encryptionStream = async (file, password, authToken, setError, setProgress, setUrl) => {
+  // Upload in chunks of 1MB, and total chunks to upload
   const chunkSize = 1024 * 1024 * 10;
   const totalChunks = Math.ceil(file.size / chunkSize);
   let currentChunk = 1;
@@ -65,11 +65,20 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
           return;
         }
 
+        setProgress((currentChunk * 100) / totalChunks);
+        currentChunk++;
+
         if (res.status === 201) {
           const { url, id } = await res.json();
 
           // Encrypt metadata: name, size and type as JSON string.
-          const fileMetadata = JSON.stringify({ name: file.name, size: file.size, type: file.type });
+          const fileMetadata = JSON.stringify({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            chunkSize
+          });
+
           const encoded = new TextEncoder().encode(fileMetadata);
           const encryptedMetadata = await encryptData(encoded, key, salt);
 
@@ -78,9 +87,8 @@ const encryptionStream = async (file, password, authToken, setError, setUrl) => 
           await fetch(`http://localhost:3000/u/meta/${id}`, requestOptions);
 
           setUrl(url);
+          setProgress(100);
         }
-
-        currentChunk++;
       }
     }
     _uploader();

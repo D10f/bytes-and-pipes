@@ -6,6 +6,7 @@ import { setUrl } from '../redux/actions/url';
 import FileInfo from './FileInfo';
 import FilePicker from './FilePicker';
 import PasswordInput from './PasswordInput';
+import ProgressOverlay from './ProgressOverlay';
 import encryptionStream from '../scripts/encryptionStream';
 
 const pageVariant = {
@@ -22,7 +23,9 @@ const pageVariant = {
 const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
 
   const [dragged, setDragged] = useState(false);
-  const [password, setPassword] = useState('watermelon');
+  const [password, setPassword] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
 
   const handleDrop = (e) => {
@@ -52,6 +55,16 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
     setDragged(false);
   };
 
+  const reset = () => {
+    setDragged(false);
+    setPassword('');
+    setProgress(0);
+    setLoading(false);
+    setFile(null);
+    setUrl('');
+    setError('');
+  };
+
   const handleFileUpload = (e) => {
     e.preventDefault();
 
@@ -65,7 +78,9 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
       return;
     }
 
-    encryptionStream(file, password, authToken, setError, (url) => {
+    setLoading(true);
+
+    encryptionStream(file, password, authToken, setError, setProgress, (url) => {
       setFile(null);
       setPassword('');
       setError('');
@@ -93,6 +108,7 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
         passwordSuggestions={true}
       /> }
       { file && <button className="upload-form__btn" type="submit">Upload</button> }
+      { loading && <ProgressOverlay progress={progress} reset={reset} action="upload" />}
     </motion.form>
   );
 };

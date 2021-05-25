@@ -1,5 +1,3 @@
-// importScripts('/idb-keyval.js'); // exposes idbKeyval to SW scope
-
 let key, url, file;
 
 self.addEventListener('install', () => {

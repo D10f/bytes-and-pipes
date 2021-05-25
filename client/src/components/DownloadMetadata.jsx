@@ -7,7 +7,7 @@ import { decryptData } from '../scripts/crypto';
 
 const DownloadMetadata = ({ fileMetadata, setFileMetadata, decryptionKey, setKey, path, setError }) => {
 
-  const [password, setPassword] = useState('watermelon');
+  const [password, setPassword] = useState('');
 
   // useEffect(() => {
   //   if (decryptionKey) {
@@ -35,7 +35,7 @@ const DownloadMetadata = ({ fileMetadata, setFileMetadata, decryptionKey, setKey
 
   return (
     <>
-      <h3 className="download__step-title mb2">
+      <h3 className="download__title mb2">
       {
         decryptionKey ? 'Extracting decryption key...' : 'Enter a password to decrypt this file'
       }

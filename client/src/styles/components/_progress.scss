@@ -1,0 +1,45 @@
+@use '../abstract/variables';
+@use '../abstract/mixins';
+
+.progress {
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  font-family: inherit;
+  color: variables.$color-primary;
+  background: rgba(variables.$color-light, 0.9);
+
+  &__title,
+  &__subtitle {
+    text-align: center;
+  }
+
+  &__title {
+    display: block;
+    font-size: 4rem;
+
+    @include mixins.responsive(landscape) {
+      font-size: 3rem;
+    }
+    @include mixins.responsive(tablet) {
+      font-size: 2rem;
+    }
+  }
+
+  &__subtitle {
+    display: inline-block;
+    font-size: 1.6rem;
+    margin-top: 2rem;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}

@@ -27,19 +27,16 @@ const SuccessMsg = ({ msg, setUrl  }) => {
       animate="visible"
       className="success"
     >
-      <a
-        className="success__msg"
-        href={msg}
-      >{msg}
-      </a>
-      <span
-        className="success__close"
-        onClick={() => setUrl('')}
-      >&times;
-      </span>
+      <p className="success__msg">{msg}</p>
     </motion.aside>
   )
 };
+
+// <span
+//   className="success__close"
+//   onClick={() => setUrl('')}
+// >&times;
+// </span>
 
 const mapDispatchToProps = (dispatch) => ({
   setUrl: (url) => dispatch(setUrl(url))

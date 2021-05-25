@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { setError } from '../redux/actions/error';
-import WarningMsg from './WarningMsg';
 
 const DownloadStream = ({ isFirefox, file, decryptionKey, downloadUrl, setError }) => {
 
@@ -15,6 +14,10 @@ const DownloadStream = ({ isFirefox, file, decryptionKey, downloadUrl, setError 
   }, []);
 
   const downloadAsStream = () => {
+    navigator.serviceWorker.addEventListener('message', event => {
+      console.log(event);
+    });
+
     setTimeout(() => {
       navigator.serviceWorker.controller.postMessage({
         key: decryptionKey,
@@ -33,7 +36,6 @@ const DownloadStream = ({ isFirefox, file, decryptionKey, downloadUrl, setError 
   return (
     <>
       <p>Stream</p>
-      <p>{isFirefox ? 'firefox' : 'chromium'}</p>
       <h3 className="download__step-title mb2">Your download will start shortly...</h3>
       <a
         ref={downloadBtn}

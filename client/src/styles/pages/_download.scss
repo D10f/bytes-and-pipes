@@ -3,34 +3,20 @@
 @use 'sass:color';
 
 .download {
-  // display: grid;
-  // gap: 3rem;
-  // grid-template-columns: repeat(3, 1fr);
-  // justify-content: center;
-  // align-items: center;
+  position: relative;
   min-height: 50%;
   z-index: 9;
   margin: 5rem 2rem;
+  border-radius: 5px;
+  text-align: center;
+  align-self: stretch;
+  padding: 5rem;
+  border: 3px dashed variables.$color-dark;
+  color: variables.$color-dark;
+  // border: 2px dashed variables.$color-gray;
+  // color: variables.$color-gray;
 
-  &__step {
-    border-radius: 5px;
-    border: 2px dashed variables.$color-gray;
-    text-align: center;
-    align-self: stretch;
-    color: variables.$color-gray;
-    padding: 5rem;
-
-    &--active {
-      border: 3px dashed variables.$color-dark;
-      color: variables.$color-dark;
-    }
-  }
-
-  &__step-title {
+  &__title {
     margin-top: 2rem;
-  }
-
-  &__step-link {
-    background: red;
   }
 }

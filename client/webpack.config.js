@@ -8,7 +8,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 class RunAfterCompile{
   apply(compiler){
     compiler.hooks.done.tap('Copy public files', function(){
-      ['serviceWorker.js', 'idb-keyval.js'].forEach(file => {
+      ['serviceWorker.js'].forEach(file => {
         fs.copyFile(`./public/${file}`, `../dist/${file}`, (err) => {
           if (err) throw err;
         });
@@ -97,7 +97,6 @@ module.exports = {
       aggregateTimeout: 1000,
       ignored: /node_modules/
     },
-    https: true,
     hot: true
   }
 };
