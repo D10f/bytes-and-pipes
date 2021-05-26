@@ -3,7 +3,7 @@ import { deriveEncryptionKey, encryptData, sha256sum } from './crypto';
 
 const encryptionStream = async (file, password, authToken, setError, setProgress, setUrl) => {
   // Upload in chunks of 1MB, and total chunks to upload
-  const chunkSize = 1024 * 1024 * 10;
+  const chunkSize = 1024 * 1024 * 1;
   const totalChunks = Math.ceil(file.size / chunkSize);
   let currentChunk = 1;
 

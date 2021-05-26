@@ -30,10 +30,10 @@ const ProgressOverlay = ({ progress, reset, action }) => {
           <span className="progress__title">{percentage}</span>
         </h3>
       )}
-      { action === 'upload' && progress >= 100 && (
+      { progress >= 100 && (
         <h3>
-          <span className="progress__title">Upload Complete!</span>
-          <span className="progress__subtitle" onClick={reset}>Upload another file?</span>
+          <span className="progress__title">{ action === 'upload' ? 'Upload Complete!' : 'Download Complete!' }</span>
+          { action === 'upload' && <span className="progress__subtitle" onClick={reset}>Upload another file?</span> }
         </h3>
       )}
     </motion.div>

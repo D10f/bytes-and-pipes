@@ -11,7 +11,7 @@ const dropdownAnimation = {
 
 const ErrorMsg = ({ error, setError }) => {
 
-  setTimeout(() => setError(null), 4500);
+  setTimeout(() => setError(null), 6000);
 
   return (
     <motion.aside

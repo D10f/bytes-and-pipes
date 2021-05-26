@@ -1,3 +1,5 @@
+//https://github.com/w3c/ServiceWorker/issues/882
+
 let key, url, file;
 
 self.addEventListener('install', () => {
@@ -12,9 +14,7 @@ self.addEventListener('activate', () => {
 
 self.addEventListener('fetch', event => {
   if (event.request.url.startsWith('http://localhost:3000/download/')) {
-    event.respondWith(async function(){
-      return downloadStream(event.request.url, event);
-    }());
+    event.respondWith(downloadStream(event.request.url, event));
   }
 });
 
@@ -30,13 +30,8 @@ self.addEventListener('message', event => {
 * @param  {object}    event Automatic event parameter coming from the Service Worker
 * @return {Response}        A Response object containing the decryption stream
 */
-async function downloadStream(url, event) {
+function downloadStream(url, event) {
 
-  const resource = await fetch(url);
-  const slicedStream = sliceStream(resource.body);
-  const decryptedStream = decryptionStream(slicedStream);
-
-  // 'Accept-Ranges': 'bytes',
   const headers = {
     'Content-Type': 'application/octet-stream; charset=utf-8',
     'Content-Disposition': `attachment; filename="${file.name}"; filename*="${file.name}"`,
@@ -44,7 +39,15 @@ async function downloadStream(url, event) {
     'X-Content-Type-Options': 'nosniff'
   };
 
-  return new Response(decryptedStream, headers);
+  return new Promise((resolve, reject) => {
+    event.waitUntil(async function(){
+      const client = await clients.get(event.clientId);
+      const response = await fetch(url);
+      const slicedStream = sliceStream(response.body);
+      const decryptedStream = decryptionStream(slicedStream, client);
+      resolve(new Response(decryptedStream, headers));
+    }());
+  });
 }
 
 /**
@@ -58,7 +61,7 @@ function sliceStream(readable) {
 
   return new ReadableStream({
     start(controller) {
-      chunkSize = (1024 ** 2) * 10 + 64;
+      chunkSize = (1024 ** 2) * 1 + 64;
       buffer = new Uint8Array(chunkSize);
       console.log('starting slicing...');
     },
@@ -116,10 +119,12 @@ function sliceStream(readable) {
 /**
 * Transforms an input readable stream of data by decrypting it's content
 * @param  {ReadableStream}  readable  Stream of data e.g., network request
+* @param  {object}          event     The fetch event contains the clientId to send postmessages back to the main thread
 * @return {ReadableStream}            Another readable stream of unencrypted data
 */
-function decryptionStream(readable) {
+function decryptionStream(readable, client) {
   const reader = readable.getReader();
+  let bytes = 0;
 
   return new ReadableStream({
     async start(controller) {
@@ -133,8 +138,12 @@ function decryptionStream(readable) {
         if (done) {
           return controller.close();
         }
+
         const decryptedChunk = await decryptData(chunk, key);
         controller.enqueue(decryptedChunk);
+
+        bytes += chunk.length;
+        client.postMessage(bytes * 100 / file.size);
       }
     },
     cancel(reason) {

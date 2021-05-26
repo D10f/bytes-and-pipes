@@ -8,7 +8,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 class RunAfterCompile{
   apply(compiler){
     compiler.hooks.done.tap('Copy public files', function(){
-      ['serviceWorker.js'].forEach(file => {
+      ['serviceWorkerBlob.js', 'serviceWorkerStream.js'].forEach(file => {
         fs.copyFile(`./public/${file}`, `../dist/${file}`, (err) => {
           if (err) throw err;
         });
