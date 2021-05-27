@@ -12,20 +12,30 @@ const stat = promisify(fs.stat);
 
 const uploader = async (req, res, next) => {
   try {
-    if (!req.header('Content-parts') || !req.header('Content-filesize')){
+    const { filename, currentChunk } = req.params;
+    const contentParts    = req.header('Content-parts');
+    const contentFilesize = req.header('Content-filesize');
+
+    if (!contentParts || !contentFilesize){
       throw new Error('Missing required headers.');
     }
 
-    if (req.header('Content-filesize') > 1024 * 1024 * 1024) {
+    if (contentFilesize > 1024 * 1024 * 1024) {
       throw new Error('Files larger than 1GB are not allowed.')
     }
 
-    // if (req.header('Content-filesize') > req.user.availableSpace){
-    if (req.header('Content-filesize') > 1024 * 1024 * 1024){
-      throw new Error('Not enough storage space available');
+    // Each chunk containss additional 64 bytes: 32 salt, 16 IV and 16 AEAD
+    if (req.body.length > contentFilesize + (contentParts * 64)) {
+      throw new Error('File is larger than reported size.');
     }
 
-    const { filename, currentChunk } = req.params;
+    // if (contentFilesize > req.user.availableSpace){
+    //   throw new Error('Not enough storage space available');
+    // }
+
+    if (currentChunk > contentParts) {
+      throw new Error('Invalid number of content parts.');
+    }
 
     // Define temporary and destination directories
     const tempDir = path.resolve(os.tmpdir(), filename);
@@ -43,7 +53,7 @@ const uploader = async (req, res, next) => {
       const files = await readdir(tempDir);
 
       // If not all chunks have uploaded, return
-      if (files.length !== Number(req.header('Content-parts'))) {
+      if (files.length !== Number(contentParts)) {
         return res.send({ uploaded: currentChunk });
       }
 

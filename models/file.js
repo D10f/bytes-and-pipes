@@ -1,12 +1,10 @@
-const mongoose = require('mongoose')
-const { promisify } = require('util')
-const fs = require('fs')
-const User = require('./user')
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
+const { promisify } = require('util');
+const fs = require('fs');
+const User = require('./user');
+const Schema = mongoose.Schema;
 
-const deleteFile = promisify(fs.unlink);
-// const readdir = promisify(fs.readdir)
-// const stat = promisify(fs.stat)
+const unlink = promisify(fs.unlink);
 
 const fileSchema = new Schema({
   name: {
@@ -32,18 +30,25 @@ const fileSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: false,
     ref: 'User'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: '24h'
   }
 }, { timestamps: true });
 
-// fileSchema.index({ expireAfterSeconds: 30 })
-
 fileSchema.virtual('downloadUrl').get(function(){
-  // return `http://localhost:3000/d/${this._id}`;
   return `${process.env.DOMAIN}/d/${this._id}`;
 });
 
 fileSchema.virtual('filepath').get(function(){
   return `${this.directory}/${this.name}`;
+});
+
+fileSchema.pre('remove', async function(next) {
+  unlink(`${this.directory}/${this.name}`); // non-blocking operation but also no need to wait for it
+  next();
 });
 
 const File = mongoose.model('Files', fileSchema);
