@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import encryptionStrategy from '../../../../assets/encryption_strategy.webp';
 
 const pageVariant = {
   initial: {
@@ -32,9 +33,10 @@ const About = () => (
     <p>Please understand that these restrictions may change in the future without prior notice, in order to prevent spam, abuse and to keep costs of running servers under control.</p>
 
     <h2 id="encryption-strategy">Encryption strategy</h2>
+    <img style={{ width: '100%' }} src={encryptionStrategy} loading="lazy" alt="Diagram showing the difference in encryption strategies" />
     <p>You will be prompted to enter a password before uploading any file. Your file will be encrypted regardless whether you enter a password or not, it will just use a different process that will ultimately produce a different download link. Choose whatever method you feel most comfortable with.</p>
     <p>Enter a password if you need to share the download link over public channels such public chatrooms or online forums. Only with the correct password you will be able to download the file so your download link does not have to be kept secret. However you will have to figure out a way to share the password with the other party, maybe arrange it in advance or use a secure communication channel.</p>
-    <p>Make sure to choose a strong password to avoid brute-force attacks that may guess it. The input field where you type your password will provide feedback by changing colors, where red means a weak password and green means a strong password.</p>
+    <p>Make sure to choose a strong password to avoid brute-force attacks that may guess it.</p>
     <p>Alternatively you can choose to leave the password field blank. In that case your file will be encrypted with a randomly generated encryption key. This is convenient because the link itself holds the encryption key so no one has to remember any passwords. Use this method if you plan to share the link over channels that you already consider secure.</p>
 
     <h2>Tech Stack</h2>

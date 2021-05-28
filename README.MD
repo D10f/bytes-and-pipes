@@ -14,7 +14,7 @@ You can choose to encrypt your files in one of two ways:
 
 - Randomly generated: an encryption key will be created for you automatically. The resulting download link will include the key so there is no need to remember any secret passwords. Use this method if you want a little more convenience and you plan to share the download link over secure channels.
 
-![Encryption Process](assets/encryptionprocess.png)
+![Encryption Process](assets/encryption_strategy.webp)
 
 ## Upload Stream
 
