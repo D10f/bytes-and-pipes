@@ -22,11 +22,6 @@ const Footer = () => {
             </Link>
           </li>
           <li className="footer__item">
-            <Link to="/how-it-works" tabIndex="-1">
-              <button className="footer__link">How It Works</button>
-            </Link>
-          </li>
-          <li className="footer__item">
             <Link tabIndex="-1" to="/privacy" >
               <button className="footer__link">Privacy Policy</button>
             </Link>

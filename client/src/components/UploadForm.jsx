@@ -73,10 +73,10 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
       return;
     }
 
-    if (!password) {
-      setError('You must type in a password!');
-      return;
-    }
+    // if (!password) {
+    //   setError('You must type in a password!');
+    //   return;
+    // }
 
     setLoading(true);
 
@@ -105,7 +105,6 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
       { file && <PasswordInput
         password={password}
         setPassword={setPassword}
-        passwordSuggestions={true}
       /> }
       { file && <button className="upload-form__btn" type="submit">Upload</button> }
       { loading && <ProgressOverlay progress={progress} reset={reset} action="upload" />}

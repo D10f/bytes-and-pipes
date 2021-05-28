@@ -1,4 +1,6 @@
-%document {
+@use '../abstract/variables';
+
+.document {
   padding: 2rem;
   margin: 0 auto;
   max-width: 80ch;
@@ -7,7 +9,23 @@
     margin: 2rem 0;
   }
 
-  p:last-child {
-    margin-bottom: 2rem;
+  p {
+    margin: 1rem 0;
+
+    &:last-child {
+      margin-bottom: 2rem;
+    }
+  }
+
+  a {
+    color: variables.$color-primary;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  ul {
+    list-style: lower-latin;
   }
 }

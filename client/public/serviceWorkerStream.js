@@ -20,6 +20,7 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('message', event => {
 
+  // Keep service worker alive in FF to allow large downloads.
   if (event.data === 'ping') {
     clients.get(event.clientId).then(client => {
       client.postMessage('pong');

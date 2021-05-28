@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion';
 import UploadForm from '../UploadForm';
-import Step from  '../Step';
 
 const steps = [
   'Select a file',
-  'Choose a strong password',
+  'Choose an encryption strategy',
   'Share the URL'
 ];
 
@@ -39,9 +38,33 @@ const Intro = () => {
         className="intro__header"
       >
         <h2 className="intro__headline">{headline}</h2>
-        {
-          steps.map((text, idx) => <Step key={idx} text={text} step={idx + 1} />)
-        }
+        <motion.p
+          className="intro__step"
+          initial={{ opacity: 0, x: -250 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+        1. Select a file
+        </motion.p>
+
+        <motion.p
+          className="intro__step"
+          initial={{ opacity: 0, x: -250 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+        2. Choose a <a href="http://localhost:3000/about#encryption-strategy" target="_blank">encryption strategy</a>
+        </motion.p>
+
+        <motion.p
+          className="intro__step"
+          initial={{ opacity: 0, x: -250 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.9 }}
+        >
+        3. Share the url
+        </motion.p>
+
       </motion.header>
 
       <UploadForm />

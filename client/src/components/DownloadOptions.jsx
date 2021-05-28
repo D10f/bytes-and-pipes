@@ -31,6 +31,8 @@ const DownloadOptions = ({ file, decryptionKey, downloadUrl }) => {
   const swSupport = 'serviceWorker' in navigator;
   const largeFile = file.size > 104857600;
 
+  console.log(decryptionKey);
+
   if ( swSupport && (isFirefox || largeFile) ) {
     return (
       <DownloadStream

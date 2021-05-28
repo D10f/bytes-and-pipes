@@ -1,15 +1,23 @@
-import { deriveEncryptionKey, encryptData, sha256sum } from './crypto';
-// import { setError } from '../redux/actions/error';
+import {
+  generateShareableUrl,
+  generateEncryptionKey,
+  deriveEncryptionKey,
+  encryptData,
+  sha256sum
+} from './crypto';
 
 const encryptionStream = async (file, password, authToken, setError, setProgress, setUrl) => {
+
   // Upload in chunks of 1MB, and total chunks to upload
   const chunkSize = 1024 * 1024 * 1;
   const totalChunks = Math.ceil(file.size / chunkSize);
   let currentChunk = 1;
 
-  // Generate random salt and encryption key
+  // Generate random salt and obtain encryption key from password, or randomly generated
   const salt = crypto.getRandomValues(new Uint8Array(32));
-  const key = await deriveEncryptionKey(password, salt);
+  const key = password
+    ? await deriveEncryptionKey(password, salt)
+    : await generateEncryptionKey();
 
   // Also random filename to avoid overwrites in the server
   const filename = await sha256sum(`${file.name + Date.now()}`);
@@ -54,8 +62,8 @@ const encryptionStream = async (file, password, authToken, setError, setProgress
       for await (const chunk of stream()) {
 
         requestOptions['body'] = chunk;
-        const endpoint = `http://localhost:3000/upload/${filename}/${currentChunk}`;
 
+        const endpoint = `http://localhost:3000/upload/${filename}/${currentChunk}`;
         const res = await fetch(endpoint, requestOptions);
 
         // If server returns an error, stop streaming
@@ -65,9 +73,11 @@ const encryptionStream = async (file, password, authToken, setError, setProgress
           return;
         }
 
+        // Update progress status
         setProgress((currentChunk * 100) / totalChunks);
         currentChunk++;
 
+        // All chunks have been uploaded
         if (res.status === 201) {
           const { url, id } = await res.json();
 
@@ -86,7 +96,14 @@ const encryptionStream = async (file, password, authToken, setError, setProgress
           requestOptions['body'] = encryptedMetadata;
           await fetch(`http://localhost:3000/u/meta/${id}`, requestOptions);
 
-          setUrl(url);
+          // If password was not provided, extract key in JWT Web format and append to URL
+          if (!password) {
+            const finalUrl = await generateShareableUrl(url, key);
+            setUrl(finalUrl);
+          } else {
+            setUrl(url);
+          }
+
           setProgress(100);
         }
       }

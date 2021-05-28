@@ -1,6 +1,3 @@
-
-/* ABSTRACT */
-
 /* BASE */
 @use './styles/base/base';
 @use './styles/base/typography';
@@ -26,12 +23,4 @@
 
 /* PAGES */
 @use './styles/pages/intro';
-@use './styles/pages/about';
-@use './styles/pages/how-it-works';
-@use './styles/pages/terms';
-@use './styles/pages/privacy';
 @use './styles/pages/download';
-
-/* THEMES */
-
-/* VENDORS */

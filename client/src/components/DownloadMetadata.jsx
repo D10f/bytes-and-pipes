@@ -5,27 +5,34 @@ import PasswordInput from './PasswordInput';
 import Button from './Button';
 import { decryptData } from '../scripts/crypto';
 
-const DownloadMetadata = ({ fileMetadata, setFileMetadata, decryptionKey, setKey, path, setError }) => {
+const DownloadMetadata = ({ fileId, hash, setFileMetadata, setDecryptionKey, setError }) => {
 
-  const [password, setPassword] = useState('');
+  const [metadata, setMetadata] = useState(undefined);
+  const [password, setPassword] = useState(undefined);
 
-  // useEffect(() => {
-  //   if (decryptionKey) {
-  //     // derive key from decryptionKey (location.hash)
-  //     // Decrypt filename
-  //     // Continue with downloading file if success
-  //     // Error out if not (meaning decryption failed due to incorrect crypto key)
-  //   }
-  // }, []);
+  useEffect(() => {
+    fetch(`http://localhost:3000/d/meta/${fileId}`)
+      .then(res => {
+        if (res.status !== 200) {
+          throw new Error('File does not exist or has expired.');
+        }
+        return res.arrayBuffer();
+      })
+      .then(buffer => hash ? decryptMetadata(undefined, buffer) : setMetadata(buffer))
+      .catch(err => {
+        setMetadata(undefined);
+        setPassword(undefined);
+        setFileMetadata(undefined);
+        setError(err);
+      });
+  }, []);
 
-  const decryptMetadata = async (e) => {
-    if (e.target.disabled) return;
-
+  const decryptMetadata = async (e, data) => {
     try {
-      const { decryptedBuffer, key } = await decryptData(fileMetadata, password);
+      const { decryptedBuffer, key } = await decryptData(data || metadata, password, hash);
       const decryptedFileMetadata = new TextDecoder().decode(decryptedBuffer);
       setFileMetadata(JSON.parse(decryptedFileMetadata));
-      setKey(key);
+      setDecryptionKey(key);
     } catch (e) {
       console.error(e);
       setError('Invalid decryption key');
@@ -37,10 +44,10 @@ const DownloadMetadata = ({ fileMetadata, setFileMetadata, decryptionKey, setKey
     <>
       <h3 className="download__title mb2">
       {
-        decryptionKey ? 'Extracting decryption key...' : 'Enter a password to decrypt this file'
+        hash ? 'Extracting decryption key...' : 'Enter a password to decrypt this file'
       }
       </h3>
-      { !decryptionKey && (
+      { !hash && (
         <>
           <PasswordInput password={password} setPassword={setPassword} passwordSuggestions={false} />
           <Button text={'Decrypt'} action={decryptMetadata} />

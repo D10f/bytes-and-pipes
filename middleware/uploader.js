@@ -24,7 +24,7 @@ const uploader = async (req, res, next) => {
       throw new Error('Files larger than 1GB are not allowed.')
     }
 
-    // Each chunk containss additional 64 bytes: 32 salt, 16 IV and 16 AEAD
+    // Each chunk contains additional 64 bytes: 32 salt, 16 IV and 16 AEAD
     if (req.body.length > contentFilesize + (contentParts * 64)) {
       throw new Error('File is larger than reported size.');
     }
@@ -33,9 +33,9 @@ const uploader = async (req, res, next) => {
     //   throw new Error('Not enough storage space available');
     // }
 
-    if (currentChunk > contentParts) {
-      throw new Error('Invalid number of content parts.');
-    }
+    // if (currentChunk > contentParts) {
+    //   throw new Error('Invalid number of content parts.');
+    // }
 
     // Define temporary and destination directories
     const tempDir = path.resolve(os.tmpdir(), filename);

@@ -16,12 +16,12 @@ const DownloadStream = ({ isFirefox, file, decryptionKey, downloadUrl, setError 
 
   const downloadAsStream = () => {
     setTimeout(() => {
+
       navigator.serviceWorker.controller.postMessage({
         key: decryptionKey,
         downloadUrl: downloadUrl,
         file: file,
       });
-
 
       if (isFirefox) {
         downloadBtn.current.download = file.name;
