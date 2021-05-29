@@ -62,7 +62,7 @@ The time it takes to both upload and download files will vary depending on your 
 
 These are some of the projects and resources that have inspired and helped me to make Bytes And Pipes.
 
-https://github.com/mozilla/send
+[Firefox Send](https://github.com/mozilla/send)
 
 [Streaming Service Workers: Live Code Session - Supercharged](https://www.youtube.com/watch?v=3Tr-scf7trE)
 
