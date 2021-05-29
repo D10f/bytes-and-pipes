@@ -17,6 +17,10 @@
 
   &__nav {
     margin-left: auto;
+
+    @include mixins.responsive(phone) {
+      margin: 0 auto 2rem auto;
+    }
   }
 
   &__menu {

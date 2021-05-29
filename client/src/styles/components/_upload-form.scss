@@ -17,8 +17,12 @@
   flex-direction: column;
 
   @include mixins.responsive(portrait) {
-    min-height: 20vh;
+    min-height: 35vh;
     padding: 2rem;
+  }
+
+  @include mixins.responsive(phone) {
+    min-height: 30vh;
   }
 
   &--dragged {

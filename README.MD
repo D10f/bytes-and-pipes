@@ -20,7 +20,7 @@ You can choose to encrypt your files in one of two ways:
 
 While modern computers have powerful hardware there is still a limit of what they can do, and this limit becomes more obvious the larger the file we're trying to encrypt. For this reason files need to be split into smaller chunks of data in order to encrypt them efficiently.
 
-Everything starts with the File API that reads the selected file. It's then converted into the byte representation and sliced down to the desired size (1MB by default). Each chunk is piped into an encryption function that is finally dispatched over the network to the server.
+Everything starts with the File API that reads the selected file. It's then converted into the byte representation and sliced down to the desired size. Each chunk is piped into an encryption function that is finally dispatched over the network to the server.
 
 Because streaming requests using the Fetch API is still not possible I built my own encryption stream using asynchronous generators (`/client/src/scripts/encryptionStream.js`):
 
@@ -31,7 +31,32 @@ pipe(reader, encrypter, uploader)(file);
 
 ## Download Stream
 
-Coming soon
+The download process works almost the same only in the reverse direction. The file is streamed down to your device and when enough bytes that conform to chunk size that was used during encryption have been received, they are decrypted. This all happens on the fly as the file is saved in your computer.
+
+The technical aspect is a little different however, because we need to use a Service Worker to intercept the download request and process it on the fly to apply the steps just described (`/client/public/serviceWorkerStream.js`):
+
+```js
+event.waitUntil(async function(){
+  const response = await fetch(url);
+  const slicedStream = sliceStream(response.body);
+  const decryptedStream = decryptionStream(slicedStream);
+  resolve(new Response(decryptedStream, headers));
+}());
+```
+
+> NOTE: For the time being while I clean up the code and fix some bugs there are two separate serviceWorker files.
+
+## Benchmarks
+
+The time it takes to both upload and download files will vary depending on your own network connection, whether you're using a VPN, etc. This benchmarks are not obtained using a thorough or scientific approach at all, but are shown here to serve as an approximation as to what to expect when using Bytes And Pipes.
+
+| File Size | Upload     | Download   |
+| :-------: | :--------: | :--------: |
+| 917MB     | 18 minutes | 17 minutes |
+| 545MB     | 11 minutes |  9 minutes |
+| 136MB     |  4 minutes |  3 minutes |
+
+> NOTE: The time it takes for both uploads and downloads has been surprisingly consistent and similar but you mileage may vary.
 
 ## Credits
 

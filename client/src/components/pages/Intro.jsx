@@ -44,7 +44,7 @@ const Intro = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
         >
-        1. Select a file
+        1. Select a file of up to 1GB.
         </motion.p>
 
         <motion.p
@@ -53,7 +53,7 @@ const Intro = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.6 }}
         >
-        2. Choose a <a href="http://localhost:3000/about#encryption-strategy" target="_blank">encryption strategy</a>
+        2. Choose a <a href="http://localhost:3000/about#encryption-strategy" target="_blank">encryption strategy</a>.
         </motion.p>
 
         <motion.p
@@ -62,7 +62,7 @@ const Intro = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.9 }}
         >
-        3. Share the url
+        3. Share the url.
         </motion.p>
 
       </motion.header>

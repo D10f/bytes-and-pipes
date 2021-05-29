@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { motion } from 'framer-motion';
 import { setError } from '../redux/actions/error';
 import { setUrl } from '../redux/actions/url';
+import Button from './Button';
 import FileInfo from './FileInfo';
 import FilePicker from './FilePicker';
 import PasswordInput from './PasswordInput';
@@ -23,6 +24,7 @@ const pageVariant = {
 const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
 
   const [dragged, setDragged] = useState(false);
+  const [passwordStrategy, setPasswordStrategy] = useState(false);
   const [password, setPassword] = useState('');
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -65,6 +67,10 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
     setError('');
   };
 
+  const togglePasswordStrategy = () => {
+    setPasswordStrategy(!passwordStrategy);
+  };
+
   const handleFileUpload = (e) => {
     e.preventDefault();
 
@@ -73,10 +79,10 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
       return;
     }
 
-    // if (!password) {
-    //   setError('You must type in a password!');
-    //   return;
-    // }
+    if (passwordStrategy && !password) {
+      setError('You must type in a password!');
+      return;
+    }
 
     setLoading(true);
 
@@ -102,11 +108,11 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
     >
       <FileInfo file={file} />
       <FilePicker file={file} setFile={setFile} />
-      { file && <PasswordInput
+      { file && passwordStrategy && <PasswordInput
         password={password}
         setPassword={setPassword}
       /> }
-      { file && <button className="upload-form__btn" type="submit">Upload</button> }
+      { file && <Button text="Upload" />}
       { loading && <ProgressOverlay progress={progress} reset={reset} action="upload" />}
     </motion.form>
   );

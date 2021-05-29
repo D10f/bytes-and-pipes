@@ -41,7 +41,7 @@ const Terms = () => (
     <p>In addition to other terms as set forth in the Agreement, you are prohibited from using the Website and Services or Content:</p>
     <ul>
       <li>for any unlawful, immoral or obscene purpose.</li>
-      <li>to upload or transmit viruses or any other type of malicious code that will or may be used in any way that will affect the functionality or</li> operation of the Website and Services, third party products and services, or the Internet.
+      <li>to upload or transmit viruses or any other type of malicious code that will or may be used in any way that will affect the functionality or operation of the Website and Services, third party products and services, or the Internet.</li>
       <li>to violate any international, federal, provincial or state regulations, rules, laws, or local ordinances.</li>
       <li>to interfere with or circumvent the security features of the Website and Services, third party products and services, or the Internet.</li>
       <li>to infringe upon or violate intellectual property rights of others.</li>

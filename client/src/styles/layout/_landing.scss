@@ -14,7 +14,7 @@
   padding: 1rem 15rem;
 
   @include mixins.responsive(portrait) {
-    padding: 1rem 10rem;
+    padding: 1rem 5rem;
   }
   @include mixins.responsive(phone) {
     // justify-content: center;

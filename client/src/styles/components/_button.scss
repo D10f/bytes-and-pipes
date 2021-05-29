@@ -42,7 +42,8 @@
   border: none;
   border-radius: 5px;
   border-bottom: 2px solid variables.$color-primary-dark;
-  background-image: variables.$background-gradient;
+  // background-image: variables.$background-gradient;
+  background: variables.$color-primary-light;
   box-shadow: variables.$shadow;
   padding: 1rem 2rem;
   appearance: none;

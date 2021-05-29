@@ -13,6 +13,10 @@ class RunAfterCompile{
           if (err) throw err;
         });
       });
+
+      fs.copyFile('../assets/favicon.png', '../dist/images/favicon.png', err => {
+        if (err) throw err;
+      });
     });
   }
 };
