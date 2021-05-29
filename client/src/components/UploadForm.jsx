@@ -112,7 +112,18 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
         password={password}
         setPassword={setPassword}
       /> }
-      { file && <Button text="Upload" />}
+      { file && (
+        <div className="upload-form__control-group">
+          <Button text="Upload" />
+          <span>or</span>
+          <span
+            className="upload-form__switch"
+            onClick={togglePasswordStrategy}
+          >
+            {passwordStrategy ? 'Encrypt without password' : 'Encrypt with password' }
+          </span>
+        </div>
+      )}
       { loading && <ProgressOverlay progress={progress} reset={reset} action="upload" />}
     </motion.form>
   );

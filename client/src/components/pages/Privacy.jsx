@@ -32,6 +32,9 @@ const Privacy = () => (
     <p>Uploaded files are automatically deleted after they're downloaded or after 24 hours, whichever happens first.</p>
     <p>Any logs generated as a result of your visit or errors produced while using our service are deleted after 30 days.</p>
     <p>No data of any kind is shared with any third parties.</p>
+
+    <h2>Where are your servers located</h2>
+    <p>Servers are located in Amsterdam, The Netherlands.</p>
   </motion.article>
 );
 

@@ -4,6 +4,8 @@
   position: absolute;
   left: 50%;
   min-width: calc(content + 1rem);
+  max-width: 80vw;
+  overflow: hidden;
   padding: 1rem 2.5rem;
   border-radius: 3px;
   border-bottom: 2px solid variables.$color-primary-dark;
@@ -16,6 +18,7 @@
 
   &__msg {
     margin-right: 1rem;
+    min-width: max-content;
   }
 
   &__close {

@@ -115,6 +115,23 @@
     }
   }
 
+  &__control-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  &__switch {
+    font-size: 1.4rem;
+    color: variables.$color-primary;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
   &__error {
     display: block;
     color: orangered;
