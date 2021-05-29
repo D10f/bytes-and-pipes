@@ -60,14 +60,12 @@ The time it takes to both upload and download files will vary depending on your 
 
 ## Credits
 
+These are some of the projects and resources that have inspired and helped me to make Bytes And Pipes.
+
 https://github.com/mozilla/send
 
-https://www.youtube.com/watch?v=3Tr-scf7trE
+[Streaming Service Workers: Live Code Session - Supercharged](https://www.youtube.com/watch?v=3Tr-scf7trE)
 
-https://blog.excalidraw.com/end-to-end-encryption/
+[Excalidraw Blog - End-to-End Encryption in the Browser](https://blog.excalidraw.com/end-to-end-encryption/)
 
-https://www.youtube.com/watch?v=SdePc87Ffik
-
-https://www.youtube.com/channel/UCO1cgjhGzsSYb1rsB4bFe4Q
-
-https://www.youtube.com/channel/UCW5YeuERMmlnqo4oq8vwUpg
+[Thomas Konrad Talk - End to end File Encryption in the Web Browser](https://invidious.exonip.de/watch?v=SdePc87Ffik)
