@@ -70,7 +70,7 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
 
   return (
     <>
-      <h3 className="download__step-title mb2">Your download will start shortly...</h3>
+      <h3 className="download__step-title mb2">Your download will automatically start in a few seconds...</h3>
       <a ref={downloadBtn} download={file.name} />
       { loading && <ProgressOverlay progress={progress} action="download" /> }
     </>

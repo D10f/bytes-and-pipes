@@ -36,7 +36,7 @@ const Header = ({ user, error, logout, url }) => {
           <SuccessMsg msg={url} />
         )}
       </AnimatePresence>
-      <Link to="/" tabIndex="-1">
+      <Link to="/">
         <motion.h1 className="header__logo"
           initial={{ scale: 0 }}
           animate={{ scale: 1.1 }}

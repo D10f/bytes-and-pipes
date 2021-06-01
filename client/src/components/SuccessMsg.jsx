@@ -1,6 +1,6 @@
-import { connect } from 'react-redux';
-import { setUrl } from '../redux/actions/url';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
+import Clipboard from './icons/Clipboard';
 
 const dropdownAnimation = {
   initial: { x: '-50%', y: -200 },
@@ -9,15 +9,20 @@ const dropdownAnimation = {
   transition: { delay: 0.3 }
 };
 
-// This should be the link to be shared, not downloaded directly
-// <a
-//   className="success__msg"
-//   href={msg}
-//   download={msg}
-// >{msg}
-// </a>
+const SuccessMsg = ({ msg }) => {
 
-const SuccessMsg = ({ msg, setUrl  }) => {
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(msg);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <motion.aside
       key="successmsg"
@@ -27,19 +32,14 @@ const SuccessMsg = ({ msg, setUrl  }) => {
       animate="visible"
       className="success"
     >
-      <p className="success__msg">{msg}</p>
+      <p className="success__msg">{copied ? 'Copied!' : msg}</p>
+      { !copied &&
+        <button className="success__clipboard" onClick={copyToClipboard}>
+          <Clipboard />
+        </button>
+      }
     </motion.aside>
   )
 };
 
-// <span
-//   className="success__close"
-//   onClick={() => setUrl('')}
-// >&times;
-// </span>
-
-const mapDispatchToProps = (dispatch) => ({
-  setUrl: (url) => dispatch(setUrl(url))
-});
-
-export default connect(undefined, mapDispatchToProps)(SuccessMsg);
+export default SuccessMsg;

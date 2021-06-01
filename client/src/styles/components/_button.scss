@@ -1,7 +1,7 @@
 @use '../abstract/variables';
 
 %button {
-  color: variables.$color-dark;
+  color: variables.$color-primary-darker;
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -10,6 +10,7 @@
 
   &:hover {
     cursor: pointer;
+    background-color: variables.$color-primary;
   }
 }
 
@@ -42,8 +43,7 @@
   border: none;
   border-radius: 5px;
   border-bottom: 2px solid variables.$color-primary-dark;
-  // background-image: variables.$background-gradient;
-  background: variables.$color-primary-light;
+  background-color: variables.$color-primary-light;
   box-shadow: variables.$shadow;
   padding: 1rem 2rem;
   appearance: none;

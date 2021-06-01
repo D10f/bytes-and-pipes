@@ -36,11 +36,18 @@
   }
 
   &__link {
-    @extend %button;
+    font-family: inherit;
+    color: variables.$color-dark;
+    text-decoration: none;
 
     &:hover,
     &:focus {
-      color: variables.$color-primary-dark;
+      color: variables.$color-primary;
+      outline: none;
+    }
+
+    @media (prefers-color-scheme:dark) {
+      background-color: variables.$color-light;
     }
   }
 }

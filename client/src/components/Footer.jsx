@@ -12,23 +12,23 @@ const Footer = () => {
       <nav className="footer__nav">
         <ul className="footer__menu">
           <li className="footer__item">
-            <a tabIndex="-1" href="https://github.com/herokunt/bytes-and-pipes">
-              <button className="footer__link">Source</button>
+            <a className="footer__link" tabIndex="0" href="https://github.com/herokunt/bytes-and-pipes">
+              Source
             </a>
           </li>
           <li className="footer__item">
-            <Link to="/about" tabIndex="-1">
-              <button className="footer__link">About</button>
+            <Link className="footer__link" tabIndex="0" to="/about">
+              About
             </Link>
           </li>
           <li className="footer__item">
-            <Link tabIndex="-1" to="/privacy" >
-              <button className="footer__link">Privacy Policy</button>
+            <Link className="footer__link" tabIndex="0" to="/privacy" >
+              Privacy Policy
             </Link>
           </li>
           <li className="footer__item">
-            <Link tabIndex="-1" to="/terms" >
-              <button className="footer__link">Terms And Conditions</button>
+            <Link className="footer__link" tabIndex="0" to="/terms" >
+              Terms And Conditions
             </Link>
           </li>
         </ul>

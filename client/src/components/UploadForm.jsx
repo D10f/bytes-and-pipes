@@ -111,6 +111,7 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
       { file && passwordStrategy && <PasswordInput
         password={password}
         setPassword={setPassword}
+        passwordSuggestions={true}
       /> }
       { file && (
         <div className="upload-form__control-group">

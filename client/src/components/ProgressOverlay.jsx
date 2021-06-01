@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import Button from './Button';
 
 const overlay = {
   initial: {
@@ -31,10 +32,12 @@ const ProgressOverlay = ({ progress, reset, action }) => {
         </h3>
       )}
       { progress >= 100 && (
-        <h3>
-          <span className="progress__title">{ action === 'upload' ? 'Upload Complete!' : 'Download Complete!' }</span>
-          { action === 'upload' && <span className="progress__subtitle" onClick={reset}>Upload another file?</span> }
-        </h3>
+        <>
+          <h3 className="progress__title">
+            { action === 'upload' ? 'Upload Complete!' : 'Download Complete!' }
+          </h3>
+          { action === 'upload' && <Button text="Upload another file?" action={reset} /> }
+        </>
       )}
     </motion.div>
   );

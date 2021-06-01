@@ -27,6 +27,10 @@ body {
   box-sizing: border-box;
   scroll-behavior: smooth;
   overflow-x: hidden;
+
+  @media (prefers-color-scheme:dark) {
+    color: variables.$color-light;
+  }
 }
 
 ul {
@@ -34,14 +38,19 @@ ul {
 }
 
 a {
-  text-decoration: none;
-  color: variables.$color-dark;
-}
-
-p a {
   color: variables.$color-primary;
+  text-decoration: none;
 
-  &:hover {
-    text-decoration: underline;
+  &:focus {
+    outline: none;
   }
 }
+
+// p a {
+//   color: variables.$color-primary;
+//   text-decoration: underline;
+//
+//   &:hover {
+//     color: variables.$color-primary-dark;
+//   }
+// }

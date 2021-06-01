@@ -7,26 +7,32 @@
   max-width: 80vw;
   overflow: hidden;
   padding: 1rem 2.5rem;
-  border-radius: 3px;
+  border-radius: variables.$border-radius;
   border-bottom: 2px solid variables.$color-primary-dark;
   box-shadow: variables.$shadow;
-  color: variables.$color-dark;
-  background-image: variables.$background-gradient;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  color: variables.$color-primary-darker;
+  background-color: variables.$color-primary-light;
 
   &__msg {
     margin-right: 1rem;
     min-width: max-content;
   }
 
-  &__close {
-    font-size: 2.6rem;
+  &__clipboard {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 7.2rem;
+    height: 100%;
+    padding: 0 2rem;
+    border: none;
+    background-color: variables.$color-primary-light;
+    fill: variables.$color-dark;
+    text-align: center;
 
     &:hover {
       cursor: pointer;
-      color: variables.$color-dark;
+      fill: variables.$color-primary-dark;
     }
   }
 }

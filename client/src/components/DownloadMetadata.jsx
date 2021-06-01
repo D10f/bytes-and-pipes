@@ -50,7 +50,7 @@ const DownloadMetadata = ({ fileId, hash, setFileMetadata, setDecryptionKey, set
       { !hash && (
         <>
           <PasswordInput password={password} setPassword={setPassword} passwordSuggestions={false} />
-          <Button text={'Decrypt'} action={decryptMetadata} />
+          <Button text={'Start download'} action={decryptMetadata} />
         </>
         )}
     </>

@@ -9,7 +9,7 @@
   align-items: center;
   padding: 0 2rem;
   margin-top: 2rem;
-  background-image: variables.$background-gradient;
+  background-color: variables.$color-primary-light;
   border-radius: 5px;
   border-bottom: 2px solid variables.$color-primary-dark;
   box-shadow: variables.$shadow;
@@ -32,13 +32,21 @@
       top: 100%;
     }
 
+    &:focus {
+      text-decoration: underline;
+    }
+
     &::before {
-      position: absolute;
-      bottom: 1rem;
-      left: 100%;
       content: "Alpha";
-      color: white;
-      font-size: 1.6rem;
+      position: absolute;
+      top: 70%;
+      left: 90%;
+      font-size: 1.5rem;
+      color: variables.$color-primary-darker;
+      background-color: variables.$color-primary-light;
+      border-radius: 5px;
+      border: 1px solid variables.$color-primary-dark;
+      transform: rotate(-15deg);
     }
   }
 
