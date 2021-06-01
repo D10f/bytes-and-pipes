@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { logout } from '../redux/actions/user';
-import ErrorMsg from '../components/ErrorMsg';
-import SuccessMsg from '../components/SuccessMsg';
+import ErrorMsg from './ErrorMsg';
+import SuccessMsg from './SuccessMsg';
 
 const dropdownAnimation = {
   initial: { y: -200 },
@@ -12,14 +11,9 @@ const dropdownAnimation = {
   transition: { delay: 0.2 }
 };
 
-const Header = ({ user, error, logout, url }) => {
+const Header = ({ error, url }) => {
 
   const title = 'Bytes And Pipes';
-
-  const handleClick = () => {
-    logout();
-    // redirect to main page
-  };
 
   return (
     <motion.header className="header"
@@ -50,37 +44,8 @@ const Header = ({ user, error, logout, url }) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user.user,
   error: state.error,
   url: state.url
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch(logout())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
-
-// <nav className="header__nav">
-// <ul className="header__menu">
-// { user ?
-//   <>
-//   <li className="header__item">
-//   <span>{user.username}</span>
-//   </li>
-//   <li className="header__item">
-//   <span>{user.storage}</span>
-//   </li>
-//   <li className="header__item">
-//   <button onClick={handleClick} className="header__link">Logout</button>
-//   </li>
-//   </>
-//   :
-//   <li className="header__item">
-//   <Link to="/login" tabIndex="-1">
-//   <button className="header__link">Login</button>
-//   </Link>
-//   </li>
-// }
-// </ul>
-// </nav>
+export default connect(mapStateToProps)(Header);

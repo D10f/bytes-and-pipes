@@ -3,6 +3,7 @@
 
 .cta {
   @extend %button-action;
+  width: max-content;
 
   &:hover,
   &:focus {

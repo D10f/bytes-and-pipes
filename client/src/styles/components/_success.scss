@@ -1,38 +1,43 @@
 @use '../abstract/variables';
+@use '../abstract/mixins';
 
 .success {
   position: absolute;
   left: 50%;
-  min-width: calc(content + 1rem);
-  max-width: 80vw;
-  overflow: hidden;
-  padding: 1rem 2.5rem;
-  border-radius: variables.$border-radius;
-  border-bottom: 2px solid variables.$color-primary-dark;
-  box-shadow: variables.$shadow;
-  color: variables.$color-primary-darker;
-  background-color: variables.$color-primary-light;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1rem;
 
-  &__msg {
-    margin-right: 1rem;
-    min-width: max-content;
+  @include mixins.responsive(tablet) {
+    flex-direction: column;
+  }
+  // min-width: calc(content + 1rem);
+  // max-width: 80vw;
+  // overflow: hidden;
+  // padding: 1rem 2.5rem;
+  // border-radius: variables.$border-radius;
+  // border-bottom: 2px solid variables.$color-primary-dark;
+  // box-shadow: variables.$shadow;
+  // color: variables.$color-primary-darker;
+  // background-color: variables.$color-primary-light;
+
+  &__container {
+    flex: 0 0 auto;
+    min-width: calc(content + 1rem);
+    max-width: 80vw;
+    overflow: auto;
+    padding: 1rem 2.5rem;
+    border-radius: variables.$border-radius;
+    border-bottom: 2px solid variables.$color-primary-dark;
+    box-shadow: variables.$shadow;
+    color: variables.$color-primary-darker;
+    background-color: variables.$color-primary-light;
   }
 
-  &__clipboard {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 7.2rem;
-    height: 100%;
-    padding: 0 2rem;
-    border: none;
-    background-color: variables.$color-primary-light;
-    fill: variables.$color-dark;
-    text-align: center;
-
-    &:hover {
-      cursor: pointer;
-      fill: variables.$color-primary-dark;
-    }
+  &__msg {
+    display: inline-block;
+    margin-right: 1rem;
+    min-width: max-content;
   }
 }

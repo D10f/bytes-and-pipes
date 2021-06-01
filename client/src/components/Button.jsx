@@ -1,7 +1,7 @@
-const Button = ({ text, action }) => (
+const Button = ({ classes, text, action }) => (
   <button
     onClick={action}
-    className="cta"
+    className={`cta ${classes}`}
     type={action ? 'button' : 'submit'}
   >
   {text}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Clipboard from './icons/Clipboard';
+import Button from './Button';
 
 const dropdownAnimation = {
   initial: { x: '-50%', y: -200 },
@@ -32,12 +32,10 @@ const SuccessMsg = ({ msg }) => {
       animate="visible"
       className="success"
     >
-      <p className="success__msg">{copied ? 'Copied!' : msg}</p>
-      { !copied &&
-        <button className="success__clipboard" onClick={copyToClipboard}>
-          <Clipboard />
-        </button>
-      }
+      <p className="success__container">
+        <span className="success__msg">{msg}</span>
+      </p>
+      <Button classes="flex-stretch" text={copied ? "Copied!" : "Copy Link"} action={copyToClipboard} />
     </motion.aside>
   )
 };
