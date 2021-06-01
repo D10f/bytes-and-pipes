@@ -59,7 +59,7 @@ router.get('/download/:id', async (req, res) => {
     }
 
     // Immediately set expired flag to true to avoid concurrent reads of the file
-    file.expired = true;
+    // file.expired = true;
     await file.save();
 
     pipeline(

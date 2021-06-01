@@ -1,7 +1,7 @@
 import convertBytes from '../scripts/convertBytes';
 
 const FileInfo = ({ file }) => (
-  <label tabIndex="0" className="upload-form__label" htmlFor="file">
+  <label tabIndex="0" className="upload-form__label mb2" htmlFor="file">
     { file ?
       <output>
         <h3>{file.name}</h3>

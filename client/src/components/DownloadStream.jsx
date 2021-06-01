@@ -1,9 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { setError } from '../redux/actions/error';
 
 const DownloadStream = ({ isFirefox, file, decryptionKey, downloadUrl, setError }) => {
 
+  // Signals the service worker has loaded
+  const [ready, setReady] = useState(false);
   const downloadBtn = useRef(null);
   let pingSender;
 
@@ -12,6 +14,12 @@ const DownloadStream = ({ isFirefox, file, decryptionKey, downloadUrl, setError 
       .register('/serviceWorkerStream.js')
       .then(downloadAsStream)
       .catch(e => setError(e.message));
+
+    return () => {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then(reg => reg.forEach(sw => sw.unregister()))
+    };
   }, []);
 
   const downloadAsStream = () => {
@@ -31,17 +39,22 @@ const DownloadStream = ({ isFirefox, file, decryptionKey, downloadUrl, setError 
         }, 10000);
       }
 
-      downloadBtn.current.click();
+      setReady(true);
+      // downloadBtn.current.click();
+
     }, 1000);
   };
 
   return (
     <>
-      <h3 className="download__step-title mb2">Your download will start shortly...</h3>
+      { !ready && <h3 className="download__step-title mb2">Loading...</h3> }
       <a
+        className={ready ? "cta" : "is-invisible"}
         ref={downloadBtn}
         href={downloadUrl}
-      />
+      >
+        Start Download
+      </a>
     </>
   );
 };

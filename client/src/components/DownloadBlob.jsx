@@ -7,8 +7,10 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
 
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [blob, setBlob] = useState(undefined);
   const downloadBtn = useRef(null);
 
+  // Loads the sevice worker
   useEffect(() => {
     if (swSupport) {
       navigator.serviceWorker
@@ -21,17 +23,28 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
     }
   }, []);
 
+  // removes the service worker when download is done
   useEffect(() => {
     if (progress >= 100) {
       navigator.serviceWorker
         .getRegistrations()
         .then(reg => reg.forEach(sw => sw.unregister()))
         .then(() => {
+          URL.revokeObjectURL(blob);
           setLoading(false);
           setProgress(0);
+          setBlob(undefined);
         })
         .catch(console.error);
     }
+
+    return () => {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then(reg => reg.forEach(sw => sw.unregister()))
+        .then(() => URL.revokeObjectURL(blob))
+    };
+
   }, [progress]);
 
   const downloadFile = async url => {
@@ -40,10 +53,11 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
       const blob = await res.blob();
       const objectURL = URL.createObjectURL(blob);
       downloadBtn.current.href = objectURL;
-      downloadBtn.current.click();
-      setTimeout(() => {
-        URL.revokeObjectURL(objectURL);
-      }, 100);
+      setBlob(objectURL);
+      // downloadBtn.current.click();
+      // setTimeout(() => {
+        //   URL.revokeObjectURL(objectURL);
+        // }, 100);
     } catch (e) {
       console.error(e);
       setError(e.message);
@@ -70,8 +84,18 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
 
   return (
     <>
-      <h3 className="download__step-title mb2">Your download will automatically start in a few seconds...</h3>
-      <a ref={downloadBtn} download={file.name} />
+      { !blob && (
+        <h3 className="download__step-title mb2">
+          Loading...
+        </h3>
+      )}
+      <a
+        className={blob ? "cta" : "is-invisible"}
+        ref={downloadBtn}
+        download={file.name}
+      >
+        Start Download
+      </a>
       { loading && <ProgressOverlay progress={progress} action="download" /> }
     </>
   );

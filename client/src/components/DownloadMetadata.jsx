@@ -1,29 +1,35 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setError } from '../redux/actions/error';
+import { decryptData } from '../scripts/crypto';
 import PasswordInput from './PasswordInput';
 import Button from './Button';
-import { decryptData } from '../scripts/crypto';
 
-const DownloadMetadata = ({ fileId, hash, setFileMetadata, setDecryptionKey, setError }) => {
+const DownloadMetadata = ({ fileId, hash, setFileMetadata, setDecryptionKey, history, setError }) => {
 
   const [metadata, setMetadata] = useState(undefined);
   const [password, setPassword] = useState(undefined);
 
   useEffect(() => {
+    console.log('sdfsd')
     fetch(`http://localhost:3000/d/meta/${fileId}`)
       .then(res => {
         if (res.status !== 200) {
-          throw new Error('File does not exist or has expired.');
+          throw new Error('File does not exist or has expired');
         }
         return res.arrayBuffer();
       })
-      .then(buffer => hash ? decryptMetadata(undefined, buffer) : setMetadata(buffer))
+      .then(buffer => (
+        hash
+          ? decryptMetadata(undefined, buffer)
+          : setMetadata(buffer)
+      ))
       .catch(err => {
-        setMetadata(undefined);
-        setPassword(undefined);
-        setFileMetadata(undefined);
+        // setMetadata(undefined);
+        // setPassword(undefined);
+        // setFileMetadata(undefined);
         setError(err);
+        history.push('/');
       });
   }, []);
 
@@ -50,7 +56,7 @@ const DownloadMetadata = ({ fileId, hash, setFileMetadata, setDecryptionKey, set
       { !hash && (
         <>
           <PasswordInput password={password} setPassword={setPassword} passwordSuggestions={false} />
-          <Button text={'Start download'} action={decryptMetadata} />
+          <Button text="Decrypt" action={decryptMetadata} />
         </>
         )}
     </>
@@ -59,6 +65,6 @@ const DownloadMetadata = ({ fileId, hash, setFileMetadata, setDecryptionKey, set
 
 const mapDispatchToProps = (dispatch) => ({
   setError: (msg) => dispatch(setError(msg))
-})
+});
 
 export default connect(undefined, mapDispatchToProps)(DownloadMetadata);

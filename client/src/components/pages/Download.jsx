@@ -15,7 +15,7 @@ const pageVariant = {
   }
 };
 
-const Download = ({ location }) => {
+const Download = ({ location, history }) => {
 
   const [fileId, setFileId]               = useState(location.pathname.match(/\/d\/(\w*)(#\w*)?$/i)[1]);
   const [hash, setHash]                   = useState(location.hash.slice(1));
@@ -41,6 +41,7 @@ const Download = ({ location }) => {
             hash={hash}
             setFileMetadata={setFileMetadata}
             setDecryptionKey={setDecryptionKey}
+            history={history}
           />
         }
         {

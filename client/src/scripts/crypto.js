@@ -190,9 +190,20 @@ export const decryptData = async (ciphertext, password = '', keyParam = '') => {
   const iv              = ciphertext.slice(32, 32 + 16);
   const encryptedBytes  = ciphertext.slice(32 + 16);
 
-  const key = password
-    ? await deriveDecryptionKey(password, salt)
-    : await importKey(keyParam);
+  let key;
+
+  if (keyParam) {
+    key = await importKey(keyParam);
+  } else {
+    key = typeof password === 'string'
+      ? await deriveDecryptionKey(password, salt)
+      : password
+  }
+
+  console.log(key);
+  // const key = password
+  //   ? await deriveDecryptionKey(password, salt)
+  //   : await importKey(keyParam);
 
   const decryptedBuffer = await crypto.subtle.decrypt(
     {
