@@ -200,7 +200,6 @@ export const decryptData = async (ciphertext, password = '', keyParam = '') => {
       : password
   }
 
-  console.log(key);
   // const key = password
   //   ? await deriveDecryptionKey(password, salt)
   //   : await importKey(keyParam);

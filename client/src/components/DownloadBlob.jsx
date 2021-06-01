@@ -21,6 +21,10 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
       // import decryption scripts
       // downloadfile(downloadUrl)
     }
+
+    return () => {
+      if (blob) URL.revokeObjectURL(blob);
+    };
   }, []);
 
   // removes the service worker when download is done
@@ -30,21 +34,11 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
         .getRegistrations()
         .then(reg => reg.forEach(sw => sw.unregister()))
         .then(() => {
-          URL.revokeObjectURL(blob);
           setLoading(false);
           setProgress(0);
-          setBlob(undefined);
         })
         .catch(console.error);
     }
-
-    return () => {
-      navigator.serviceWorker
-        .getRegistrations()
-        .then(reg => reg.forEach(sw => sw.unregister()))
-        .then(() => URL.revokeObjectURL(blob))
-    };
-
   }, [progress]);
 
   const downloadFile = async url => {
@@ -82,6 +76,10 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
     }, 1000);
   };
 
+  const handleClick = () => {
+    setBlob(undefined);
+  };
+
   return (
     <>
       { !blob && (
@@ -93,6 +91,7 @@ const DownloadBlob = ({ swSupport, file, decryptionKey, downloadUrl, setError })
         className={blob ? "cta" : "is-invisible"}
         ref={downloadBtn}
         download={file.name}
+        onClick={handleClick}
       >
         Start Download
       </a>

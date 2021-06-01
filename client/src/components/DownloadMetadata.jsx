@@ -11,7 +11,6 @@ const DownloadMetadata = ({ fileId, hash, setFileMetadata, setDecryptionKey, his
   const [password, setPassword] = useState(undefined);
 
   useEffect(() => {
-    console.log('sdfsd')
     fetch(`http://localhost:3000/d/meta/${fileId}`)
       .then(res => {
         if (res.status !== 200) {
