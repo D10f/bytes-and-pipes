@@ -125,7 +125,7 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
           </span>
         </div>
       )}
-      { loading && <ProgressOverlay progress={progress} reset={reset} action="upload" />}
+      { (loading || url) && <ProgressOverlay progress={progress} reset={reset} action="upload" />}
     </motion.form>
   );
 };

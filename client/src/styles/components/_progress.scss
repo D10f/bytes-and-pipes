@@ -16,9 +16,9 @@
   color: variables.$color-primary;
   background: rgba(variables.$color-light, 0.9);
 
-  @media (prefers-color-scheme:dark) {
-    background: rgba(119,119,119, 0.8);
-  }
+  // @media (prefers-color-scheme:dark) {
+  //   background: rgba(119,119,119, 0.8);
+  // }
 
   &__title,
   &__subtitle {

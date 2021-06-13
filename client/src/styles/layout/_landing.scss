@@ -24,9 +24,9 @@
     padding: 1rem 2rem;
   }
 
-  @media (prefers-color-scheme:dark) {
-    background-color: #777;
-  }
+  // @media (prefers-color-scheme:dark) {
+  //   background-color: #777;
+  // }
 
   &::before {
     content: '';
@@ -38,9 +38,9 @@
     background-color: variables.$color-gray-light;
     clip-path: polygon(2rem 0, 10rem 75%, 100% 100%, 0 100%, 0 0);
 
-    @media (prefers-color-scheme:dark) {
-      background-color: #666;
-    }
+    // @media (prefers-color-scheme:dark) {
+    //   background-color: #666;
+    // }
   }
 
   &::after {
@@ -54,9 +54,9 @@
     background-color: variables.$color-gray;
     clip-path: polygon(1rem 0, 7rem 100%, 0 100%, 0 0);
 
-    @media (prefers-color-scheme:dark) {
-      background-color: #555;
-    }
+    // @media (prefers-color-scheme:dark) {
+    //   background-color: #555;
+    // }
   }
 
   &::before,

@@ -46,8 +46,8 @@
       outline: none;
     }
 
-    @media (prefers-color-scheme:dark) {
-      background-color: variables.$color-light;
-    }
+    // @media (prefers-color-scheme:dark) {
+    //   background-color: variables.$color-light;
+    // }
   }
 }

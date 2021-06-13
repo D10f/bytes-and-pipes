@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { connect } from 'react-redux';
 import Button from './Button';
 
 const overlay = {
@@ -13,7 +14,7 @@ const overlay = {
   transition: { duration: 1 }
 };
 
-const ProgressOverlay = ({ progress, reset, action }) => {
+const ProgressOverlay = ({ progress, reset, action, url }) => {
 
   const percentage = `${Math.round(progress)}%`;
 
@@ -25,13 +26,13 @@ const ProgressOverlay = ({ progress, reset, action }) => {
       animate="visible"
       className={ action === 'download' ? 'progress progress--download' : 'progress'}
     >
-      { progress < 100 && (
+      { (!url && progress < 100) && (
         <h3>
           { action === 'download' && <span className="progress__subtitle">Prefetching files</span>}
           <span className="progress__title">{percentage}</span>
         </h3>
       )}
-      { progress >= 100 && (
+      { url && (
         <>
           <h3 className="progress__title">
             { action === 'upload' ? 'Upload Complete!' : 'Download Complete!' }
@@ -43,4 +44,8 @@ const ProgressOverlay = ({ progress, reset, action }) => {
   );
 };
 
-export default ProgressOverlay;
+const mapStateToProps = state => ({
+  url: state.url
+});
+
+export default connect(mapStateToProps)(ProgressOverlay);

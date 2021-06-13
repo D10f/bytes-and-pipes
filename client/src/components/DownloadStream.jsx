@@ -32,7 +32,7 @@ const DownloadStream = ({ isFirefox, file, decryptionKey, downloadUrl, setError 
       });
 
       if (isFirefox) {
-        downloadBtn.current.download = file.name;
+        // downloadBtn.current.download = file.name;
 
         pingSender = setInterval(() => {
           navigator.serviceWorker.controller.postMessage('ping');

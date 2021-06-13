@@ -18,7 +18,10 @@ const DownloadOptions = ({ file, decryptionKey, downloadUrl }) => {
   then downloaded from the resulting blob. For small files this inefficiency is
   hardly noticeable and will improve user experience.
 
-  For this reasons we recommend using Firefox for downloading files.
+  For this reasons we recommend using Firefox for downloading files.*
+
+  *UPDATE:
+  Seems like FF89 has breaking changes that make this no longer viable...
 
   Source:
     https://html.spec.whatwg.org/multipage/links.html#downloading-resources
@@ -31,7 +34,7 @@ const DownloadOptions = ({ file, decryptionKey, downloadUrl }) => {
   const swSupport = 'serviceWorker' in navigator;
   const largeFile = file.size > 104857600;
 
-  if ( swSupport && (isFirefox || largeFile) ) {
+  if ( swSupport && largeFile ) {
     return (
       <DownloadStream
         file={file}

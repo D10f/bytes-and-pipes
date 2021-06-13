@@ -31,9 +31,9 @@
     &--okay { @extend %input-info; }
     &--strong { @extend %input-success; }
 
-    @media (prefers-color-scheme:dark) {
-      color: variables.$color-light;
-    }
+    // @media (prefers-color-scheme:dark) {
+    //   color: variables.$color-light;
+    // }
   }
 
   &__toggle,

@@ -62,6 +62,7 @@ router.get('/download/:id', async (req, res) => {
     // file.expired = true;
     await file.save();
 
+    res.set('Content-Type', 'application/octet-stream');
     pipeline(
       createReadStream(file.filepath),
       res,

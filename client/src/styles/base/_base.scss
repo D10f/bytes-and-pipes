@@ -28,9 +28,9 @@ body {
   scroll-behavior: smooth;
   overflow-x: hidden;
 
-  @media (prefers-color-scheme:dark) {
-    color: variables.$color-light;
-  }
+  // @media (prefers-color-scheme:dark) {
+  //   color: variables.$color-light;
+  // }
 }
 
 ul {
