@@ -108,11 +108,14 @@ const UploadForm = ({ authToken, error, setError, url, setUrl }) => {
     >
       <FileInfo file={file} />
       <FilePicker file={file} setFile={setFile} />
-      { file && passwordStrategy && <PasswordInput
-        password={password}
-        setPassword={setPassword}
-        passwordSuggestions={true}
-      /> }
+      {
+        file && passwordStrategy && (
+        <PasswordInput
+          password={password}
+          setPassword={setPassword}
+          passwordSuggestions={true}
+        />
+      )}
       { file && (
         <div className="upload-form__control-group">
           <Button text="Upload" />

@@ -44,6 +44,11 @@ const PasswordInput = ({ password, setPassword, passwordSuggestions }) => {
     setPassword(password);
   };
 
+  // Resets password field when component unmounts
+  useEffect(() => {
+    return () => setPassword('');
+  }, []);
+
   return (
     <div className="login__control-group">
       <input

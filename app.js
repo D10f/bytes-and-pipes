@@ -2,11 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-require('./db/mongoose');
-
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.resolve(__dirname, 'dist');
 // const PUBLIC_DIR = path.resolve(__dirname, 'client/dist');
 
@@ -29,4 +27,4 @@ app.use('/', (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
-app.listen(PORT, process.env.HOST, () => console.log(`Listening on port ${PORT}`))
+module.exports = app;

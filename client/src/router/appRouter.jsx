@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+
 import Header from '../components/Header';
 import Intro from '../components/pages/Intro';
 import Footer from '../components/Footer';

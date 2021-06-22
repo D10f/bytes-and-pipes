@@ -2,13 +2,17 @@
   "name": "bytes_and_pipes",
   "version": "1.0.0",
   "description": "Secure file sharing web application",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "env-cmd -f ./config/dev.env node server.js",
-    "serve": "env-cmd -f ./config/dev.env nodemon server.js",
+    "start": "env-cmd -f ./config/dev.env node index.js",
+    "serve": "env-cmd -f ./config/dev.env nodemon index.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run serve\" \"npm run client\"",
-    "prod": "env-cmd -f ./config/prod.env nodemon server.js"
+    "prod": "env-cmd -f ./config/prod.env nodemon index.js",
+    "test": "env-cmd -f ./config/test.env jest --watch"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +28,8 @@
   },
   "devDependencies": {
     "concurrently": "^6.0.0",
-    "nodemon": "^2.0.7"
+    "jest": "^27.0.4",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3"
   }
 }

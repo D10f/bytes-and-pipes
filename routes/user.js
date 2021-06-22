@@ -16,10 +16,9 @@ router.post('/signup', async (req, res) => {
   try {
     const user = await new User(req.body);
     await user.save();
-    sendConfirmationEmail(user);
+    // sendConfirmationEmail(user);
     res.status(201).send();
   } catch(err) {
-    console.log(err);
     res.status(400).send(err);
   }
 });
