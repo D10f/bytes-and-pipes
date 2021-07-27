@@ -112,7 +112,8 @@ userSchema.methods.toJSON = function() {
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email: email });
 
-  if (!user || !user.active){
+  // if (!user || !user.active){
+  if (!user){
     throw new Error('Invalid credentials');
   }
 

@@ -2,6 +2,7 @@ node_modules/
 dist/
 config/
 uploads/
+uploads-test/
 deploy.sh
 cleartmp.sh
 *.tar.gz

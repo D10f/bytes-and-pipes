@@ -12,6 +12,7 @@ const stat = promisify(fs.stat);
 
 const uploader = async (req, res, next) => {
   try {
+    console.log(req.headers);
     const { filename, currentChunk } = req.params;
     const contentParts    = req.header('Content-parts');
     const contentFilesize = req.header('Content-filesize');
@@ -39,7 +40,8 @@ const uploader = async (req, res, next) => {
 
     // Define temporary and destination directories
     const tempDir = path.resolve(os.tmpdir(), filename);
-    const destDir = path.resolve(__dirname, '../uploads');
+    // const destDir = path.resolve(__dirname, '../uploads');
+    const destDir = path.resolve(__dirname, process.env.UPLOAD_LOCATION);
 
     // Create directories if they do not exist
     await mkdir(tempDir, { recursive: true });
@@ -69,7 +71,9 @@ const uploader = async (req, res, next) => {
         });
 
       // Remove the now empty temporary directory
-      fs.rmdir(tempDir, console.error);
+      fs.rmdir(tempDir, (err) => {
+        if (err) console.error(err);
+      });
 
       const { size } = await stat(newFilepath);
 
