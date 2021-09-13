@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const { promisify } = require('util');
+// const { promisify } = require('util');
 const fs = require('fs');
 const User = require('./user');
 const Schema = mongoose.Schema;
 
-const unlink = promisify(fs.unlink);
+// const unlink = promisify(fs.unlink);
 
 const fileSchema = new Schema({
   name: {
@@ -46,8 +46,8 @@ fileSchema.virtual('filepath').get(function(){
   return `${this.directory}/${this.name}`;
 });
 
-fileSchema.pre('remove', async function(next) {
-  unlink(`${this.directory}/${this.name}`); // non-blocking operation but also no need to wait for it
+fileSchema.pre('remove', function(next) {
+  fs.unlink(`${this.directory}/${this.name}`);
   next();
 });
 

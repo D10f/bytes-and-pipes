@@ -4,6 +4,7 @@ config/
 uploads/
 uploads-test/
 deploy.sh
+bytes_deploy.sh
 cleartmp.sh
 *.tar.gz
 
