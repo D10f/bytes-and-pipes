@@ -1,11 +1,12 @@
-const express = require('express');
+import { Router } from 'express';
+
 const { createReadStream } = require('fs');
 const { pipeline } = require('stream');
 const auth = require('../middleware/auth');
 const uploader = require('../middleware/uploader');
 const File = require('../models/file');
 
-const router = express.Router();
+const router = Router();
 
 // router.post('/upload/:filename/:seq', auth, uploader, async (req, res) => {
 router.post('/upload/:filename/:currentChunk', uploader, async (req, res) => {
