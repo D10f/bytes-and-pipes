@@ -1,6 +1,8 @@
 import { connect } from "mongoose";
+import config from '../config';
+import log from './logger';
 
-export default async (config) => {
+export default async () => {
   const connection = await connect(config.MONGODB_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -8,6 +10,6 @@ export default async (config) => {
     useUnifiedTopology: true,
   });
   
-  console.log(connection);
+  log.info(connection);
   return connection.connection.db;
 };

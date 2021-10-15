@@ -1,7 +1,11 @@
 import express from "express";
 import routes from "../api";
+import config from "../config";
+import log from "./logger";
 
-export default (app, config) => {
+import { ErrorService, NotFoundError } from '../services/ErrorService';
+
+export default (app) => {
   /**
    * Set headers
    */
@@ -40,9 +44,7 @@ export default (app, config) => {
    */
 
   app.use((req, res, next) => {
-    const error = new Error("Not Found");
-    error.status = 404;
-    next(error);
+    throw new NotFoundError('Resource Not Found');
   });
 
   /**
@@ -50,7 +52,13 @@ export default (app, config) => {
    */
 
   app.use((err, req, res, next) => {
-    res.status(err.status) || 500;
-    res.json({ message: err.message });
+
+    log.error(err.message);
+
+    if (err instanceof ErrorService) {
+      return res.status(err.status).json(err.message);
+    }
+
+    res.status(500).json('Internal Server Error');
   });
 };

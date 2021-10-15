@@ -1,5 +1,6 @@
 import bunyan from 'bunyan';
+import config from '../config';
 
-const logger = bunyan.createLogger({ name: 'development', level: 'debug' });
+const log = bunyan.createLogger({ name: config.LOG_NAME, level: config.LOG_LEVEL });
 
-export default logger;
+export default log;

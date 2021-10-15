@@ -11,8 +11,9 @@ export default {
   SG_API_KEY: process.env.SG_API_KEY || "",
 
   //FILE UPLOAD/DOWNLOAD SETTINGS
-  MAX_FILE_SIZE: process.env.MAX_FILE_SIZE || "10mb",
+  MAX_FILE_SIZE: process.env.MAX_FILE_SIZE || 1024 * 1024 * 1024,
   PUBLIC_DIR: process.env.PUBLIC_DIR || path.resolve(__dirname, "dist"),
+  UPLOAD_LOCATION: process.env.UPLOAD_LOCATION || '',
 
   //NODE.JS PROCESS
   PORT: process.env.PORT || 3000,
@@ -21,4 +22,6 @@ export default {
   //APP SETTINGS
   DOMAIN: process.env.DOMAIN || "localhost",
   JWT_SECRET: process.env.JWT_SECRET || "goodenoughfordevandtestpurposes",
+  LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
+  LOG_NAME: process.env.LOG_NAME || 'Bytes And Pipes [Development]'
 };

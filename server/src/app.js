@@ -11,7 +11,7 @@ const startServer = async () => {
   /**
    * Initializes services and libraries
    */
-  await init(app, config);
+  await init(app);
 
   /**
    *  Register healthcheck routes

@@ -30,14 +30,6 @@ const uploader = async (req, res, next) => {
       throw new Error('File is larger than reported size.');
     }
 
-    // if (contentFilesize > req.user.availableSpace){
-    //   throw new Error('Not enough storage space available');
-    // }
-
-    // if (currentChunk > contentParts) {
-    //   throw new Error('Invalid number of content parts.');
-    // }
-
     // Define temporary and destination directories
     const tempDir = path.resolve(os.tmpdir(), filename);
     // const destDir = path.resolve(__dirname, '../uploads');

@@ -1,19 +1,22 @@
-import mongooseConnect from './mongoose';
-import sendgridConnect from './sendgrid';
-import expressApp from './express';
+import log from './logger';
+import initMongoose from './mongoose';
+import initSendgrid from './sendgrid';
+import initExpress from './express';
 
 /**
  * Initializes all services and libraries
  */
 
-export default async (app, config) => {
+export default async (app) => {
 
-  await mongooseConnect(config);
-  console.log('MongoDB connection ready');
+  log.info('Bunyan initialized');
 
-  sendgridConnect(config);
-  console.log('Sendgrid API setup ready');
+  await initMongoose();
+  log.info('MongoDB connection ready');
 
-  expressApp(app, config);
-  console.log('Express server ready');
+  initSendgrid();
+  log.info('Sendgrid API setup ready');
+
+  initExpress(app);
+  log.info('Express server ready');
 };

@@ -22,6 +22,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.4.2",
     "bcryptjs": "^2.4.3",
+    "bunyan": "^1.8.15",
     "env-cmd": "^10.1.0",
     "express": "^4.17.1",
     "express-validator": "^6.10.0",
