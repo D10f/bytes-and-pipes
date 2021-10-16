@@ -1,15 +1,20 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import routes from "../api";
 import config from "../config";
 import log from "./logger";
 
 import { ErrorService, NotFoundError } from '../services/ErrorService';
 
-export default (app) => {
+export default () => {
+
+   /**
+   *  Initialize Express Server
+   */
+  const app = express();
+
   /**
    * Set headers
    */
-
   app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", config.DOMAIN);
     res.setHeader(
@@ -36,7 +41,6 @@ export default (app) => {
    * Register api routes
    */
 
-  app.use("/user", routes.userRouter);
   app.use("/file", routes.fileRouter);
 
   /**
@@ -51,7 +55,7 @@ export default (app) => {
    * Error handling
    */
 
-  app.use((err, req, res, next) => {
+  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
     log.error(err.message);
 
@@ -61,4 +65,6 @@ export default (app) => {
 
     res.status(500).json('Internal Server Error');
   });
+
+  return app;
 };

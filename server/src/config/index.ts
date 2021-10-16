@@ -1,9 +1,10 @@
-import dotenv from "dotenv";
 import path from "path";
+import dotenv from "dotenv";
+import { ConfigurationInterface } from '../interfaces';
 
 dotenv.config();
 
-export default {
+const config = {
   //MONGODB SETTINGS
   MONGODB_URI: process.env.MONGODB_URI || "mongodb://localhost:27017",
 
@@ -13,7 +14,8 @@ export default {
   //FILE UPLOAD/DOWNLOAD SETTINGS
   MAX_FILE_SIZE: process.env.MAX_FILE_SIZE || 1024 * 1024 * 1024,
   PUBLIC_DIR: process.env.PUBLIC_DIR || path.resolve(__dirname, "dist"),
-  UPLOAD_LOCATION: process.env.UPLOAD_LOCATION || '',
+  UPLOAD_LOCATION:
+    process.env.UPLOAD_LOCATION || path.resolve(__dirname, "..", "uploads"),
 
   //NODE.JS PROCESS
   PORT: process.env.PORT || 3000,
@@ -22,6 +24,8 @@ export default {
   //APP SETTINGS
   DOMAIN: process.env.DOMAIN || "localhost",
   JWT_SECRET: process.env.JWT_SECRET || "goodenoughfordevandtestpurposes",
-  LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
-  LOG_NAME: process.env.LOG_NAME || 'Bytes And Pipes [Development]'
+  LOG_LEVEL: process.env.LOG_LEVEL || "debug",
+  LOG_NAME: process.env.LOG_NAME || "Bytes And Pipes [Development]",
 };
+
+export default config;

@@ -1,17 +1,13 @@
-import express from "express";
+import { Express } from "express";
+import bunyan from 'bunyan';
 import init from "./lib";
 import config from "./config";
 
 const startServer = async () => {
   /**
-   *  Initialize Express Server
-   */
-  const app = express();
-
-  /**
    * Initializes services and libraries
    */
-  await init(app);
+  const { log, app } : { log: bunyan, app: Express } = await init();
 
   /**
    *  Register healthcheck routes
@@ -26,12 +22,19 @@ const startServer = async () => {
   });
 
   /**
+   * Start listening for connections
+   */
+   const server = app.listen(+config.PORT, config.HOST, () => {
+    log.info(`Listening on port ${config.PORT}`);
+  });
+
+  /**
    *  Initialize signal listeners for graceful shutdown
    */
-  const shutdown = () => {
+   const shutdown = () => {
     server.close((err) => {
       if (err) {
-        console.error(err);
+        log.error(err);
         process.exitCode = 1;
       }
       process.exit();
@@ -39,7 +42,7 @@ const startServer = async () => {
   };
 
   process.on("SIGINT", () => {
-    console.info(
+    log.warn(
       "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",
       new Date().toISOString()
     );
@@ -47,18 +50,11 @@ const startServer = async () => {
   });
 
   process.on("SIGTERM", () => {
-    console.info(
+    log.warn(
       "Got SIGTERM (docker container stop). Graceful shutdown ",
       new Date().toISOString()
     );
     shutdown();
-  });
-
-  /**
-   * Start listening for connections
-   */
-   app.listen(config.PORT, config.HOST, () => {
-    console.log(`Listening on port ${config.PORT}`);
   });
 };
 
