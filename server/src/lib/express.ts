@@ -48,7 +48,7 @@ export default () => {
    */
 
   app.use((req, res, next) => {
-    throw new NotFoundError('Resource Not Found');
+    next(new NotFoundError('Resource Not Found'));
   });
 
   /**

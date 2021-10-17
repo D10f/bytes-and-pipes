@@ -12,8 +12,7 @@ export default async (): Promise<{ log: bunyan, app: Express }> => {
 
   log.info('Bunyan logger ready');
 
-  const db = await initMongoose();
-  log.info('MongoDB connection ready');
+  await initMongoose();
 
   const app = initExpress();
   log.info('Express server ready');

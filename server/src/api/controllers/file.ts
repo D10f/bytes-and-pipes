@@ -33,7 +33,7 @@ export const uploadFile: RequestHandler = async (req, res, next) => {
         return res.send({ uploaded: currentChunk });
       }
 
-      const newFile = await FileService.saveNewFile({
+      const newFile = await FileService.createRecord({
         name: filename,
         directory: tempDir,
         size: Number(contentFilesize),
@@ -68,25 +68,19 @@ export const downloadFile: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('No file found with that id.');
     }
 
-    const fileStream = FileService.readAsStream(file.filepath);
+    // const fileStream = FileService.readAsStream(file.filepath);
 
     res.set("Content-Type", "application/octet-stream");
 
-    pipeline(fileStream, res, async (err) => {
-      if (err) {
-        next(err);
-      }
+    pipeline(
+      await FileService.reconstructRecord(file),
+      res,
+      async (err) => {
+        if (err) {
+          next(err);
+        }
       await FileService.deleteRecord(file._id);
     });
-
-    // pipeline(fileStream: ReadStream, res: Response, (err: Error) => {
-    //   if (err) {
-    //     next(err);
-    //   }
-
-    //   FileService.deleteRecord(file._id);
-    // });
-
 
   } catch (err) {
     next(err);

@@ -45,6 +45,13 @@ export default {
     await unlink(filepath);
   },
 
+  async reconstructRecord(record: FileInterface): Promise<fs.ReadStream[]> {
+    const fileFragments = await this.readDirectory(record.directory!);
+    return fileFragments
+      .sort((a,b) => Number(a) + Number(b)) // read from last to first
+      .map(fragment => fs.createReadStream(fragment));
+  },
+
   async deleteRecord(id: string) {
     const file = await this.findFileById(id);
     file?.remove();
@@ -54,7 +61,7 @@ export default {
     return await stat(filepath);
   },
 
-  async saveNewFile(data: FileInterface) {
+  async createRecord(data: FileInterface) {
     const file = new File(data);
     await file.save();
     return file;
