@@ -3,7 +3,6 @@ import os from "os";
 import path from "path";
 import { promisify } from "util";
 import File from '../models/file';
-
 import { FileInterface } from '../interfaces';
 
 const mkdir = promisify(fs.mkdir);
@@ -12,9 +11,17 @@ const readdir = promisify(fs.readdir);
 const unlink = promisify(fs.unlink);
 const stat = promisify(fs.stat);
 
+interface writeFileInterface {
+  location: string;
+  data: Buffer;
+  contentParts: number;
+  contentFileSize: number;
+  currentChunk: string;
+}
+
 export default {
-  async createTempDirectory(dirName: fs.PathLike): Promise<fs.PathLike> {
-    const location = path.resolve(os.tmpdir(), dirName as string);
+  async createTempDirectory(filename: string): Promise<string> {
+    const location = path.resolve(os.tmpdir(), filename as string);
     await this.createDirectory(location);
     return location;
   },
@@ -35,10 +42,20 @@ export default {
     return fs.createReadStream(filepath);
   },
 
-  writeFile(filepath: fs.PathLike, data: any, callback = (err?: Error) => {}) {
-    const writer = fs.createWriteStream(filepath);
-    writer.write(data);
-    writer.on("close", callback);
+  writeFile({ location, data, contentParts, contentFileSize, currentChunk } : writeFileInterface) {
+    return new Promise((resolve) => {
+      const writer = fs.createWriteStream(path.join(location, currentChunk));
+      writer.write(data);
+      writer.on('close', async () => {
+        const files = await this.readDirectory(location);
+
+        if (files.length !== contentParts) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
   },
 
   async deleteFile(filepath: fs.PathLike) {
@@ -47,6 +64,7 @@ export default {
 
   async reconstructRecord(record: FileInterface): Promise<fs.ReadStream[]> {
     const fileFragments = await this.readDirectory(record.directory!);
+
     return fileFragments
       .sort((a,b) => Number(a) + Number(b)) // read from last to first
       .map(fragment => fs.createReadStream(fragment));

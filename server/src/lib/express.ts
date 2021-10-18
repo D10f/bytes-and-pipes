@@ -15,7 +15,7 @@ export default () => {
   /**
    * Set headers
    */
-  app.use((req, res, next) => {
+  app.use((_req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", config.DOMAIN);
     res.setHeader(
       "Access-Control-Allow-Methods",
@@ -47,7 +47,7 @@ export default () => {
    * 404 not found
    */
 
-  app.use((req, res, next) => {
+  app.use((_req, _res, next) => {
     next(new NotFoundError('Resource Not Found'));
   });
 
@@ -55,7 +55,7 @@ export default () => {
    * Error handling
    */
 
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 
     log.error(err.message);
 

@@ -6,12 +6,7 @@
   "scripts": {
     "start": "nodemon src/app.ts | bunyan -o short",
     "build": "tsc",
-    "test": "env-cmd -f ./config/test.env jest --watch --runInBand"
-  },
-  "jest": {
-    "watchPathIgnorePatterns": [
-      "node_modules"
-    ]
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

@@ -1,9 +1,13 @@
-import { Response, RequestHandler } from "express";
+import { RequestHandler } from "express";
 import { pipeline } from 'stream';
 import config from "../../config";
 import FileService from "../../services/FileService";
 import { BadRequestError } from '../../services/ErrorService';
 
+/**
+ * Receives a chunk of a file and saves it to the file system.
+ * Checks the headers for metadata about the file e.g., size, number of chunks uploaded, etc.
+ */
 export const uploadFile: RequestHandler = async (req, res, next) => {
   const contentParts: string | undefined = req.header("Content-parts");
   const contentFilesize: string | undefined = req.header("Content-filesize");
@@ -25,27 +29,58 @@ export const uploadFile: RequestHandler = async (req, res, next) => {
 
   const tempDir = await FileService.createTempDirectory(filename);
 
-  FileService.writeFile(tempDir, async () => {
-    try {
-      const files = await FileService.readDirectory(tempDir);
+  try {
+    const done = await FileService.writeFile({
+      location: tempDir,
+      data: req.body,
+      contentParts: Number(contentParts),
+      contentFileSize: Number(contentFilesize),
+      currentChunk: currentChunk
+    });
 
-      if (files.length !== Number(contentParts)) {
-        return res.send({ uploaded: currentChunk });
-      }
-
+    if (done) {
       const newFile = await FileService.createRecord({
         name: filename,
         directory: tempDir,
-        size: Number(contentFilesize),
-      });
+        size: Number(contentFilesize)
+      })
 
-      res.status(201).json({ url: newFile.downloadUrl, id: newFile._id });
-    } catch (err) {
-      next(err);
+      return res.status(201).json({
+        url: newFile.downloadUrl,
+        id: newFile._id
+      });
     }
-  });
+
+    res.send({ uploaded: currentChunk });
+
+  } catch (err) {
+    next(err);
+  }
+
+  // FileService.writeFile(tempDir, async () => {
+  //   try {
+  //     const files = await FileService.readDirectory(tempDir);
+  //
+  //     if (files.length !== Number(contentParts)) {
+  //       return res.send({ uploaded: currentChunk });
+  //     }
+  //
+  //     const newFile = await FileService.createRecord({
+  //       name: filename,
+  //       directory: tempDir,
+  //       size: Number(contentFilesize),
+  //     });
+  //
+  //     res.status(201).json({ url: newFile.downloadUrl, id: newFile._id });
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // });
 };
 
+/**
+ * Updates a file record with encrypted metadata buffer
+ */
 export const updateFileMetadata: RequestHandler = async (req, res, next) => {
 
   const updates = {
@@ -67,8 +102,6 @@ export const downloadFile: RequestHandler = async (req, res, next) => {
     if (!file) {
       throw new BadRequestError('No file found with that id.');
     }
-
-    // const fileStream = FileService.readAsStream(file.filepath);
 
     res.set("Content-Type", "application/octet-stream");
 
