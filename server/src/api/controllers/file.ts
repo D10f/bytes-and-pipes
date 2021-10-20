@@ -14,22 +14,25 @@ export const uploadFile: RequestHandler = async (req, res, next) => {
 
   if (!contentParts || !contentFilesize) {
     next(new BadRequestError("Missing required headers."));
+    return;
   }
 
   if (Number(contentFilesize) > config.MAX_FILE_SIZE) {
     next(new BadRequestError("Files larger than 1GB are not allowed."));
+    return;
   }
 
   // Each chunk contains additional 64 bytes: 32 salt, 16 IV and 16 AEAD
-  if (req.body.length > Number(contentFilesize) + Number(contentParts) * 64) {
+  if (req.body.length > (Number(contentFilesize) + Number(contentParts) * 64)) {
     next(new BadRequestError("File is larger than reported size."));
+    return;
   }
 
   const { filename, currentChunk } = req.params;
 
-  const tempDir = await FileService.createTempDirectory(filename);
-
   try {
+    const tempDir = await FileService.createTempDirectory(filename);
+
     const done = await FileService.writeFile({
       location: tempDir,
       data: req.body,
@@ -83,6 +86,11 @@ export const uploadFile: RequestHandler = async (req, res, next) => {
  */
 export const updateFileMetadata: RequestHandler = async (req, res, next) => {
 
+  if (!req.body) {
+    next(new BadRequestError("Missing required body content."));
+    return;
+  }
+
   const updates = {
     encryptedMetadata: req.body as Buffer
   };
@@ -97,23 +105,26 @@ export const updateFileMetadata: RequestHandler = async (req, res, next) => {
 
 export const downloadFile: RequestHandler = async (req, res, next) => {
   try {
+
     const file = await FileService.findFileById(req.params.id);
 
     if (!file) {
-      throw new BadRequestError('No file found with that id.');
+      next(new BadRequestError('No file found with that id.'));
+      return;
     }
 
     res.set("Content-Type", "application/octet-stream");
 
     pipeline(
-      await FileService.reconstructRecord(file),
+      await FileService.reconstructRecord(file!),
       res,
       async (err) => {
         if (err) {
           next(err);
         }
-      await FileService.deleteRecord(file._id);
-    });
+        await FileService.deleteRecord(file!._id);
+      }
+    );
 
   } catch (err) {
     next(err);

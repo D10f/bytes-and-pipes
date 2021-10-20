@@ -1,15 +1,7 @@
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 import fs from "fs";
 
-import { FileInterface } from "../interfaces";
-
-/**
- * These are virtual properties (getters) on the model.
- */
- interface FileBaseDocument extends FileInterface, Document {
-  downloadUrl: string;
-  filepath: string;
-};
+import { FileBaseDocument } from "../interfaces";
 
 const fileSchema = new mongoose.Schema<FileBaseDocument>(
   {

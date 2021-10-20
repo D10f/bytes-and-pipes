@@ -3,7 +3,7 @@ import os from "os";
 import path from "path";
 import { promisify } from "util";
 import File from '../models/file';
-import { FileInterface } from '../interfaces';
+import { FileInterface, FileBaseDocument } from '../interfaces';
 
 const mkdir = promisify(fs.mkdir);
 const rmdir = promisify(fs.rmdir);
@@ -62,7 +62,7 @@ export default {
     await unlink(filepath);
   },
 
-  async reconstructRecord(record: FileInterface): Promise<fs.ReadStream[]> {
+  async reconstructRecord(record: FileInterface | FileBaseDocument): Promise<fs.ReadStream[]> {
     const fileFragments = await this.readDirectory(record.directory!);
 
     return fileFragments

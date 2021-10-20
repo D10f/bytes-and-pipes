@@ -1,5 +1,6 @@
-import bunyan from 'bunyan';
 import fs from 'fs';
+import bunyan from 'bunyan';
+import { Document } from 'mongoose';
 
 export interface ConfigurationInterface {
   MONGODB_URI: string;
@@ -23,3 +24,11 @@ export interface FileInterface {
   expired?: boolean;
   createdAt?: Date;
 }
+
+/**
+ * These are virtual properties (getters) on the model.
+ */
+export interface FileBaseDocument extends FileInterface, Document {
+  downloadUrl: string;
+  filepath: string;
+};
