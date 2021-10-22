@@ -141,7 +141,7 @@ describe('File controller test suite', () => {
     findFileByIdMock.mockReturnValueOnce(mockFile);
 
     jest.spyOn(stream, 'pipeline').mockImplementationOnce(
-      (a: any, b: any, c: any ): any => {}
+      (_a: any, _b: any, _c: any ): any => {}
     );
 
     await downloadFile(requestMock, responseMock, nextMock);
@@ -161,7 +161,7 @@ describe('File controller test suite', () => {
     findFileByIdMock.mockReturnValueOnce(mockFile);
 
     jest.spyOn(stream, 'pipeline').mockImplementationOnce(
-      (a: any, b: any, cb: any ): any => { cb('error') }
+      (_a: any, _b: any, cb: any ): any => { cb('error') }
     );
 
     await downloadFile(requestMock, responseMock, nextMock);

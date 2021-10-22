@@ -15,19 +15,15 @@ interface writeFileInterface {
   location: string;
   data: Buffer;
   contentParts: number;
-  contentFileSize: number;
   currentChunk: string;
 }
 
 export default {
-  async createTempDirectory(filename: string): Promise<string> {
+  async createTempDirectory(filename: string, recursive: boolean = true): Promise<string> {
     const location = path.resolve(os.tmpdir(), filename as string);
-    await this.createDirectory(location);
+    // await this.createDirectory(location);
+    await mkdir(location, { recursive });
     return location;
-  },
-
-  async createDirectory(filepath: fs.PathLike, recursive: boolean = true) {
-    await mkdir(filepath, { recursive });
   },
 
   async removeDirectory(filepath: fs.PathLike) {
@@ -42,17 +38,21 @@ export default {
     return fs.createReadStream(filepath);
   },
 
-  writeFile({ location, data, contentParts, contentFileSize, currentChunk } : writeFileInterface) {
-    return new Promise((resolve) => {
+  writeFile(file : writeFileInterface) {
+
+    const { location, data, contentParts, currentChunk } = file;
+
+    return new Promise((resolve, reject) => {
       const writer = fs.createWriteStream(path.join(location, currentChunk));
       writer.write(data);
-      writer.on('close', async () => {
+      writer.on('error', (err) => reject(err.message));
+      writer.on('finish', async () => {
         const files = await this.readDirectory(location);
 
         if (files.length !== contentParts) {
           resolve(false);
         } else {
-          resolve(true);
+          resolve(true); // entire file has been uploaded
         }
       });
     });

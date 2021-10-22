@@ -42,7 +42,11 @@ fileSchema.virtual("filepath").get(function (this: FileBaseDocument) {
 });
 
 fileSchema.pre<FileBaseDocument>("remove", function (next) {
-  fs.unlink(`${this.directory}/${this.name}`, (err) => {});
+  fs.unlink(`${this.directory}/${this.name}`, (err) => {
+    if (err) {
+      next(err);
+    }
+  });
   next();
 });
 

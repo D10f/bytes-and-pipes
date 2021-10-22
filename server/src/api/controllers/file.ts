@@ -37,7 +37,6 @@ export const uploadFile: RequestHandler = async (req, res, next) => {
       location: tempDir,
       data: req.body,
       contentParts: Number(contentParts),
-      contentFileSize: Number(contentFilesize),
       currentChunk: currentChunk
     });
 

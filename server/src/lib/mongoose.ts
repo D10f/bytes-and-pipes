@@ -20,13 +20,13 @@ export default async () => {
       log.error('Failed to reconnect to MongoDB');
     });
 
-    await mongoose.connect(config.MONGODB_URI, {
+    return await mongoose.connect(config.MONGODB_URI, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
       useUnifiedTopology: true
     });
-    
+
   } catch (error: any) {
     log.error(error.message);
     process.exit(1);

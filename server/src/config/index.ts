@@ -1,6 +1,6 @@
 import path from "path";
 import dotenv from "dotenv";
-import { ConfigurationInterface } from '../interfaces';
+// import { ConfigurationInterface } from '../interfaces';
 
 dotenv.config();
 
