@@ -38,7 +38,7 @@ export default {
     return fs.createReadStream(filepath);
   },
 
-  writeFile(file : writeFileInterface) {
+  writeFile(file : writeFileInterface): Promise<boolean> {
 
     const { location, data, contentParts, currentChunk } = file;
 
