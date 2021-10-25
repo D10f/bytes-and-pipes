@@ -1,10 +1,13 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import stream from 'stream';
+// import stream from 'stream';
 import { promisify } from 'util';
 import mock from 'mock-fs';
 import FileService from '../FileService';
+import File from '../../models/file';
+
+jest.mock('../../models/file');
 
 const fileStats = promisify(fs.stat);
 
@@ -116,5 +119,64 @@ describe('File Service test suite', () => {
     const streams = await FileService.reconstructRecord({ directory: '/tmp/reconstruct' });
     expect(streams.length).toBe(3);
     // expect(streams[0]).toBe(expect.any(Buffer));
+  });
+
+  test('Should delete a File Document record', async () => {
+    const mockFile = {
+      remove: jest.fn()
+    };
+    File.findOne = jest.fn().mockReturnValueOnce(mockFile);
+    await FileService.deleteRecord('123');
+    expect(mockFile.remove).toBeCalled();
+  });
+
+  test('Should get stats for a file', async () => {
+    const stats = await FileService.getFileData('/tmp/testDirectory/file1');
+    expect(stats).toBeTruthy();
+  });
+
+  test('Should create a new File Document', async () => {
+    const fileData = {
+      name: 'test',
+      encryptedMetadata: Buffer.from([ 1, 2, 3]),
+      directory: '/does/not/matter',
+      size: 123,
+      expired: false,
+      createdAt: new Date(),
+    };
+
+    const newFile = await FileService.createRecord(fileData);
+    expect(File).toBeCalled();
+    expect(newFile.save).toBeCalled();
+  });
+
+  test('Should update File Record encryptedMetadata field', async () => {
+    const updateMock = {
+      encryptedMetadata: Buffer.from([ 1, 2, 3 ])
+    };
+
+    const mockUpdateFileById = jest.fn();
+    File.findByIdAndUpdate = mockUpdateFileById;
+    await FileService.updateFileMetadata('123', updateMock);
+    expect(mockUpdateFileById).toBeCalledWith(
+      '123',
+      updateMock,
+      { lean: true }
+    );
+  });
+
+  test('Should find a File Document by its id', async () => {
+
+    File.findOne = jest.fn().mockReturnValueOnce({
+      _id: 'hello',
+      expired: true
+    });
+
+    const file = await FileService.findFileById('123');
+    expect(File.findOne).toBeCalled();
+    expect(file).toEqual({
+      _id: 'hello',
+      expired: true
+    })
   });
 });
