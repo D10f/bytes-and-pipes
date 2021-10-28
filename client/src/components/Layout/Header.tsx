@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import ErrorMsg from './ErrorMsg';
-import SuccessMsg from './SuccessMsg';
+import ErrorMsg from '@components/ErrorMsg';
+import SuccessMsg from '@components/SuccessMsg';
 
 const dropdownAnimation = {
   initial: { y: -200 },

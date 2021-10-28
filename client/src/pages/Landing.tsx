@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
 import UploadForm from '../UploadForm';
 
-const steps = [
-  'Select a file',
-  'Choose an encryption strategy',
-  'Share the URL'
-];
+import {
+  LANDING_PAGE_STEPS,
+  LANDING_HEADLINE
+} from '@utils/constants';
 
 const pageVariant = {
   initial: {
@@ -18,9 +17,7 @@ const pageVariant = {
   }
 };
 
-const Intro = () => {
-
-  const headline = 'Share Your Files In Privacy';
+const Landing = () => {
 
   return (
     <motion.section
@@ -37,7 +34,7 @@ const Intro = () => {
         exit="initial"
         className="intro__header"
       >
-        <h2 className="intro__headline">{headline}</h2>
+        <h2 className="intro__headline">{LANDING_HEADLINE}</h2>
         <motion.p
           className="intro__step"
           initial={{ opacity: 0, x: -250 }}
@@ -72,4 +69,4 @@ const Intro = () => {
   );
 };
 
-export default Intro;
+export default Landing;

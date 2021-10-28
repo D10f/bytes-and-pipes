@@ -1,52 +1,40 @@
 const path = require('path');
-const fs = require('fs');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-class RunAfterCompile{
-  apply(compiler){
-    compiler.hooks.done.tap('Copy public files', function(){
-      ['serviceWorkerBlob.js', 'serviceWorkerStream.js'].forEach(file => {
-        fs.copyFile(`./public/${file}`, `../dist/${file}`, (err) => {
-          if (err) throw err;
-        });
-      });
-
-      fs.copyFile('../assets/favicon.png', '../dist/images/favicon.png', err => {
-        if (err) throw err;
-      });
-    });
-  }
-};
+const plugins = [
+  new HtmlWebpackPlugin({ template: './public/index.html' }),
+];
 
 let mode = 'development';
 let target = 'web';
 let devtool = 'source-map';
-let plugins = [
-  new HtmlWebpackPlugin({ template: './public/index.html' })
-];
 
 if (process.env.NODE_ENV === 'production') {
   mode = 'production';
   target = 'browserslist';
   devtool = false;
-  plugins.push(new CleanWebpackPlugin());
-  plugins.push(new RunAfterCompile());
+  plugins.push(
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' })
+  );
+} else {
+  plugins.push(
+    new MiniCssExtractPlugin({ filename: '[name].css' }),
+    new ReactRefreshWebpackPlugin()
+  );
 }
-
-plugins.push(new MiniCssExtractPlugin({
-  filename: mode === 'production' ? "[name].[contenthash].css" : "[name].css"
-}));
 
 module.exports = {
   mode: mode,
   target: target,
-  entry: './src/app.js',
+  entry: './src/index',
   output: {
-    filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, '..', 'dist'),
+    filename: mode === 'development' ? '[name].js' : '[name].[contenthash].js',
+    path: path.resolve(__dirname, 'dist'),
     assetModuleFilename: 'images/[name][ext][query]'
   },
   module: {
@@ -70,7 +58,7 @@ module.exports = {
         }
       },
       {
-        test: /\.jsx?/,
+        test: /\.(j|t)sx?/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader'
@@ -92,15 +80,34 @@ module.exports = {
   },
   plugins: plugins,
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@assets': path.resolve(__dirname, 'src/assets'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@pages': path.resolve(__dirname, 'src/pages'),
+      '@redux': path.resolve(__dirname, 'src/redux'),
+      '@utils': path.resolve(__dirname, 'src/utils')
+    }
   },
   devtool: devtool,
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    watchOptions: {
-      aggregateTimeout: 1000,
-      ignored: /node_modules/
+    static: {
+      directory: path.resolve(__dirname, 'dist'),
+      publicPath: '/assets',
     },
-    hot: true
+    watchFiles: {
+      paths: path.resolve(__dirname, 'src'),
+      options: {
+        ignored: /node_modules/
+      }
+    },
+    compress: false, // <- true is default
+    hot: true // <- true is default
+  },
+  optimization: {
+    splitChunks: {
+      chunks: mode === 'production' ? 'all' : 'async'
+    }
   }
 };

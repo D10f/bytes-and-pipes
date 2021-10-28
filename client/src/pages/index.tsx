@@ -1,16 +1,16 @@
-import { Suspense, lazy } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
-import Header from '../components/Header';
-import Intro from '../components/pages/Intro';
-import Footer from '../components/Footer';
-import Download from '../components/pages/Download';
+import Header from '@components/Layout/Header';
+import Footer from '@components/Layout/Footer';
 
-// import Login from '../components/pages/Login';
-const About   = lazy(() => import('../components/pages/About'));
-const Terms   = lazy(() => import('../components/pages/Terms'));
-const Privacy = lazy(() => import('../components/pages/Privacy'));
+import Landing  from '@pages/Landing';
+import Download from './Download';
+
+const About   = lazy(() => import('@pages/About'));
+const Terms   = lazy(() => import('@pages/Terms'));
+const Privacy = lazy(() => import('@pages/Privacy'));
 
 const AppRouter = () => {
   const location = useLocation();
@@ -21,7 +21,7 @@ const AppRouter = () => {
       <AnimatePresence exitBeforeEnter>
         <Suspense fallback={<></>}>
           <Switch location={location} key={location.key}>
-            <Route path="/" exact component={Intro} />
+            <Route path="/" exact component={Landing} />
             <Route path="/d" component={Download} />
             <Route path="/about" component={About} />
             <Route path="/terms" component={Terms} />
