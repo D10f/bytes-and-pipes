@@ -64,8 +64,8 @@ These are some of the projects and resources that have inspired and helped me to
 
 [Firefox Send](https://github.com/mozilla/send)
 
-[Streaming Service Workers: Live Code Session - Supercharged](https://www.youtube.com/watch?v=3Tr-scf7trE)
+[Streaming Service Workers: Live Code Session - Supercharged](https://invidious.namazso.eu/watch?v=SdePc87Ffik)
 
 [Excalidraw Blog - End-to-End Encryption in the Browser](https://blog.excalidraw.com/end-to-end-encryption/)
 
-[Thomas Konrad Talk - End to end File Encryption in the Web Browser](https://invidious.exonip.de/watch?v=SdePc87Ffik)
+[Thomas Konrad Talk - End to end File Encryption in the Web Browser](https://invidious.namazso.eu/watch?v=SdePc87Ffik)
