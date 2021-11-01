@@ -1,0 +1,43 @@
+@use './mixins';
+@use './variables';
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+
+  @include mixins.responsive(phone)       { font-size: 50%;    }
+  @include mixins.responsive(landscape)   { font-size: 56.25%; }
+  @include mixins.responsive(portrait)    { font-size: 50%;    }
+  @include mixins.responsive(big-desktop) { font-size: 75%;    }
+}
+
+body {
+  font-family: ubuntu, sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.7;
+  color: variables.$color-dark;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: variables.$color-primary;
+  text-decoration: none;
+
+  &:focus {
+    outline: none;
+  }
+}

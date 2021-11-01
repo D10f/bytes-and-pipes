@@ -85,9 +85,16 @@ module.exports = {
       '@': path.resolve(__dirname, 'src'),
       '@assets': path.resolve(__dirname, 'src/assets'),
       '@components': path.resolve(__dirname, 'src/components'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
+      '@icons': path.resolve(__dirname, 'src/components/Icons'),
+      '@layout': path.resolve(__dirname, 'src/layout'),
       '@pages': path.resolve(__dirname, 'src/pages'),
+      '@services': path.resolve(__dirname, 'src/services'),
       '@redux': path.resolve(__dirname, 'src/redux'),
-      '@utils': path.resolve(__dirname, 'src/utils')
+      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@constants': path.resolve(__dirname, 'src/utils/constants'),
+      '@types': path.resolve(__dirname, 'src/types'),
+      '@styles': path.resolve(__dirname, 'src/styles'),
     }
   },
   devtool: devtool,
@@ -102,6 +109,7 @@ module.exports = {
         ignored: /node_modules/
       }
     },
+    historyApiFallback: true,
     compress: false, // <- true is default
     hot: true // <- true is default
   },

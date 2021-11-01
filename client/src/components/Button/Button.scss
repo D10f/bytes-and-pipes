@@ -1,0 +1,79 @@
+@use '@styles/variables';
+
+.btn {
+  @extend %button;
+
+  &--primary {
+    @extend %button-action;
+  }
+
+  &--outline {
+    @extend %button-outline;
+  }
+}
+
+%button {
+  color: variables.$color-primary-darker;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-family: ubuntu;
+  outline: none;
+
+  &:hover {
+    cursor: pointer;
+    color: variables.$color-light;
+    background-color: variables.$color-primary;
+  }
+}
+
+%button-action {
+  @extend %button;
+
+  border: none;
+  border-radius: 5px;
+  border-bottom: 2px solid variables.$color-primary-dark;
+  background-color: variables.$color-primary-light;
+  box-shadow: variables.$shadow;
+  padding: 1rem 2rem;
+  appearance: none;
+  outline: none;
+  transition: transform 0.2s;
+
+  &:active,
+  &:focus {
+    transform: translateY(.5rem);
+    box-shadow: variables.$shadow-thick;
+  }
+
+  &:disabled {
+    background-image: none;
+    border-bottom: 2px solid variables.$color-dark;
+    background-color: variables.$color-gray-dark;
+  }
+}
+
+%button-outline {
+  @extend %button;
+
+  // padding: 0.5rem 1.5rem;
+  padding: 1rem 2rem;
+  border: 2px solid variables.$color-primary;
+  border-radius: 3px;
+  transition: all 0.2;
+  appearance: none;
+  outline: none;
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    background-color: variables.$color-primary;
+    color: variables.$color-light;
+  }
+
+  &:active {
+    background-color: variables.$color-primary-dark;
+    color: variables.$color-light;
+    border: 2px solid variables.$color-primary-dark;
+  }
+}

@@ -1,0 +1,21 @@
+@use '@styles/variables';
+@use '@styles/mixins';
+
+.urlinput__container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+
+  @include mixins.responsive(phone) {
+    flex-direction: column;
+  }
+}
+
+.urlinput__text {
+  border: 2px solid variables.$color-primary;
+  border-radius: variables.$border-radius;
+  background-color: variables.$color-light;
+  min-width: 75%;
+  padding: 0 1rem;
+  flex: 1 0 auto;
+}

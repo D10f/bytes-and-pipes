@@ -18,8 +18,9 @@ export const generateRandomPassword = (length = 16): string => {
   while (password.length < length) {
     const byte = crypto.getRandomValues(new Uint8Array(1));
 
+
     // included characters: A-Z a-z 0-9 "#$%&\'()*+,-./:;<=>?@[\\]^_`{|}
-    if (byte[0] > 33 || byte [0] < 126) {
+    if (byte[0] > 33 && byte[0] < 126) {
       password += decoder.decode(byte);
     }
   }
@@ -160,21 +161,27 @@ export const decryptData = async (
   keyParam = ''
 ): Promise<IDecryptedData> => {
 
+  if (!keyParam && !password) {
+    throw new Error('Cannot decrypt without a password or key parameter!')
+  }
+
   // The ciphertext is prepended with a random salt and initialization vector
   // By default these values are 32 and 16 bytes, respectively.
   const salt           = ciphertext.slice(0, RANDOM_SALT_LENGTH);
   const iv             = ciphertext.slice(RANDOM_SALT_LENGTH, RANDOM_SALT_LENGTH + INIT_VECTOR_LENGTH);
   const encryptedBytes = ciphertext.slice(RANDOM_SALT_LENGTH + INIT_VECTOR_LENGTH);
 
-  let key: CryptoKey;
+  const key: CryptoKey = keyParam
+    ? await importKey(keyParam)
+    : await deriveDecryptionKey(password, salt as Uint8Array);
 
-  if (keyParam) {
-    key = await importKey(keyParam);
-  } else {
-    key = typeof password === 'string'
-    ? await deriveDecryptionKey(password, salt as Uint8Array)
-    : password
-  }
+  // if (keyParam) {
+  //   key = await importKey(keyParam);
+  // } else {
+  //   key = typeof password === 'string'
+  //     ? await deriveDecryptionKey(password, salt as Uint8Array)
+  //     : password
+  // }
 
   const decryptedBuffer: ArrayBuffer = await crypto.subtle.decrypt(
     {

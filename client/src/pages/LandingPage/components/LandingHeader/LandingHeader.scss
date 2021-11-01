@@ -1,0 +1,10 @@
+@use '@styles/mixins';
+
+.landing__header {
+  @include mixins.responsive(phone) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}

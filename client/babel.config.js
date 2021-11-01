@@ -5,7 +5,6 @@ module.exports = {
     '@babel/preset-typescript',
   ],
   plugins: [
-    'react-refresh/babel',
     '@babel/plugin-transform-runtime'
   ]
 };

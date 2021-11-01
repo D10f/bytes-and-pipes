@@ -61,24 +61,22 @@ class UploadService {
 
   createEncryptionStream() {
     if (!this.key) {
-      throw new Error('You must choose an encryption strategy.');
+      throw new Error('Key object of type ');
     }
     const readStream = this.readChunk(this.file);
     const encryptStream = this.encryptChunk(readStream, this.key);
     const uploadStream = this.uploadChunk(encryptStream);
-    return uploadStream;
+    return uploadStream();
   }
 
   async withRandomKey() {
     this.key = await CryptoService.generateEncryptionKey();
     this.encryptionStrat = encryptionStrat.RANDOMLY_GENERATED;
-    return this;
   }
 
   async withPassword(password: string) {
     this.key = await CryptoService.deriveEncryptionKey(password, this.salt);
     this.encryptionStrat = encryptionStrat.PASSWORD_BASED;
-    return this;
   }
 
   async hashFileName() {
@@ -87,7 +85,8 @@ class UploadService {
   }
 
   uploadChunk(g: ArrayBufferAsyncGenerator) {
-    const { post } = this;
+    // Quick & dirty hack around context binding
+    const post = this.post.bind(this);
     return async function*() {
       for await (const chunk of g()) {
         yield post(chunk);
@@ -95,7 +94,7 @@ class UploadService {
     }
   }
 
-  encryptChunk(g: ArrayBufferGenerator, key: CryptoKey) {
+  encryptChunk(g: () => AsyncGenerator<ArrayBuffer, void, unknown>, key: CryptoKey) {
     const { salt } = this;
     return async function*() {
       for await (const chunk of g()) {
@@ -104,9 +103,9 @@ class UploadService {
     }
   }
 
-  readChunk(file: File): ArrayBufferGenerator {
+  readChunk(file: File) {
     let offset = 0;
-    return function*(){
+    return async function*(){
       while (offset <= file.size) {
         const chunk = file.slice(offset, offset + UPLOAD_CHUNK_SIZE);
         offset += UPLOAD_CHUNK_SIZE;
@@ -118,7 +117,7 @@ class UploadService {
   async post(payload: ArrayBuffer | Uint8Array) {
 
     const endpoint = BASE_API_ENDPOINT +
-      `/upload${this.hashedFileName}/${this.currentChunk}`;
+      `/upload/${this.hashedFileName}/${this.currentChunk}`;
 
     const apiResponse = await fetch(endpoint, {
       method: 'POST',
@@ -150,6 +149,8 @@ class UploadService {
   async put(payload: Uint8Array) {
 
     let { url, id } = this.responseObject!;
+
+    console.log(url);
 
     const endpoint = BASE_API_ENDPOINT +
       `/u/meta/${id}`;

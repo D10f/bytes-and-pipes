@@ -1,0 +1,44 @@
+@use '@styles/variables';
+@use '@styles/mixins';
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 0;
+  border-top: 1px solid variables.$color-dark;
+  z-index: variables.$z-level-footer;
+
+  @include mixins.responsive(phone) {
+    align-self: center;
+    border: none;
+  }
+
+  &__nav {
+    margin-left: auto;
+
+    @include mixins.responsive(phone) {
+      margin: 0 auto 2rem auto;
+    }
+  }
+
+  &__menu {
+    display: flex;
+  }
+
+  &__item {
+    margin: 0 1rem;
+  }
+
+  &__link {
+    font-family: inherit;
+    color: variables.$color-dark;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: variables.$color-primary;
+      outline: none;
+    }
+  }
+}

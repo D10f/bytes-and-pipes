@@ -44,18 +44,36 @@ export default {
 
     return new Promise((resolve, reject) => {
       const writer = fs.createWriteStream(path.join(location, currentChunk));
-      writer.write(data);
-      writer.on('error', (err) => reject(err.message));
-      writer.on('finish', async () => {
-        const files = await this.readDirectory(location);
+      writer.write(data, async err => {
+        if (err) {
+          reject(err.message);
+        }
 
+        const files = await this.readDirectory(location);
+        
         if (files.length !== contentParts) {
           resolve(false);
         } else {
           resolve(true); // entire file has been uploaded
         }
       });
+
     });
+
+    // return new Promise((resolve, reject) => {
+    //   const writer = fs.createWriteStream(path.join(location, currentChunk));
+    //   writer.write(data);
+    //   writer.on('error', (err) => reject(err.message));
+    //   writer.on('finish', async () => {
+    //     const files = await this.readDirectory(location);
+    //
+    //     if (files.length !== contentParts) {
+    //       resolve(false);
+    //     } else {
+    //       resolve(true); // entire file has been uploaded
+    //     }
+    //   });
+    // });
   },
 
   async deleteFile(filepath: fs.PathLike) {

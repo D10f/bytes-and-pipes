@@ -1,0 +1,20 @@
+@use '@styles/variables';
+@use '@styles/mixins';
+
+.landing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: variables.$z-level-landing;
+
+  @include mixins.responsive(portrait) {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 2rem;
+  }
+
+  @include mixins.responsive(phone) {
+    gap: 5rem;
+  }
+}

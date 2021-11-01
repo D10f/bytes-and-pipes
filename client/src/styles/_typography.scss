@@ -1,0 +1,32 @@
+@use './variables';
+
+@font-face {
+  font-family: 'galdwinlight';
+  src: url(../assets/galdwinlight.ttf) format('truetype');
+  font-weight: lighter;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  src: url(../assets/Ubuntu-R.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+button, a {
+  font-family: Ubuntu;
+}
+
+::selection {
+  background: variables.$color-primary;
+  color: variables.$color-light;
+}
+
+.accent {
+  color: variables.$color-primary;
+
+  &:hover {
+    color: variables.$color-primary-dark;
+  }
+}
