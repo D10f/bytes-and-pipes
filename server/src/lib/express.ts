@@ -16,7 +16,8 @@ export default () => {
    * Set headers
    */
   app.use((_req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", config.DOMAIN);
+    // res.setHeader("Access-Control-Allow-Origin", config.DOMAIN);
+    res.setHeader("Access-Control-Allow-Origin", '*');
     res.setHeader(
       "Access-Control-Allow-Methods",
       "GET, POST, PUT, PATCH, DELETE"

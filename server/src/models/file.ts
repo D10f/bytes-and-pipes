@@ -39,7 +39,7 @@ fileSchema.virtual("downloadUrl").get(function (this: FileBaseDocument) {
     ? `${config.DOMAIN}:${config.PORT}`
     : config.DOMAIN;
 
-  return `http://${domain}/file/d/${this._id}`;
+  return `http://${domain}/d/${this._id}`;
 });
 
 fileSchema.virtual("filepath").get(function (this: FileBaseDocument) {

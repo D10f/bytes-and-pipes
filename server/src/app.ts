@@ -1,6 +1,6 @@
 import { Express } from "express";
-import mongoose from 'mongoose';
-import bunyan from 'bunyan';
+import mongoose from "mongoose";
+import bunyan from "bunyan";
 import init from "./lib";
 import config from "./config";
 
@@ -8,7 +8,8 @@ const startServer = async () => {
   /**
    * Initializes services and libraries
    */
-  const { log, app, db } : { log: bunyan, app: Express, db: typeof mongoose } = await init();
+  const { log, app, db }: { log: bunyan; app: Express; db: typeof mongoose } =
+    await init();
 
   /**
    *  Register healthcheck routes
@@ -25,28 +26,27 @@ const startServer = async () => {
   /**
    * Start listening for connections
    */
-   const server = app.listen(+config.PORT, config.HOST, () => {
+  const server = app.listen(+config.PORT, config.HOST, () => {
     log.info(`Listening on port ${config.PORT}`);
   });
 
   /**
    *  Initialize signal listeners for graceful shutdown
    */
-   const shutdown = () => {
-     log.info('Shutting down server...');
-     server.close(async (err) => {
+  const shutdown = () => {
+    log.info("Shutting down server...");
+    server.close(async (err) => {
+      if (err) {
+        log.error(err);
+        process.exitCode = 1;
+      }
 
-       if (err) {
-         log.error(err);
-         process.exitCode = 1;
-       }
+      log.info("Disconnecting from database...");
+      await db.disconnect();
 
-       log.info('Disconnecting from database...');
-       await db.disconnect();
-
-       log.info(`Server shutdown [${process.exitCode}]`)
-       process.exit();
-     });
+      log.info(`Server shutdown [${process.exitCode}]`);
+      process.exit();
+    });
   };
 
   process.on("SIGINT", () => {

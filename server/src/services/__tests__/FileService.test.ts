@@ -66,6 +66,7 @@ describe('File Service test suite', () => {
   });
 
   // Skipping due to conflict when using read and write streams in same suite while using mock-fs
+  // Solved with node version 16+
   test.skip('Should return a stream with file contents', () => {
     const stream = FileService.readAsStream('/tmp/testDirectory/file1');
     expect(stream instanceof fs.ReadStream).toBe(true);
