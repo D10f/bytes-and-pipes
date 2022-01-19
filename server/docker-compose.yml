@@ -1,0 +1,35 @@
+version: '2.4'
+
+services:
+  node-app:
+    build:
+      context: .
+      target: development
+    ports:
+      - 3000:80
+    env_file:
+      - .env
+    volumes:
+      ./:/app
+      /app/node_modules
+      bytesandpipes_uploads:/app/uploads
+    
+  mongo:
+    image: mongo:5-focal
+    restart: always
+    ports:
+      - 127.0.0.1:27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+      MONGO_INITDB_DATABASE: bytesandpipes
+  
+  mongo-express:
+    image: mongo-express:1.0.0-alpha
+    restart: always
+    ports:
+      - 127.0.0.1:8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: toor
+      ME_CONFIG_MONGODB_URL: mongodb://root:toor@mongo:27017/
