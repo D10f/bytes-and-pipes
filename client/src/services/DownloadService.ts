@@ -10,26 +10,22 @@ interface IFileMetadata {
 
 class DownloadService {
   private readonly url: URL;
-  private key: CryptoKey | undefined;
+  private readonly fileId: string;
+  private cryptoKey: CryptoKey | undefined;
   private swPingInterval: number | undefined;
   public fileMetadata: IFileMetadata | ArrayBuffer | undefined;
 
-  constructor(url: string) {
+  constructor(url: string, fileId: string) {
     this.url = new URL(url);
+    this.fileId = fileId;
   }
 
-  get hasKey() {
-    return Boolean(this.key);
+  get key() {
+    return Boolean(this.cryptoKey);
   }
 
-  get urlFragment() {
+  get hash() {
     return this.url.hash.slice(1);
-  }
-
-  get fileId() {
-    // Assumes structure: http://localhost/file/d/123#urlfragment
-    const fileId = this.url.href.match(/\d\/(\w*)(#\w)*?$/i);
-    return fileId || '';
   }
 
   get downloadUrl() {
@@ -43,13 +39,7 @@ class DownloadService {
       return null;
     }
 
-    const fileId = this.fileId;
-
-    if (!fileId) {
-      throw new Error('Invalid download URL provided');
-    }
-
-    const url = `${this.url.href}/file/d/meta/${fileId}`;
+    const url = `${this.url.href}/file/d/meta/${this.fileId}`;
     const response = await fetch(url);
 
     if (response.status !== 200) {
@@ -63,8 +53,8 @@ class DownloadService {
     if (!this.fileMetadata || !(this.fileMetadata instanceof ArrayBuffer)) {
       throw new Error('No metadata found for this file.');
     }
-    const { buffer, key } = await CryptoService.decryptData(this.fileMetadata, password, this.urlFragment);
-    this.key = key;
+    const { buffer, key } = await CryptoService.decryptData(this.fileMetadata, password, this.hash);
+    this.cryptoKey = key;
     this.fileMetadata = JSON.parse(new TextDecoder().decode(buffer));
   }
 

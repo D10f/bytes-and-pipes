@@ -23,7 +23,7 @@ const App = () => {
                 <Route path="/about" component={AboutPage} />
                 <Route path="/privacy" component={PrivacyPage} />
                 <Route path="/terms" component={TermsPage} />
-                <Route path="/d" component={DownloadPage} />
+                <Route path="/download/:fileId" component={DownloadPage} />
               </Switch>
             </Suspense>
           </AppLayout>

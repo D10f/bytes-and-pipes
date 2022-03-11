@@ -3,8 +3,6 @@ import DownloadService from '@services/DownloadService';
 
 interface IProps {
   downloader: DownloadService;
-  setProgress?: (num: number) => void;
-  setError?: (str: string) => void;
 }
 
 const DownloadStream = ({ downloader }: IProps) => {

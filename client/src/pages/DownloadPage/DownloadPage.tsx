@@ -6,25 +6,20 @@ import Button from '@components/Button/Button';
 import FileInfo from '@components/FileInfo/FileInfo';
 import DownloadStream from './components/DownloadStream';
 
-/**
- * Possible states are:
- *  1) fetching metadata
- *  2) no password provided via url fragment (ask user for input)
- *  3) all set, ready to start download
- */
+const DownloadPage = ({ location, match }: RouteComponentProps<any>) => {
 
-const DownloadPage = ({ location }: RouteComponentProps) => {
-
-  const { downloader } = useDownload(location);
+  const { downloader, fileMetadata, decryptMetadata, loading } = useDownload(location.pathname, match.params.fileId);
   const [ password, setPassword ] = useState('');
 
+  const isEncrypted = (data: any) => data instanceof ArrayBuffer;
+
   return (
-    <section className="">
+    <section>
       <article>
+        <h1>dsfsdf</h1>
+        { !fileMetadata && <p>Loading...</p>}
 
-        {downloader && !downloader.fileMetadata && <p>Loading...</p>}
-
-        {downloader && !downloader.hasKey && (
+        { fileMetadata && isEncrypted(fileMetadata) && (
           <>
             <PasswordInput
               password={password}
@@ -35,14 +30,15 @@ const DownloadPage = ({ location }: RouteComponentProps) => {
             <Button
               text="Decrypt"
               variant="primary"
-              onClick={() => downloader!.decryptMetadata(password)}
+              disabled={loading}
+              onClick={() => decryptMetadata(password)}
             />
           </>
         )}
 
-        {downloader && downloader.hasKey && downloader.fileMetadata && (
+        { fileMetadata && !isEncrypted(fileMetadata) && (
           <>
-            <FileInfo file={downloader.fileMetadata as unknown as File} />
+            <FileInfo file={fileMetadata as unknown as File} />
             <DownloadStream downloader={downloader} />
           </>
         )}

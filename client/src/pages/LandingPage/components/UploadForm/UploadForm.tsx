@@ -54,6 +54,12 @@ const UploadForm = ({ currentStep, updateStep }: IUploadFormProps) => {
     updateStep(FileUploadStepsEnum.UPLOAD_FILE);
   };
 
+  const resetForm = () => {
+    setFile(null);
+    setPassword('');
+    updateStep(FileUploadStepsEnum.SELECT_FILE);
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer?.files[0];
@@ -98,7 +104,7 @@ const UploadForm = ({ currentStep, updateStep }: IUploadFormProps) => {
       )}
 
       {currentStep === FileUploadStepsEnum.UPLOAD_FILE && (
-        <ProgressOverlay file={file!} password={password} />
+        <ProgressOverlay file={file!} password={password} resetForm={resetForm} />
       )}
 
     </motion.form>

@@ -1,25 +1,46 @@
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setError } from '@redux/errors/actions';
 import DownloadService from '@services/DownloadService';
 
-const useDownload = (location: any) => {
+const useDownload = (pathname: string, fileId: string) => {
 
-  const [ downloader ] = useState(new DownloadService(location.pathname));
-  const [ progress, setProgress ] = useState(0);
-  const [ error, setError ] = useState('');
+  const dispatch = useDispatch();
+  const [ loading, setLoading ] = useState(true);
+  const [ downloader ] = useState(new DownloadService(pathname, fileId));
+
+  console.log(downloader)
+  console.log(downloader.downloadUrl)
+  console.log(downloader.fileMetadata instanceof ArrayBuffer)
+
+  const decryptMetadata = async (password?: string) => {
+    setLoading(true);
+    await downloader.decryptMetadata(password)
+    setLoading(false);
+  }
 
   useEffect(() => {
     const init = async function(){
-      await downloader.fetchMetadata()
-      await downloader.decryptMetadata();
+
+      await downloader.fetchMetadata();
+
+      if (downloader.hash) {
+        await downloader.decryptMetadata();
+      }
+
+      setLoading(false);
     };
+
     init()
-      .catch(err => setError(err.message));
-  }, []);
+      .catch(err => dispatch(setError(err.message)));
+
+  }, [ downloader ]);
 
   return {
     downloader,
-    progress,
-    error,
+    fileMetadata: downloader.fileMetadata,
+    decryptMetadata,
+    loading
   };
 };
 

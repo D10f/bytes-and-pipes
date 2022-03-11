@@ -8,6 +8,7 @@ import './ProgressOverlay.scss';
 interface IProgressOverlayProps {
   file: File;
   password: string | null;
+  resetForm: () => void;
 }
 
 const overlay = {
@@ -21,7 +22,7 @@ const overlay = {
   }
 };
 
-const ProgressOverlay = ({ file, password }: IProgressOverlayProps) => {
+const ProgressOverlay = ({ file, password, resetForm }: IProgressOverlayProps) => {
 
   const { progress, url, error } = useUpload(file, password);
 
@@ -34,9 +35,10 @@ const ProgressOverlay = ({ file, password }: IProgressOverlayProps) => {
       transition={{ duration: 0.5 }}
     >
       <h3 className="progress__title">
-        {progress < 100
-          ? `${progress}%`
-          : 'Upload Succesful!'
+        {
+          progress < 100
+            ? `${progress}%`
+            : 'Upload Succesful!'
         }
       </h3>
 
@@ -46,6 +48,7 @@ const ProgressOverlay = ({ file, password }: IProgressOverlayProps) => {
           <Button
             text="Upload Another File"
             variant="primary"
+            onClick={resetForm}
           />
         </>
       )}

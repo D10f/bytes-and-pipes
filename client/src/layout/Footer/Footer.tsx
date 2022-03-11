@@ -20,6 +20,12 @@ const Footer = () => (
         </li>
 
         <li className="footer__item">
+          <Link className="footer__link" tabIndex={0} to="/download/file123">
+            Download
+          </Link>
+        </li>
+
+        <li className="footer__item">
           <Link className="footer__link" tabIndex={0} to="/about">
             About
           </Link>

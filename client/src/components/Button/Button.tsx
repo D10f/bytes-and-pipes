@@ -14,9 +14,10 @@ interface IButtonProps {
   variant?: ButtonVariants;
   btnType?: ButtonTypes;
   onClick?: () => void;
+  disabled?: boolean
 }
 
-const Button = ({ text, variant, btnType, onClick }: IButtonProps) => {
+const Button = ({ text, variant, btnType, onClick, disabled }: IButtonProps) => {
 
   const styles = variant ? `btn--${variant}` : 'btn';
   const action = btnType || 'button';
@@ -26,6 +27,7 @@ const Button = ({ text, variant, btnType, onClick }: IButtonProps) => {
       className={styles}
       type={action}
       onClick={onClick}
+      disabled={disabled}
     >
       { text }
     </button>

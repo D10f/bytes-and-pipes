@@ -3,6 +3,10 @@
 .btn {
   @extend %button;
 
+  &[disabled] {
+    background-color: variables.$color-gray-dark;
+  }
+
   &--primary {
     @extend %button-action;
   }
