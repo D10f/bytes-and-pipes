@@ -4,4 +4,6 @@ import { store } from '@/store';
 
 import App from './App.vue';
 
+import './main.css';
+
 createApp(App).use(router).use(store).mount('#app');
