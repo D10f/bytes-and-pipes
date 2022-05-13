@@ -19,3 +19,8 @@
 .footer__link {
   @apply hover:text-primary-500;
 }
+
+.action-btn {
+  @apply bg-primary-400 text-green-900 rounded border-b-2 border-primary-600
+         py-2 px-4 w-max hover:bg-primary-300 active:border-b active:translate-y-px;
+}

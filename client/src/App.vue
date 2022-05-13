@@ -1,10 +1,12 @@
 <template>
-  <body
-    class="bg-gray-100 min-h-screen p-12 flex flex-col justify-between align-stretch"
-  >
-    <TheNavbar />
-    <router-view></router-view>
-    <TheFooter />
+  <body class="bg-gray-100">
+    <div
+      class="min-h-screen p-4 sm:p-8 md:p-12 mx-auto flex flex-col justify-between align-stretch max-w-screen-xl"
+    >
+      <TheNavbar />
+      <router-view></router-view>
+      <TheFooter />
+    </div>
   </body>
 </template>
 

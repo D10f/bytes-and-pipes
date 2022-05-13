@@ -1,8 +1,8 @@
 <template>
   <section>
-    <header>
+    <header class="md:mb-5">
       <h3 class="font-subtitle text-2xl font-bold">
-        Share your files in privacy
+        Share your files in privacy:
       </h3>
     </header>
     <ol>

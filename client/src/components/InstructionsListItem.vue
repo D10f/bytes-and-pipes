@@ -1,10 +1,10 @@
 <template>
   <li
-    class="text-lg p-2 my-2 rounded border-b-2 opacity-80"
+    class="md:text-lg max-w-max text-gray-500 p-2 my-2 rounded"
     :class="{
-      'bg-gray-400 border-gray-600': isActive,
-      'bg-primary-400 border-primary-600 opacity-100': isValid,
-      'bg-red-400 border-red-600 opacity-100': isError,
+      'bg-gray-300 text-gray-900': isActive,
+      'bg-primary-400 text-green-900': isValid,
+      'bg-red-300 text-orange-900': isError,
     }"
   >
     {{ text }}

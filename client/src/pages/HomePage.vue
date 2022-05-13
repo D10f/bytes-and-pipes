@@ -1,22 +1,20 @@
 <template>
-  <main class="grid grid-cols-2 gap-x-2 justify-center items-center">
+  <main
+    class="flex flex-col gap-16 md:grid md:grid-cols-2 md:gap-x-2 md:justify-between md:justify-center md:items-center"
+  >
     <InstructionsList />
-    <div class="w-full">
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-    </div>
+    <ControlPanel />
   </main>
 </template>
 
 <script>
 import InstructionsList from '@/components/InstructionsList.vue';
+import ControlPanel from '@/components/ControlPanel.vue';
 export default {
   name: 'HomePage',
   components: {
     InstructionsList,
+    ControlPanel,
   },
 };
 </script>
