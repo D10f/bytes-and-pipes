@@ -1,3 +1,21 @@
+@font-face {
+  font-family: 'galdwinlight';
+  src: url(./assets/galdwinlight.ttf) format('truetype');
+  font-weight: lighter;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ubuntu';
+  src: url(./assets/ubuntu.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.footer__link {
+  @apply hover:text-primary-500;
+}

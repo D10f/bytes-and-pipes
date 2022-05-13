@@ -1,5 +1,7 @@
 <template>
-  <body>
+  <body
+    class="bg-gray-100 min-h-screen p-12 flex flex-col justify-between align-stretch"
+  >
     <TheNavbar />
     <router-view></router-view>
     <TheFooter />
