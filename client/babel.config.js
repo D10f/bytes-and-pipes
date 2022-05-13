@@ -1,10 +1,5 @@
 module.exports = {
   presets: [
-    '@babel/preset-env',
-    [ '@babel/preset-react', { automatic: true } ],
-    '@babel/preset-typescript',
-  ],
-  plugins: [
-    '@babel/plugin-transform-runtime'
+    '@vue/cli-plugin-babel/preset'
   ]
-};
+}
