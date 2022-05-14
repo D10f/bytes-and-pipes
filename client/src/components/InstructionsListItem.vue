@@ -36,11 +36,11 @@ export default {
     },
     classObject() {
       return {
-        'opacity-100': this.isCurrent,
-        'bg-gray-300 text-gray-900 opacity-100':
+        'border-l-2 opacity-100': this.isCurrent,
+        'border-gray-900 bg-gray-300 text-gray-900 opacity-100':
           this.isCurrent && !this.isValid && !this.isError,
-        'bg-primary-400 text-green-900': this.isValid,
-        'bg-red-300 text-orange-900': this.isError,
+        'border-green-900 bg-primary-400 text-green-900': this.isValid,
+        'border-orange-900 bg-red-300 text-orange-900': this.isError,
       };
     },
   },
