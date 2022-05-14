@@ -45,6 +45,21 @@ export const store = createStore({
     currentInstruction({ instructions }) {
       return instructions.find((i) => i.isCurrent);
     },
+    nextUnfinishedInstruction({ instructions }) {
+      return instructions.find(
+        (i) => (!i.isCurrent && i.status === 'IDLE') || i.status === 'ERROR'
+      );
+    },
+    isReadyToUpload({
+      file,
+      expirationTime,
+      allowedDownloads,
+      encryptionStrategy,
+    }) {
+      return (
+        file && expirationTime && allowedDownloads && encryptionStrategy.type
+      );
+    },
     truncatedFilename({ file }) {
       // TODO: Truncate name
       return file.name;
@@ -78,7 +93,7 @@ export const store = createStore({
         status: 'VALID',
         details: getters.fileDetails,
       });
-      commit('setCurrentInstruction', 'SHARE_OPTIONS');
+      commit('setCurrentInstruction', getters.nextUnfinishedInstruction.title);
     },
     updateDownloadOptions(
       { getters, commit },
@@ -90,16 +105,19 @@ export const store = createStore({
         status: 'VALID',
         details: getters.downloadOptions,
       });
-      commit('setCurrentInstruction', 'ENCRYPTION_OPTIONS');
+      commit('setCurrentInstruction', getters.nextUnfinishedInstruction.title);
     },
     updateEncryptionOptions({ getters, commit }, { useRandomKey, password }) {
-      commit('setEncryptionOptions', { useRandomKey, password });
+      commit('setEncryptionOptions', {
+        useRandomKey,
+        password,
+      });
       commit('setInstructionStatus', {
         instruction: 'ENCRYPTION_OPTIONS',
         status: 'VALID',
         details: getters.encryptionStrategy,
       });
-      commit('setCurrentInstruction', 'UPLOAD');
+      commit('setCurrentInstruction', getters.nextUnfinishedInstruction.title);
     },
   },
   mutations: {
@@ -125,7 +143,7 @@ export const store = createStore({
       state.encryptionStrategy.type = useRandomKey
         ? 'RANDOMLY_GENERATED'
         : 'PASSWORD_BASED';
-      state.encryptionStrategy.content = password || null;
+      state.encryptionStrategy.content = password ? password : null;
     },
   },
 });
