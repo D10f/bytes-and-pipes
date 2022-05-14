@@ -9,28 +9,28 @@ export const store = createStore({
     instructions: [
       {
         title: 'SELECT_FILE',
-        text: '1. Select a file of up to 1GB.',
+        text: 'Select a file of up to 1GB.',
         isCurrent: true,
         status: 'IDLE',
         details: '',
       },
       {
         title: 'SHARE_OPTIONS',
-        text: '2. Choose download options.',
+        text: 'Choose download options.',
         isCurrent: false,
         status: 'IDLE',
         details: '',
       },
       {
         title: 'ENCRYPTION_OPTIONS',
-        text: '3. Choose an encryption strategy.',
+        text: 'Choose an encryption strategy.',
         isCurrent: false,
         status: 'IDLE',
         details: '',
       },
       {
         title: 'UPLOADING',
-        text: '4. Upload.',
+        text: 'Upload.',
         status: 'IDLE',
         details: '',
       },

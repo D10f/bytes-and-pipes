@@ -1,6 +1,6 @@
 <template>
   <li
-    class="md:text-lg max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100"
+    class="md:text-lg sm:w-full md:max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100"
     :class="classObject"
     @click="selectInstruction"
   >

@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full mx-10 flex flex-col gap-6 justify-center">
+  <div class="options__container mx-10">
     <div class="relative flex gap-4 justify-between items-center">
       <label
         for="expirationTime"
@@ -8,7 +8,7 @@
       >
       <input
         v-model="expirationTime"
-        class="text-right bg-white border border-gray-400 p-1 w-16 focus:outline-none"
+        class="options-input"
         id="expirationTime"
         placeholder="24"
       />
@@ -25,7 +25,7 @@
       >
       <input
         v-model="allowedDownloads"
-        class="text-right bg-white border border-gray-400 p-1 w-16 focus:outline-none"
+        class="options-input"
         id="allowedDownloads"
         placeholder="1"
       />
@@ -37,6 +37,7 @@
     <button
       @click="updateDownloadOptions"
       class="action-btn"
+      :class="{ 'mx-auto': true }"
       :disabled="isButtonDisabled"
     >
       Next

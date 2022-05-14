@@ -1,11 +1,11 @@
 <template>
-  <section>
+  <section class="xs:mx-auto lg:mx-0">
     <header class="md:mb-5">
       <h3 class="font-subtitle text-2xl font-bold">
         Share your files in just a few steps:
       </h3>
     </header>
-    <ol>
+    <ol class="list-decimal pl-6">
       <InstructionsListItem
         v-for="instruction in instructions"
         :key="instruction.title"

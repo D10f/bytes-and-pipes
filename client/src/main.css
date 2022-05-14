@@ -20,9 +20,17 @@
   @apply hover:text-primary-500;
 }
 
+.options__container {
+  @apply h-full py-10 flex flex-col gap-6 justify-center;
+}
+
 .action-btn {
   @apply bg-primary-400 text-green-900 rounded border-b-2 border-primary-600
           w-max hover:bg-primary-300 active:border-b active:translate-y-px
           disabled:bg-gray-400 disabled:border-gray-600 disabled:text-gray-900
           disabled:border-b-2 disabled:translate-y-0 px-4 py-2;
+}
+
+.options-input {
+  @apply text-right bg-white border rounded border-gray-400 p-1 w-16 focus:outline-none;
 }

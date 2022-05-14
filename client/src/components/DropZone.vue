@@ -1,6 +1,6 @@
 <template>
   <form
-    class="h-full flex flex-col justify-center items-center"
+    class="options__container items-center"
     :class="classObject"
     @submit.prevent=""
     @dragover.prevent="handleDragEnter"
