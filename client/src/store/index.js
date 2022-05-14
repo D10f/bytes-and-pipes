@@ -3,9 +3,12 @@ import { createStore } from 'vuex';
 export const store = createStore({
   state: {
     file: null,
-    expirationTime: null, // 1-24
-    allowedDownloads: null, // 1-5
-    encryptionStrategy: null, // random or password
+    expirationTime: null,
+    allowedDownloads: null,
+    encryptionStrategy: {
+      type: null,
+      content: null,
+    },
     instructions: [
       {
         title: 'SELECT_FILE',
@@ -29,7 +32,7 @@ export const store = createStore({
         details: '',
       },
       {
-        title: 'UPLOADING',
+        title: 'UPLOAD',
         text: 'Upload.',
         status: 'IDLE',
         details: '',
@@ -56,6 +59,9 @@ export const store = createStore({
     },
     downloadOptions({ expirationTime, allowedDownloads }) {
       return `Expires in ${expirationTime} hours or after ${allowedDownloads} downloads.`;
+    },
+    encryptionStrategy({ encryptionStrategy }) {
+      return `Encryption strategy: ${encryptionStrategy.type}`;
     },
   },
   actions: {
@@ -86,6 +92,15 @@ export const store = createStore({
       });
       commit('setCurrentInstruction', 'ENCRYPTION_OPTIONS');
     },
+    updateEncryptionOptions({ getters, commit }, { useRandomKey, password }) {
+      commit('setEncryptionOptions', { useRandomKey, password });
+      commit('setInstructionStatus', {
+        instruction: 'ENCRYPTION_OPTIONS',
+        status: 'VALID',
+        details: getters.encryptionStrategy,
+      });
+      commit('setCurrentInstruction', 'UPLOAD');
+    },
   },
   mutations: {
     setCurrentInstruction(state, instruction) {
@@ -105,6 +120,12 @@ export const store = createStore({
     setDownloadOptions(state, { expirationTime, allowedDownloads }) {
       state.expirationTime = expirationTime;
       state.allowedDownloads = allowedDownloads;
+    },
+    setEncryptionOptions(state, { useRandomKey, password }) {
+      state.encryptionStrategy.type = useRandomKey
+        ? 'RANDOMLY_GENERATED'
+        : 'PASSWORD_BASED';
+      state.encryptionStrategy.content = password || null;
     },
   },
 });

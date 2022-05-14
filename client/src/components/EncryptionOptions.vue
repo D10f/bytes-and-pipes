@@ -66,6 +66,12 @@ export default {
     };
   },
   methods: {
+    updateEncryptionOptions() {
+      this.$store.dispatch('updateEncryptionOptions', {
+        useRandomKey: this.useRandomKey,
+        password: this.password,
+      });
+    },
     loadZxcvbn() {
       if (!this.zxcvbn) {
         import('zxcvbn').then((m) => {
