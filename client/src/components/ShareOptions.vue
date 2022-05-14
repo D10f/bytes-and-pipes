@@ -1,38 +1,34 @@
 <template>
   <div class="options__container mx-10">
-    <div class="relative flex gap-4 justify-between items-center">
+    <div class="flex gap-4 justify-between items-center">
       <label
         for="expirationTime"
         title="Hours until this file expires (max 24 hours)"
-        >Expiration Time</label
       >
+        Expiration Time
+        <span class="text-xs text-gray-500 italic">(24 hours max)</span>
+      </label>
       <input
         v-model="expirationTime"
         class="options-input"
         id="expirationTime"
         placeholder="24"
       />
-      <span
-        class="absolute top-6 italic text-sm text-gray-500 opacity-50 hover:opacity-100 hover:cursor-default"
-        >Hours until this file expires</span
-      >
     </div>
-    <div class="relative flex gap-4 justify-between items-center">
+    <div class="flex gap-4 justify-between items-center">
       <label
         for="allowedDownloads"
         title="Number of downloads allowed for this file (max 5 downloads)"
-        >Allowed Downloads</label
       >
+        Allowed Downloads
+        <span class="text-xs text-gray-500 italic">(5 downloads max)</span>
+      </label>
       <input
         v-model="allowedDownloads"
         class="options-input"
         id="allowedDownloads"
         placeholder="1"
       />
-      <span
-        class="absolute top-6 italic text-sm text-gray-500 opacity-50 hover:opacity-100 hover:cursor-default"
-        >Number of downloads allowed for this file</span
-      >
     </div>
     <button
       @click="updateDownloadOptions"
