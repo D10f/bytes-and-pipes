@@ -1,6 +1,6 @@
 <template>
   <input class="hidden" ref="fileInput" type="file" @change="fileChangeFn" />
-  <button :class="classObject" type="button" @click="handleClick">
+  <button class="action-btn" type="button" @click="handleClick">
     {{ file ? 'Change File' : 'Select' }}
   </button>
 </template>
@@ -21,14 +21,6 @@ export default {
     return {
       fileChangeFn: this.handleFileChange,
     };
-  },
-  computed: {
-    classObject() {
-      return {
-        'action-btn': !this.file,
-        'text-primary-600 hover:text-primary-500': this.file,
-      };
-    },
   },
   methods: {
     handleClick() {

@@ -54,8 +54,8 @@ export default {
   data() {
     return {
       v$: useVuelidate(),
-      expirationTime: '',
-      allowedDownloads: '',
+      expirationTime: this.$store.state.expirationTime,
+      allowedDownloads: this.$store.state.allowedDownloads,
     };
   },
   validations() {
