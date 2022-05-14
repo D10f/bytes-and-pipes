@@ -2,13 +2,13 @@
   <section>
     <header class="md:mb-5">
       <h3 class="font-subtitle text-2xl font-bold">
-        Share your files in privacy:
+        Share your files in just a few steps:
       </h3>
     </header>
     <ol>
       <InstructionsListItem
         v-for="instruction in instructions"
-        :key="instruction.id"
+        :key="instruction.title"
         :instruction="instruction"
       />
     </ol>

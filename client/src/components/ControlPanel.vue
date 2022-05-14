@@ -1,6 +1,6 @@
 <template>
   <section class="border-2 border-dashed border-black rounded h-32 md:h-full">
-    <DropZone v-if="currentStep === 'SELECT_FILE'" />
+    <DropZone v-if="currentInstruction === 'SELECT_FILE'" />
   </section>
 </template>
 
@@ -12,8 +12,8 @@ export default {
     DropZone,
   },
   computed: {
-    currentStep() {
-      return this.$store.getters.currentStep;
+    currentInstruction() {
+      return this.$store.getters.currentInstruction.title;
     },
   },
 };

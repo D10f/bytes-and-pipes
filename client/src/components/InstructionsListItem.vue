@@ -1,13 +1,11 @@
 <template>
   <li
-    class="md:text-lg max-w-max text-gray-500 p-2 my-2 rounded"
-    :class="{
-      'bg-gray-300 text-gray-900': isActive,
-      'bg-primary-400 text-green-900': isValid,
-      'bg-red-300 text-orange-900': isError,
-    }"
+    class="md:text-lg max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100"
+    :class="classObject"
+    @click="selectInstruction"
   >
     {{ text }}
+    <p v-if="details" class="text-sm p-2">{{ details }}</p>
   </li>
 </template>
 
@@ -19,20 +17,36 @@ export default {
   },
   data() {
     return {
-      id: this.instruction.id,
       text: this.instruction.text,
-      status: this.instruction.status,
+      title: this.instruction.title,
     };
   },
   computed: {
-    isActive() {
-      return this.status === 'ACTIVE';
+    isCurrent() {
+      return this.$store.getters.instruction(this.title).isCurrent;
     },
     isValid() {
-      return this.status === 'VALID';
+      return this.$store.getters.instruction(this.title).status === 'VALID';
     },
     isError() {
-      return this.status === 'ERROR';
+      return this.$store.getters.instruction(this.title).status === 'ERROR';
+    },
+    details() {
+      return this.$store.getters.instruction(this.title).details;
+    },
+    classObject() {
+      return {
+        'opacity-100': this.isCurrent,
+        'bg-gray-300 text-gray-900 opacity-100':
+          this.isCurrent && !this.isValid && !this.isError,
+        'bg-primary-400 text-green-900': this.isValid,
+        'bg-red-300 text-orange-900': this.isError,
+      };
+    },
+  },
+  methods: {
+    selectInstruction() {
+      this.$store.dispatch('selectInstruction', this.title);
     },
   },
 };

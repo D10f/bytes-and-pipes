@@ -2,33 +2,78 @@ import { createStore } from 'vuex';
 
 export const store = createStore({
   state: {
+    file: null,
     instructions: [
       {
-        id: (Math.random() * 1000).toString(),
         title: 'SELECT_FILE',
         text: '1. Select a file of up to 1GB.',
-        status: 'ACTIVE', // ACTIVE, IDLE, VALID, ERROR
+        isCurrent: true,
+        status: 'IDLE',
+        details: '',
       },
       {
-        id: (Math.random() * 1000).toString(),
-        title: 'ENCRYPTION_STRAT',
-        text: '2. Choose and encryption strategy.',
+        title: 'SHARE_OPTIONS',
+        text: '2. Choose download options.',
+        isCurrent: false,
         status: 'IDLE',
+        details: '',
       },
       {
-        id: (Math.random() * 1000).toString(),
-        title: 'SHARE',
-        text: '3. Share the url.',
+        title: 'ENCRYPTION_OPTIONS',
+        text: '3. Choose an encryption strategy.',
+        isCurrent: false,
         status: 'IDLE',
+        details: '',
+      },
+      {
+        title: 'UPLOADING',
+        text: '4. Upload.',
+        status: 'IDLE',
+        details: '',
       },
     ],
   },
   getters: {
-    currentStep({ instructions }) {
-      const { title } = instructions.find((i) => i.status === 'ACTIVE');
-      return title;
+    instruction: (state) => (title) =>
+      state.instructions.find((i) => i.title === title),
+    currentInstruction({ instructions }) {
+      return instructions.find((i) => i.isCurrent);
+    },
+    // TODO: Truncate name
+    truncatedFilename({ file }) {
+      return file.name;
+    },
+    // TODO: Make size human-readable
+    filesizeReadable({ file }) {
+      return file.size;
     },
   },
-  actions: {},
-  mutations: {},
+  actions: {
+    selectInstruction({ getters, commit }, instruction) {
+      if (getters.currentInstruction.title === instruction) {
+        return;
+      }
+      commit('setCurrentInstruction', instruction);
+    },
+    selectFile({ commit }, file) {
+      commit('setFile', file);
+      commit('setCurrentInstruction', 'SHARE_OPTIONS');
+    },
+  },
+  mutations: {
+    setCurrentInstruction(state, instruction) {
+      state.instructions = state.instructions.map((i) => ({
+        ...i,
+        isCurrent: i.title === instruction,
+      }));
+    },
+    setFile(state, file) {
+      state.file = file;
+    },
+    setError(state, { step, details }) {
+      state.instructions = state.instructions.map((i) => {
+        return i.title === step ? { ...i, status: 'ERROR', details } : i;
+      });
+    },
+  },
 });
