@@ -35,7 +35,7 @@ export const store = createStore({
       },
       {
         title: 'UPLOAD',
-        text: 'Upload.',
+        text: 'Share the file url.',
         status: 'IDLE',
         details: '',
       },
