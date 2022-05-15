@@ -1,4 +1,4 @@
-export function convertBytes(bytes) {
+export const convertBytes = (bytes) => {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
 
   if (bytes == 0) {
@@ -12,4 +12,4 @@ export function convertBytes(bytes) {
   }
 
   return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
-}
+};

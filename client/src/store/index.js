@@ -1,6 +1,12 @@
 import { createStore } from 'vuex';
 import { convertBytes } from '@/utils/bytes';
 import { shortener } from '@/utils/shortener';
+import {
+  EncryptionService,
+  PasswordBasedStrategy,
+  RandomPasswordStrategy,
+} from '@/services/EncryptionService';
+import { UploadService } from '@/services/UploadService';
 
 export const store = createStore({
   state: {
@@ -70,12 +76,6 @@ export const store = createStore({
       const readableSize = `(${convertBytes(file.size)})`;
       return truncatedFilename + readableSize;
     },
-    downloadOptions({ expirationTime, allowedDownloads }) {
-      return `Expires in ${expirationTime} hours or after ${allowedDownloads} downloads.`;
-    },
-    encryptionStrategy({ encryptionStrategy }) {
-      return `Encryption strategy: ${encryptionStrategy.type}`;
-    },
   },
   actions: {
     selectInstruction({ getters, commit }, instruction) {
@@ -101,21 +101,36 @@ export const store = createStore({
       commit('setInstructionStatus', {
         instruction: 'SHARE_OPTIONS',
         status: 'VALID',
-        details: getters.downloadOptions,
+        details: `Expires in ${expirationTime} hours or after ${allowedDownloads} downloads.`,
       });
       commit('setCurrentInstruction', getters.nextUnfinishedInstruction.title);
     },
     updateEncryptionOptions({ getters, commit }, { useRandomKey, password }) {
+      const encryptionType = useRandomKey
+        ? 'RANDOMLY_GENERATED'
+        : 'PASSWORD_BASED';
+
       commit('setEncryptionOptions', {
-        useRandomKey,
+        type: encryptionType,
         password,
       });
+
       commit('setInstructionStatus', {
         instruction: 'ENCRYPTION_OPTIONS',
         status: 'VALID',
-        details: getters.encryptionStrategy,
+        details: `Encryption strategy: ${encryptionType}`,
       });
       commit('setCurrentInstruction', getters.nextUnfinishedInstruction.title);
+    },
+    getUploadService({ state }) {
+      const file = state.file;
+      const strategy = state.encryptionStrategy.type;
+      const password = state.encryptionStrategy.content;
+      const EncryptionStrategy =
+        strategy === 'RANDOMLY_GENERATED'
+          ? new RandomPasswordStrategy()
+          : new PasswordBasedStrategy(password);
+      return new UploadService(file, new EncryptionService(EncryptionStrategy));
     },
   },
   mutations: {
@@ -137,11 +152,9 @@ export const store = createStore({
       state.expirationTime = expirationTime;
       state.allowedDownloads = allowedDownloads;
     },
-    setEncryptionOptions(state, { useRandomKey, password }) {
-      state.encryptionStrategy.type = useRandomKey
-        ? 'RANDOMLY_GENERATED'
-        : 'PASSWORD_BASED';
-      state.encryptionStrategy.content = password ? password : null;
+    setEncryptionOptions(state, { type, password }) {
+      state.encryptionStrategy.type = type;
+      state.encryptionStrategy.content = password;
     },
   },
 });

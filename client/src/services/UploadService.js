@@ -21,10 +21,17 @@ export class UploadService {
     );
   }
 
-  async post(payload) {
+  start() {
+    const readStream = this._readChunk().bind(this);
+    const encryptStream = this._encryptChunk(readStream).bind(this);
+    const uploadStream = this._uploadChunk(encryptStream).bind(this);
+    return uploadStream();
+  }
+
+  async _post(payload) {
     const endpoint =
       process.env.VUE_APP_BASE_URL +
-      `/upload/${this.uploadId}/${this._currentChunk}`;
+      `/upload/${this._uploadId}/${this._currentChunk}`;
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -52,7 +59,7 @@ export class UploadService {
     };
   }
 
-  async put(payload) {
+  async _put(payload) {
     let { url, id } = this.responseObj;
 
     const endpoint = process.env.VUE_APP_BASE_URL + `/u/meta/${id}`;
@@ -68,12 +75,7 @@ export class UploadService {
       : url;
   }
 
-  createUploadStream() {
-    const { uploadStream, encryptChunk, readChunk } = this;
-    return uploadStream(encryptChunk(readChunk()));
-  }
-
-  readChunk() {
+  _readChunk() {
     let offset = 0;
     return async function* () {
       while (offset <= this._file.size) {
@@ -87,7 +89,7 @@ export class UploadService {
     };
   }
 
-  encryptChunk(g) {
+  _encryptChunk(g) {
     return async function* () {
       for await (const chunk of g()) {
         yield this._encryptionService.encrypt(chunk);
@@ -95,11 +97,12 @@ export class UploadService {
     };
   }
 
-  uploadChunk(g) {
-    const post = this.post.bind(this);
+  _uploadChunk(g) {
+    // const post = this._post.bind(this);
     return async function* () {
       for await (const chunk of g()) {
-        yield post(chunk);
+        // yield this._post(chunk);
+        yield chunk;
       }
     };
   }

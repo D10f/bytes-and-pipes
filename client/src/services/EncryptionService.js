@@ -4,7 +4,7 @@ import {
   deriveEncryptionKey,
   encryptData,
   sha256sum,
-} from './crypto';
+} from '@/utils/crypto';
 
 /**
  * Base class
@@ -17,14 +17,14 @@ class EncryptionStrategy {
     this.type;
     this.generatePassword();
   }
-  async encrypt(data) {
-    return await encryptData(data, this.key, this.salt);
+  encrypt(data) {
+    return encryptData(data, this.key, this.salt);
   }
-  async generatePassword() {
+  generatePassword() {
     throw new Error('Method not implemented!');
   }
-  async generateShareableUrl(url) {
-    return await generateShareableUrl(url, this.key);
+  generateShareableUrl(url) {
+    return generateShareableUrl(url, this.key);
   }
 }
 
@@ -65,7 +65,7 @@ export class EncryptionService {
     return this._encryptionStrategy.generateShareableUrl(url);
   }
 
-  async sha256sum(data) {
-    return await sha256sum(data);
+  sha256sum(data) {
+    return sha256sum(data);
   }
 }

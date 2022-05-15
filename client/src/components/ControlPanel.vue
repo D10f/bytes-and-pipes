@@ -3,6 +3,7 @@
     <DropZone v-if="currentInstruction === 'SELECT_FILE'" />
     <ShareOptions v-if="currentInstruction === 'SHARE_OPTIONS'" />
     <EncryptionOptions v-if="currentInstruction === 'ENCRYPTION_OPTIONS'" />
+    <UploadForm v-if="currentInstruction === 'UPLOAD'" />
   </section>
 </template>
 
@@ -10,6 +11,7 @@
 import DropZone from './DropZone.vue';
 import ShareOptions from './ShareOptions.vue';
 import EncryptionOptions from './EncryptionOptions.vue';
+import UploadForm from './UploadForm.vue';
 
 export default {
   name: 'ControlPanel',
@@ -17,6 +19,7 @@ export default {
     DropZone,
     ShareOptions,
     EncryptionOptions,
+    UploadForm,
   },
   computed: {
     currentInstruction() {

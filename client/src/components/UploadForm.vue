@@ -6,7 +6,11 @@
     >
       Please make sure to complete all the steps to start the upload.
     </p>
-    <button :disabled="!isReady" class="action-btn mx-auto">
+    <button
+      @click="startUpload"
+      :disabled="!isReady"
+      class="action-btn mx-auto"
+    >
       Start Upload
     </button>
     <UploadFormOverlay v-if="progress" :progress="progress" />
@@ -14,7 +18,7 @@
 </template>
 
 <script>
-import UploadFormOverlay from './UploadFormOverlay.vue';
+import UploadFormOverlay from '@/components/UploadFormOverlay.vue';
 
 export default {
   name: 'UploadForm',
@@ -22,6 +26,7 @@ export default {
   data() {
     return {
       progress: 0,
+      url: undefined,
     };
   },
   computed: {
@@ -30,8 +35,12 @@ export default {
     },
   },
   methods: {
-    startUpload() {
-      this.progress = 0;
+    async startUpload() {
+      this.progress = 12;
+      const uploadService = await this.$store.dispatch('getUploadService');
+      for await (const chunk of uploadService.start()) {
+        console.log(new TextDecoder().decode(chunk));
+      }
     },
   },
 };
