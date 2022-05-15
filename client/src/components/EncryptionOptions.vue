@@ -40,6 +40,7 @@
         type="password"
         class="text-right bg-white border rounded border-gray-400 p-1 focus:outline-none"
         id="passwordBased"
+        :tabindex="useRandomKey ? -1 : 0"
         @input.prevent="getPasswordStrength()"
       />
     </div>
@@ -103,7 +104,7 @@ export default {
   computed: {
     classObject() {
       return {
-        'opacity-20 pointer-events-none': this.useRandomKey,
+        'opacity-20 pointer-events-none select-none': this.useRandomKey,
       };
     },
     checkboxClassObject() {
