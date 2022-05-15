@@ -1,4 +1,6 @@
 import { createStore } from 'vuex';
+import { convertBytes } from '@/utils/bytes';
+import { shortener } from '@/utils/shortener';
 
 export const store = createStore({
   state: {
@@ -60,17 +62,13 @@ export const store = createStore({
         file && expirationTime && allowedDownloads && encryptionStrategy.type
       );
     },
-    truncatedFilename({ file }) {
-      // TODO: Truncate name
-      return file.name;
-    },
-    filesizeReadable({ file }) {
-      // TODO: Make size human-readable
-      return file.size;
-    },
     fileDetails({ file }) {
-      // TODO: return truncated file name + human readable file size
-      return `${file.name} (${file.size})`;
+      const truncatedFilename = shortener(file.name, {
+        headLength: 15,
+        tailLength: 10,
+      });
+      const readableSize = `(${convertBytes(file.size)})`;
+      return truncatedFilename + readableSize;
     },
     downloadOptions({ expirationTime, allowedDownloads }) {
       return `Expires in ${expirationTime} hours or after ${allowedDownloads} downloads.`;

@@ -9,9 +9,7 @@
   >
     <p class="text-gray-700 text-sm mb-4 pointer-events-none">
       {{
-        file
-          ? `${filename} (${filesize})`
-          : 'Drag and drop or use the file picker below:'
+        file ? `${fileDetails})` : 'Drag and drop or use the file picker below:'
       }}
     </p>
     <DropZoneFilePicker :file="file" :handleFileChange="handleFileChange" />
@@ -38,11 +36,8 @@ export default {
     file() {
       return this.$store.state.file;
     },
-    filename() {
-      return this.$store.getters.truncatedFilename;
-    },
-    filesize() {
-      return this.$store.getters.filesizeReadable;
+    fileDetails() {
+      return this.$store.getters.fileDetails;
     },
   },
   methods: {
