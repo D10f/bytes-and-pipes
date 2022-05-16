@@ -1,11 +1,13 @@
 <template>
-  <li
-    class="md:text-lg sm:w-full md:max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100"
-    :class="classObject"
-    @click="selectInstruction"
-  >
-    {{ text }}
-    <p v-if="details" class="text-sm italic p-2">{{ details }}</p>
+  <li>
+    <button
+      class="text-left md:text-lg sm:w-full md:max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100 focus:opacity-100"
+      :class="classObject"
+      @click="selectInstruction"
+    >
+      <span class="block pl-2">{{ text }}</span>
+      <span v-if="details" class="text-sm italic p-2 block">{{ details }}</span>
+    </button>
   </li>
 </template>
 
