@@ -9,7 +9,7 @@
   >
     <p class="text-gray-700 text-sm mb-4 pointer-events-none">
       {{
-        file ? `${fileDetails})` : 'Drag and drop or use the file picker below:'
+        file ? `${fileDetails}` : 'Drag and drop or use the file picker below:'
       }}
     </p>
     <DropZoneFilePicker :file="file" :handleFileChange="handleFileChange" />

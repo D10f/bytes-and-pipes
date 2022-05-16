@@ -1,10 +1,10 @@
 export function getFileDetails(file) {
   const truncatedFilename = shortener(file.name, {
-    headLength: 15,
+    headLength: 20,
     tailLength: 10,
   });
-  const readableSize = `(${convertBytes(file.size)})`;
-  return truncatedFilename + readableSize;
+  const readableSize = convertBytes(file.size);
+  return `${truncatedFilename} (${readableSize})`;
 }
 
 /**
