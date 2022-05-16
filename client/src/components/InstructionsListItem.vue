@@ -41,7 +41,11 @@ export default {
           this.isCurrent && !this.isValid && !this.isError,
         'border-green-900 bg-primary-400 text-green-900': this.isValid,
         'border-orange-900 bg-red-300 text-orange-900': this.isError,
+        'pointer-events-none': this.isUploading,
       };
+    },
+    isUploading() {
+      return this.$store.state.upload.isUploading;
     },
   },
   methods: {

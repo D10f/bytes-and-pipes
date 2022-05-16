@@ -13,12 +13,18 @@
     >
       Start Upload
     </button>
-    <UploadFormOverlay v-if="progress" :progress="progress" />
+    <UploadFormOverlay v-if="isUploading" :progress="progress" />
   </div>
 </template>
 
 <script>
 import UploadFormOverlay from '@/components/UploadFormOverlay.vue';
+import {
+  EncryptionService,
+  PasswordBasedStrategy,
+  RandomPasswordStrategy,
+} from '@/services/EncryptionService';
+import { UploadService } from '@/services/UploadService';
 
 export default {
   name: 'UploadForm',
@@ -33,13 +39,36 @@ export default {
     isReady() {
       return this.$store.getters.isReadyToUpload;
     },
+    isUploading() {
+      return this.$store.state.upload.isUploading;
+    },
   },
   methods: {
     async startUpload() {
-      this.progress = 12;
-      const uploadService = await this.$store.dispatch('getUploadService');
-      for await (const chunk of uploadService.start()) {
-        console.log(new TextDecoder().decode(chunk));
+      this.$store.dispatch('startUpload');
+
+      const file = this.$store.state.file;
+      const { type, content } = this.$store.state.encryptionStrategy;
+
+      const EncryptionStrategy =
+        type === 'RANDOMLY_GENERATED'
+          ? new RandomPasswordStrategy()
+          : new PasswordBasedStrategy(content);
+
+      const uploadService = await new UploadService(
+        file,
+        new EncryptionService(EncryptionStrategy)
+      );
+
+      try {
+        for await (const { progress, url } of uploadService.start()) {
+          this.progress = Math.round(progress);
+          if (url) {
+            this.$store.dispatch('finishDownload', url);
+          }
+        }
+      } catch (error) {
+        this.$store.dispatch('uploadFailure', error.message);
       }
     },
   },

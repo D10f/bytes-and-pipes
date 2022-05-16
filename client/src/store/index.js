@@ -1,17 +1,16 @@
 import { createStore } from 'vuex';
 import { getFileDetails } from '@/utils/file';
-import {
-  EncryptionService,
-  PasswordBasedStrategy,
-  RandomPasswordStrategy,
-} from '@/services/EncryptionService';
-import { UploadService } from '@/services/UploadService';
 
 export const store = createStore({
   state: {
     file: null,
     expirationTime: null,
     allowedDownloads: null,
+    upload: {
+      isUploading: false,
+      done: false,
+      url: null,
+    },
     encryptionStrategy: {
       type: null,
       content: null,
@@ -54,7 +53,7 @@ export const store = createStore({
     },
     nextUnfinishedInstruction({ instructions }) {
       return instructions.find(
-        (i) => (!i.isCurrent && i.status === 'IDLE') || i.status === 'ERROR'
+        (i) => !i.isCurrent && (i.status === 'IDLE' || i.status === 'ERROR')
       );
     },
     isReadyToUpload({
@@ -69,6 +68,20 @@ export const store = createStore({
     },
   },
   actions: {
+    startUpload({ commit }) {
+      commit('setUploadStatus', { isUploading: true, done: false, url: null });
+    },
+    finishUpload({ commit }, url) {
+      commit('setUploadStatus', { isUploading: true, done: true, url });
+    },
+    uploadFailure({ commit }, error) {
+      commit('setInstructionStatus', {
+        instruction: 'UPLOAD',
+        status: 'ERROR',
+        details: error,
+      });
+      commit('setUploadStatus', { isUploading: false, done: false, url: null });
+    },
     selectInstruction({ getters, commit }, instruction) {
       if (getters.currentInstruction.title === instruction) {
         return;
@@ -123,18 +136,11 @@ export const store = createStore({
       });
       commit('setCurrentInstruction', getters.nextUnfinishedInstruction.title);
     },
-    getUploadService({ state }) {
-      const file = state.file;
-      const strategy = state.encryptionStrategy.type;
-      const password = state.encryptionStrategy.content;
-      const EncryptionStrategy =
-        strategy === 'RANDOMLY_GENERATED'
-          ? new RandomPasswordStrategy()
-          : new PasswordBasedStrategy(password);
-      return new UploadService(file, new EncryptionService(EncryptionStrategy));
-    },
   },
   mutations: {
+    setUploadStatus(state, status) {
+      state.upload = status;
+    },
     setCurrentInstruction(state, instruction) {
       state.instructions = state.instructions.map((i) => ({
         ...i,
