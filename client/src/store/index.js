@@ -1,6 +1,5 @@
 import { createStore } from 'vuex';
-import { convertBytes } from '@/utils/bytes';
-import { shortener } from '@/utils/shortener';
+import { getFileDetails } from '@/utils/file';
 import {
   EncryptionService,
   PasswordBasedStrategy,
@@ -68,14 +67,6 @@ export const store = createStore({
         file && expirationTime && allowedDownloads && encryptionStrategy.type
       );
     },
-    fileDetails({ file }) {
-      const truncatedFilename = shortener(file.name, {
-        headLength: 15,
-        tailLength: 10,
-      });
-      const readableSize = `(${convertBytes(file.size)})`;
-      return truncatedFilename + readableSize;
-    },
   },
   actions: {
     selectInstruction({ getters, commit }, instruction) {
@@ -85,13 +76,23 @@ export const store = createStore({
       commit('setCurrentInstruction', instruction);
     },
     selectFile({ getters, commit }, file) {
-      commit('setFile', file);
+      const error = file.size > process.env.VUE_APP_MAX_FILE_SIZE;
+
+      commit('setFile', error ? null : file);
       commit('setInstructionStatus', {
         instruction: 'SELECT_FILE',
-        status: 'VALID',
-        details: getters.fileDetails,
+        status: error ? 'ERROR' : 'VALID',
+        details: error
+          ? `${getFileDetails(file)} exceeds allowed size`
+          : getFileDetails(file),
       });
-      commit('setCurrentInstruction', getters.nextUnfinishedInstruction.title);
+
+      if (!error) {
+        commit(
+          'setCurrentInstruction',
+          getters.nextUnfinishedInstruction.title
+        );
+      }
     },
     updateDownloadOptions(
       { getters, commit },

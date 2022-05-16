@@ -18,6 +18,7 @@
 
 <script>
 import DropZoneFilePicker from './DropZoneFilePicker.vue';
+import { getFileDetails } from '@/utils/file';
 
 export default {
   name: 'DropZone',
@@ -37,7 +38,7 @@ export default {
       return this.$store.state.file;
     },
     fileDetails() {
-      return this.$store.getters.fileDetails;
+      return getFileDetails(this.file);
     },
   },
   methods: {
@@ -57,7 +58,6 @@ export default {
       this.updateFileState(file);
     },
     updateFileState(file) {
-      // TODO: Error validation
       this.$store.dispatch('selectFile', file);
     },
   },

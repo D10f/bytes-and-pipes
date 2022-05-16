@@ -5,7 +5,7 @@
     @click="selectInstruction"
   >
     {{ text }}
-    <p v-if="details" class="text-sm p-2">{{ details }}</p>
+    <p v-if="details" class="text-sm italic p-2">{{ details }}</p>
   </li>
 </template>
 
