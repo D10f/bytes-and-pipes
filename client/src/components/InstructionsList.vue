@@ -7,7 +7,7 @@
     </header>
     <ol
       class="list-decimal pl-6"
-      :class="{ 'hover:cursor-not-allowed': isUploading }"
+      :class="{ 'hover:cursor-not-allowed': isUploading && !done }"
     >
       <InstructionsListItem
         v-for="instruction in instructions"
@@ -31,6 +31,9 @@ export default {
   computed: {
     isUploading() {
       return this.$store.state.upload.isUploading;
+    },
+    done() {
+      return this.$store.state.upload.done;
     },
   },
 };

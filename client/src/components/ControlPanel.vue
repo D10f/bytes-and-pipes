@@ -1,5 +1,5 @@
 <template>
-  <section class="border-2 border-dashed border-black rounded h-64 lg:h-80">
+  <section class="border-2 border-dashed border-black rounded h-64 md:h-80">
     <DropZone v-if="currentInstruction === 'SELECT_FILE'" />
     <ShareOptions v-if="currentInstruction === 'SHARE_OPTIONS'" />
     <EncryptionOptions v-if="currentInstruction === 'ENCRYPTION_OPTIONS'" />

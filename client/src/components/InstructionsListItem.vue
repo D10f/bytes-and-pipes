@@ -4,6 +4,7 @@
       class="text-left md:text-lg sm:w-full md:max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100 focus:opacity-100"
       :class="classObject"
       @click="selectInstruction"
+      :tabindex="this.isFocusable ? 0 : -1"
     >
       <span class="block px-2">{{ text }}</span>
       <span v-if="details" class="text-sm italic p-2 block">{{ details }}</span>
@@ -36,6 +37,9 @@ export default {
     details() {
       return this.$store.getters.instruction(this.title).details;
     },
+    isFocusable() {
+      return !this.$store.state.upload.isUploading || this.title === 'UPLOAD';
+    },
     classObject() {
       return {
         'border-l-2 opacity-100': this.isCurrent,
@@ -43,11 +47,8 @@ export default {
           this.isCurrent && !this.isValid && !this.isError,
         'border-green-900 bg-primary-400 text-green-900': this.isValid,
         'border-orange-900 bg-red-300 text-orange-900': this.isError,
-        'pointer-events-none': this.isUploading,
+        'pointer-events-none': !this.isFocusable,
       };
-    },
-    isUploading() {
-      return this.$store.state.upload.isUploading;
     },
   },
   methods: {

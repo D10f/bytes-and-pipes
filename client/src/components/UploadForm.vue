@@ -8,7 +8,7 @@
     </p>
     <button
       @click="startUpload"
-      :disabled="!isReady"
+      :disabled="!isReady || isUploading"
       class="action-btn mx-auto"
     >
       Start Upload
@@ -64,7 +64,7 @@ export default {
         for await (const { progress, url } of uploadService.start()) {
           this.progress = Math.round(progress);
           if (url) {
-            this.$store.dispatch('finishDownload', url);
+            this.$store.dispatch('finishUpload', url);
           }
         }
       } catch (error) {

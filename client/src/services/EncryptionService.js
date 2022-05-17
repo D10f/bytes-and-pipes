@@ -15,9 +15,12 @@ class EncryptionStrategy {
     this.salt = crypto.getRandomValues(new Uint8Array(32));
     this.key;
     this.type;
-    this.generatePassword();
+    // this.generatePassword();
   }
-  encrypt(data) {
+  async encrypt(data) {
+    if (!this.key) {
+      this.key = await this.generatePassword();
+    }
     return encryptData(data, this.key, this.salt);
   }
   generatePassword() {
@@ -33,8 +36,8 @@ export class RandomPasswordStrategy extends EncryptionStrategy {
     super(password);
     this.type = 'RANDOMLY_GENERATED';
   }
-  async generatePassword() {
-    this.key = await generateEncryptionKey();
+  generatePassword() {
+    return generateEncryptionKey();
   }
 }
 
@@ -43,8 +46,8 @@ export class PasswordBasedStrategy extends EncryptionStrategy {
     super(password);
     this.type = 'PASSWORD_BASED';
   }
-  async generatePassword() {
-    this.key = await deriveEncryptionKey(this.password, this.salt);
+  generatePassword() {
+    return deriveEncryptionKey(this.password, this.salt);
   }
 }
 

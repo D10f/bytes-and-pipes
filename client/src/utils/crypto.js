@@ -104,7 +104,7 @@ export const deriveEncryptionKey = async (password, salt) => {
     {
       name: 'PBKDF2',
       salt: salt,
-      iterations: 250000,
+      iterations: 250_000,
       hash: 'SHA-256',
     },
     keyMaterial,

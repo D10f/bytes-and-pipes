@@ -73,6 +73,11 @@ export const store = createStore({
     },
     finishUpload({ commit }, url) {
       commit('setUploadStatus', { isUploading: true, done: true, url });
+      commit('setInstructionStatus', {
+        instruction: 'UPLOAD',
+        status: 'VALID',
+        details: 'Upload Successful.',
+      });
     },
     uploadFailure({ commit }, error) {
       commit('setInstructionStatus', {
