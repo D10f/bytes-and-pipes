@@ -112,7 +112,7 @@ export const deriveEncryptionKey = async (password, salt) => {
       name: 'AES-GCM',
       length: 256,
     },
-    false,
+    true,
     ['encrypt']
   );
 };
