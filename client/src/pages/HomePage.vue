@@ -1,6 +1,6 @@
 <template>
   <main
-    class="flex flex-col gap-16 md:grid md:grid-cols-2 md:gap-x-2 md:justify-between md:justify-center md:items-center"
+    class="gap-16 md:grid md:grid-cols-2 md:gap-x-2 md:justify-between md:justify-center md:items-center"
   >
     <InstructionsList />
     <ControlPanel />

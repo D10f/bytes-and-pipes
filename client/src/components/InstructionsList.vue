@@ -1,7 +1,7 @@
 <template>
   <section class="xs:mx-auto lg:mx-0">
     <header class="md:mb-5">
-      <h3 class="font-subtitle text-2xl font-bold">
+      <h3 class="font-subtitle text-xl md:text-2xl font-bold">
         Share your files in just a few steps:
       </h3>
     </header>

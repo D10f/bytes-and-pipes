@@ -5,7 +5,7 @@
       :class="classObject"
       @click="selectInstruction"
     >
-      <span class="block pl-2">{{ text }}</span>
+      <span class="block px-2">{{ text }}</span>
       <span v-if="details" class="text-sm italic p-2 block">{{ details }}</span>
     </button>
   </li>
