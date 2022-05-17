@@ -40,4 +40,3 @@ export class TooManyRequests extends ErrorService {
     super(429, message);
   }
 }
-

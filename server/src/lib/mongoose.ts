@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 import config from '../config';
 import log from './logger';
 
@@ -20,15 +20,14 @@ export default async () => {
       log.error('Failed to reconnect to MongoDB');
     });
 
-    return await mongoose.connect(config.MONGODB_URI, {
+    return await mongoose.connect(config.MONGODB_URI as string, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
-
-  } catch (error: any) {
-    log.error(error.message);
+  } catch (error) {
+    log.error((error as Error).message);
     process.exit(1);
   }
 };

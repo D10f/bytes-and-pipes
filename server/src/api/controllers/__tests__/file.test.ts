@@ -1,28 +1,34 @@
+/* eslint-disable */
+
 import stream from 'stream';
 import FileService from '../../../services/FileService';
 import { BadRequestError } from '../../../services/ErrorService';
-import { uploadFile, updateFileMetadata, downloadFile, readFileMetadata } from '../file';
+import {
+  uploadFile,
+  updateFileMetadata,
+  downloadFile,
+  readFileMetadata,
+} from '../file';
 
 jest.mock('../../../services/FileService');
 // jest.mock('stream');
 
 describe('File controller test suite', () => {
-
   const requestMock = {
     body: new Array(1048576), // should be Buffer type
     params: {
       filename: 'testing.txt',
       currentChunk: '8',
-      id: 'someid'
+      id: 'someid',
     },
-    header: jest.fn()
+    header: jest.fn(),
   } as any;
 
   const responseMock = {
     send: jest.fn(),
     status: jest.fn(),
     json: jest.fn(),
-    set: jest.fn()
+    set: jest.fn(),
   } as any;
 
   const nextMock = jest.fn();
@@ -50,12 +56,9 @@ describe('File controller test suite', () => {
   });
 
   test('Should succeed to process a valid file', async () => {
-
-    requestMock.header.mockImplementation(
-      (str: string) => {
-        return str === 'Content-parts' ? '12' : '12582912';
-      }
-    );
+    requestMock.header.mockImplementation((str: string) => {
+      return str === 'Content-parts' ? '12' : '12582912';
+    });
 
     createTempDirectoryMock.mockReturnValueOnce('/some/path/testing.txt');
     writeFileMock.mockReturnValueOnce(true);
@@ -74,36 +77,38 @@ describe('File controller test suite', () => {
   test('Should fail to upload file due to missing headers', async () => {
     requestMock.header.mockReturnValue(undefined);
     await uploadFile(requestMock, responseMock, nextMock);
-    expect(nextMock).toBeCalledWith(new BadRequestError('Missing required headers.'));
+    expect(nextMock).toBeCalledWith(
+      new BadRequestError('Missing required headers.'),
+    );
   });
 
   test('Should fail to upload file due to exceeding max file size', async () => {
     requestMock.header.mockReturnValue(Number.MAX_SAFE_INTEGER);
     await uploadFile(requestMock, responseMock, nextMock);
-    expect(nextMock).toBeCalledWith(new BadRequestError("Files larger than 1GB are not allowed."));
+    expect(nextMock).toBeCalledWith(
+      new BadRequestError('Files larger than 1GB are not allowed.'),
+    );
   });
 
   test('Should fail to upload file due to req body larger than reported file size', async () => {
     // Example file of 28MB (28829003) using 1MB (1048576) file chunks
-    requestMock.header.mockImplementation(
-      (str: string) => {
-        return str === 'Content-parts' ? '28' : '28829003';
-      }
-    );
+    requestMock.header.mockImplementation((str: string) => {
+      return str === 'Content-parts' ? '28' : '28829003';
+    });
     // 64 bytes per chunk: 32 salt, 16 IV and 16 AEAD
     // 1: Test fails if body greater than, so add one to exceed that
-    requestMock.body = new Array((28 * 64) + 28829003 + 1)
+    requestMock.body = new Array(28 * 64 + 28829003 + 1);
     await uploadFile(requestMock, responseMock, nextMock);
-    expect(nextMock).toBeCalledWith(new BadRequestError("File is larger than reported size."));
+    expect(nextMock).toBeCalledWith(
+      new BadRequestError('File is larger than reported size.'),
+    );
   });
 
   test('Should call next upon error returned', async () => {
     createTempDirectoryMock.mockRejectedValueOnce('Some error');
-    requestMock.header.mockImplementation(
-      (str: string) => {
-        return str === 'Content-parts' ? '28' : '28829003';
-      }
-    );
+    requestMock.header.mockImplementation((str: string) => {
+      return str === 'Content-parts' ? '28' : '28829003';
+    });
     await uploadFile(requestMock, responseMock, nextMock);
     expect(writeFileMock).not.toBeCalled();
     expect(nextMock).toBeCalled();
@@ -112,7 +117,7 @@ describe('File controller test suite', () => {
   test('Should update file metadata', async () => {
     await updateFileMetadata(requestMock, responseMock, nextMock);
     expect(updateFileMetadataMock).toBeCalledWith(requestMock.params.id, {
-      encryptedMetadata: requestMock.body
+      encryptedMetadata: requestMock.body,
     });
     expect(responseMock.status).toBeCalledWith(202);
   });
@@ -120,7 +125,9 @@ describe('File controller test suite', () => {
   test('Should fail to update file metadata due to missing request body', async () => {
     requestMock.body = undefined;
     await updateFileMetadata(requestMock, responseMock, nextMock);
-    expect(nextMock).toBeCalledWith(new BadRequestError("Missing required body content."));
+    expect(nextMock).toBeCalledWith(
+      new BadRequestError('Missing required body content.'),
+    );
     expect(updateFileMetadataMock).not.toBeCalled();
   });
 
@@ -140,12 +147,15 @@ describe('File controller test suite', () => {
 
     findFileByIdMock.mockReturnValueOnce(mockFile);
 
-    jest.spyOn(stream, 'pipeline').mockImplementationOnce(
-      (_a: any, _b: any, _c: any ): any => {}
-    );
+    jest
+      .spyOn(stream, 'pipeline')
+      .mockImplementationOnce((_a: any, _b: any, _c: any): any => {});
 
     await downloadFile(requestMock, responseMock, nextMock);
-    expect(responseMock.set).toBeCalledWith("Content-Type", "application/octet-stream");
+    expect(responseMock.set).toBeCalledWith(
+      'Content-Type',
+      'application/octet-stream',
+    );
     expect(reconstructRecordMock).toBeCalledWith(mockFile);
     expect(deleteRecordMock).not.toBeCalled();
   });
@@ -160,12 +170,17 @@ describe('File controller test suite', () => {
 
     findFileByIdMock.mockReturnValueOnce(mockFile);
 
-    jest.spyOn(stream, 'pipeline').mockImplementationOnce(
-      (_a: any, _b: any, cb: any ): any => { cb('error') }
-    );
+    jest
+      .spyOn(stream, 'pipeline')
+      .mockImplementationOnce((_a: any, _b: any, cb: any): any => {
+        cb('error');
+      });
 
     await downloadFile(requestMock, responseMock, nextMock);
-    expect(responseMock.set).toBeCalledWith("Content-Type", "application/octet-stream");
+    expect(responseMock.set).toBeCalledWith(
+      'Content-Type',
+      'application/octet-stream',
+    );
     expect(reconstructRecordMock).toBeCalledWith(mockFile);
     expect(nextMock).toBeCalled();
     expect(deleteRecordMock).toBeCalledWith(mockFile._id);
@@ -174,7 +189,9 @@ describe('File controller test suite', () => {
   test('Should fail to find a file with provided id', async () => {
     findFileByIdMock.mockReturnValueOnce(undefined);
     await downloadFile(requestMock, responseMock, nextMock);
-    expect(nextMock).toBeCalledWith(new BadRequestError('No file found with that id.'));
+    expect(nextMock).toBeCalledWith(
+      new BadRequestError('No file found with that id.'),
+    );
     expect(responseMock.set).not.toBeCalled();
   });
 
@@ -184,7 +201,7 @@ describe('File controller test suite', () => {
       name: 'test',
       directory: '/dev/null',
       size: 28829003,
-      encryptedMetadata: 'metadata'
+      encryptedMetadata: 'metadata',
     };
 
     findFileByIdMock.mockReturnValueOnce(mockFile);

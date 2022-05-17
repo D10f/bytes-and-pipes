@@ -1,9 +1,8 @@
-import fs from "fs";
-import os from "os";
-import path from "path";
-import { promisify } from "util";
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import { promisify } from 'util';
 import File from '../models/file';
-import { FileInterface, FileBaseDocument } from '../interfaces';
 
 const mkdir = promisify(fs.mkdir);
 const rmdir = promisify(fs.rmdir);
@@ -19,7 +18,10 @@ interface writeFileInterface {
 }
 
 export default {
-  async createTempDirectory(filename: string, recursive: boolean = true): Promise<string> {
+  async createTempDirectory(
+    filename: string,
+    recursive = true,
+  ): Promise<string> {
     const location = path.resolve(os.tmpdir(), filename as string);
     // await this.createDirectory(location);
     await mkdir(location, { recursive });
@@ -38,54 +40,41 @@ export default {
     return fs.createReadStream(filepath);
   },
 
-  writeFile(file : writeFileInterface): Promise<boolean> {
-
+  writeFile(file: writeFileInterface): Promise<boolean> {
     const { location, data, contentParts, currentChunk } = file;
 
     return new Promise((resolve, reject) => {
       const writer = fs.createWriteStream(path.join(location, currentChunk));
-      writer.write(data, async err => {
+      writer.write(data, async (err) => {
         if (err) {
           reject(err.message);
         }
 
         const files = await this.readDirectory(location);
-        
+
         if (files.length !== contentParts) {
           resolve(false);
         } else {
           resolve(true); // entire file has been uploaded
         }
       });
-
     });
-
-    // return new Promise((resolve, reject) => {
-    //   const writer = fs.createWriteStream(path.join(location, currentChunk));
-    //   writer.write(data);
-    //   writer.on('error', (err) => reject(err.message));
-    //   writer.on('finish', async () => {
-    //     const files = await this.readDirectory(location);
-    //
-    //     if (files.length !== contentParts) {
-    //       resolve(false);
-    //     } else {
-    //       resolve(true); // entire file has been uploaded
-    //     }
-    //   });
-    // });
   },
 
   async deleteFile(filepath: fs.PathLike) {
     await unlink(filepath);
   },
 
-  async reconstructRecord(record: FileInterface | FileBaseDocument): Promise<fs.ReadStream[]> {
+  // TODO: Proper typings
+  async reconstructRecord(
+    record: FileInterface | FileBaseDocument,
+  ): Promise<fs.ReadStream[]> {
+    /* eslint-disable-next-line */
     const fileFragments = await this.readDirectory(record.directory!);
 
     return fileFragments
-      .sort((a,b) => Number(a) + Number(b)) // read from last to first
-      .map(fragment => fs.createReadStream(fragment));
+      .sort((a, b) => Number(a) + Number(b)) // read from last to first
+      .map((fragment) => fs.createReadStream(fragment));
   },
 
   async deleteRecord(id: string) {
