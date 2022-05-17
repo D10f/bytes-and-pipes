@@ -3,6 +3,7 @@ import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
 import File from '../models/file';
+import { FileBaseDocument, FileInterface } from '../interfaces';
 
 const mkdir = promisify(fs.mkdir);
 const rmdir = promisify(fs.rmdir);

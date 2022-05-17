@@ -1,7 +1,10 @@
-interface FileInterface {
+import { PathLike } from 'fs';
+import { Document } from 'mongoose';
+
+export interface FileInterface {
   name?: string;
   encryptedMetadata?: Buffer;
-  directory?: fs.PathLike | string;
+  directory?: PathLike | string;
   size?: number;
   expired?: boolean;
   createdAt?: Date;
@@ -10,7 +13,8 @@ interface FileInterface {
 /**
  * These are virtual properties (getters) on the Mongoose model.
  */
-interface FileBaseDocument extends FileInterface, Document {
+
+export interface FileBaseDocument extends FileInterface, Document {
   downloadUrl: string;
   filepath: string;
 }
