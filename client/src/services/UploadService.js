@@ -1,12 +1,12 @@
+const UPLOAD_CHUNK_SIZE = Number(process.env.VUE_APP_UPLOAD_CHUNK_SIZE);
+
 export class UploadService {
   constructor(file, encryptionService) {
     this._file = file;
     this._encryptionService = encryptionService;
 
     this._currentChunk = 1;
-    this._totalChunks = Math.ceil(
-      file.size / process.env.VUE_APP_UPLOAD_CHUNK_SIZE
-    );
+    this._totalChunks = Math.ceil(file.size / UPLOAD_CHUNK_SIZE);
 
     this._headers = new Headers({
       'Access-Control-Request-Headers':
@@ -16,9 +16,7 @@ export class UploadService {
       'Content-filesize': `${this._file.size}`,
     });
 
-    this._uploadId = encryptionService.sha256sum(
-      `${this._file.name}${Date.now()}`
-    );
+    this._uploadId = crypto.randomUUID();
   }
 
   start() {
@@ -31,7 +29,7 @@ export class UploadService {
   async _post(payload) {
     const endpoint =
       process.env.VUE_APP_BASE_URL +
-      `/upload/${this._uploadId}/${this._currentChunk}`;
+      `/file/upload/${this._uploadId}/${this._currentChunk}`;
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -54,7 +52,7 @@ export class UploadService {
     }
 
     return {
-      progress: (this._currentChunk * 100) / this.totalChunk,
+      progress: (this._currentChunk++ * 100) / this._totalChunks,
       url: undefined,
     };
   }
@@ -62,7 +60,7 @@ export class UploadService {
   async _put(payload) {
     let { url, id } = this.responseObj;
 
-    const endpoint = process.env.VUE_APP_BASE_URL + `/u/meta/${id}`;
+    const endpoint = process.env.VUE_APP_BASE_URL + `/file/u/meta/${id}`;
 
     await fetch(endpoint, {
       method: 'PUT',
@@ -79,11 +77,8 @@ export class UploadService {
     let offset = 0;
     return async function* () {
       while (offset <= this._file.size) {
-        const chunk = this._file.slice(
-          offset,
-          offset + process.env.VUE_APP_UPLOAD_CHUNK_SIZE
-        );
-        offset += process.env.VUE_APP_UPLOAD_CHUNK_SIZE;
+        const chunk = this._file.slice(offset, offset + UPLOAD_CHUNK_SIZE);
+        offset += UPLOAD_CHUNK_SIZE;
         yield chunk.arrayBuffer();
       }
     };
@@ -98,11 +93,9 @@ export class UploadService {
   }
 
   _uploadChunk(g) {
-    // const post = this._post.bind(this);
     return async function* () {
       for await (const chunk of g()) {
-        // yield this._post(chunk);
-        yield chunk;
+        yield this._post(chunk);
       }
     };
   }
