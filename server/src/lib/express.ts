@@ -35,7 +35,7 @@ export default () => {
 
   app.use(express.raw({ limit: config.MAX_FILE_SIZE }));
   app.use(express.json());
-  app.use(express.static(config.PUBLIC_DIR));
+  // app.use(express.static(config.PUBLIC_DIR));
 
   /**
    * Register api routes

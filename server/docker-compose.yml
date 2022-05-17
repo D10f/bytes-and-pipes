@@ -1,4 +1,4 @@
-version: "2.4"
+version: '2.4'
 
 services:
   node-app:
@@ -12,7 +12,7 @@ services:
     volumes:
       - ./:/app
       - /app/node_modules
-      - bytesandpipes_uploads:/app/uploads
+      - bytesandpipes_uploads:/app/tmp/uploads
 
   mongo:
     image: mongo:5-focal

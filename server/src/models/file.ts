@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import fs from 'fs';
-import config from '../config';
+// import config from '../config';
 import { FileBaseDocument } from '../interfaces';
 
 const fileSchema = new mongoose.Schema<FileBaseDocument>(
@@ -34,11 +34,12 @@ const fileSchema = new mongoose.Schema<FileBaseDocument>(
 );
 
 fileSchema.virtual('downloadUrl').get(function (this: FileBaseDocument) {
-  const domain = process.env.development
-    ? `${config.DOMAIN}:${config.PORT}`
-    : config.DOMAIN;
+  // const domain = process.env.development
+  //   ? `${config.DOMAIN}:${config.PORT}`
+  //   : config.DOMAIN;
 
-  return `http://${domain}/d/${this._id}`;
+  // return `http://${domain}/d/${this._id}`;
+  return process.env.DOWNLOAD_BASE_URL + this._id;
 });
 
 fileSchema.virtual('filepath').get(function (this: FileBaseDocument) {

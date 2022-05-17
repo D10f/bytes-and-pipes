@@ -23,7 +23,7 @@ export default {
     filename: string,
     recursive = true,
   ): Promise<string> {
-    const location = path.resolve(os.tmpdir(), filename as string);
+    const location = path.resolve(os.tmpdir(), 'uploads', filename as string);
     // await this.createDirectory(location);
     await mkdir(location, { recursive });
     return location;
