@@ -19,11 +19,6 @@ export default {
 </script>
 
 <style scoped>
-/* Utility class for centering */
-.sk-center {
-  margin: auto;
-}
-
 .sk-grid {
   --sk-size: 40px;
   width: var(--sk-size);
@@ -39,7 +34,6 @@ export default {
   --sk-color-500: #90e481;
   --sk-color-600: #73d162;
   --sk-color-700: #1d8361;
-  --sk-radius: 0.2rem;
   width: 33.33%;
   height: 33.33%;
   float: left;
@@ -48,14 +42,12 @@ export default {
 }
 .sk-grid-cube:nth-child(1) {
   animation-delay: 0.2s;
-  border-top-left-radius: var(--sk-radius);
 }
 .sk-grid-cube:nth-child(2) {
   animation-delay: 0.3s;
 }
 .sk-grid-cube:nth-child(3) {
   animation-delay: 0.4s;
-  border-top-right-radius: var(--sk-radius);
 }
 .sk-grid-cube:nth-child(4) {
   animation-delay: 0.1s;
@@ -68,14 +60,12 @@ export default {
 }
 .sk-grid-cube:nth-child(7) {
   animation-delay: 0s;
-  border-bottom-left-radius: var(--sk-radius);
 }
 .sk-grid-cube:nth-child(8) {
   animation-delay: 0.1s;
 }
 .sk-grid-cube:nth-child(9) {
   animation-delay: 0.2s;
-  border-bottom-right-radius: var(--sk-radius);
 }
 
 @keyframes sk-grid {

@@ -6,7 +6,6 @@
 </template>
 
 <script>
-// import AppSpinner from '@/components/AppSpinner.vue';
 export default {
   name: 'DownloadPage',
   props: {
@@ -21,10 +20,11 @@ export default {
     };
   },
   created() {
+    console.log(this.id);
     // Check if resource exists
     // Check encryption type i.e., password based vs randomly generated
     //  if randomly generated check presence of router hash value
-    console.log(this.$router.currentRoute._value.hash);
+    console.log(this.$router.currentRoute._value.hash.slice(1));
     //  if password based prompt for password input
     // Start download
   },
