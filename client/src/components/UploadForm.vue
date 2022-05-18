@@ -1,5 +1,5 @@
 <template>
-  <div class="options__container relative">
+  <div v-if="!isUploading" class="options__container">
     <p
       v-if="!isReady"
       class="text-gray-700 text-center text-sm mb-4 pointer-events-none"
@@ -9,12 +9,12 @@
     <button
       @click="startUpload"
       :disabled="!isReady || isUploading"
-      class="action-btn mx-auto"
+      class="action-btn block mx-auto"
     >
       Start Upload
     </button>
-    <UploadFormOverlay v-if="isUploading" :progress="progress" />
   </div>
+  <UploadFormOverlay v-else :progress="progress" />
 </template>
 
 <script>

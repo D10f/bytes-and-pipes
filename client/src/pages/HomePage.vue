@@ -1,6 +1,6 @@
 <template>
   <main
-    class="gap-64 md:grid md:grid-cols-2 md:gap-x-2 md:justify-between md:justify-center md:items-center"
+    class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-x-2 md:justify-between md:justify-center md:items-center h-full my-6 mb-12"
   >
     <InstructionsList />
     <ControlPanel />

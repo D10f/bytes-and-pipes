@@ -1,7 +1,7 @@
 <template>
   <li>
     <button
-      class="text-left md:text-lg sm:w-full md:max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100 focus:opacity-100"
+      class="text-left md:text-lg w-full md:w-max md:max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100 focus:opacity-100"
       :class="classObject"
       @click="selectInstruction"
       :tabindex="this.isFocusable ? 0 : -1"

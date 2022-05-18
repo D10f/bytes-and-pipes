@@ -1,17 +1,19 @@
 <template>
   <aside
-    class="absolute top-0 left-0 w-full h-full bg-white/95 flex flex-col justify-center items-center text-back font-subtitle text-gray-700"
+    class="py-10 bg-white/95 flex flex-col justify-center items-center text-back font-subtitle text-gray-700"
   >
     <div v-if="!done" class="text-center">
       <p class="mb-2 text-4xl">{{ progress }}%</p>
       <p>Please don't close or refresh this window.</p>
     </div>
-    <div v-else class="text-center mx-8">
-      <p class="mb-2 xl:text-lg text-left">
+    <div v-else class="text-center mx-8 max-w-full px-8">
+      <p
+        class="mb-2 sm:text-sm xl:text-lg text-left max-w-full overflow-hidden text-ellipsis break-all"
+      >
         <span class="block text-gray-600 italic text-sm"
           >Your Download Link:</span
         >
-        <span class="my-4 text-center border-b-2 border-primary-400">{{
+        <span class="inline-block my-2 md:my-4 border-b-2 border-primary-500">{{
           url
         }}</span>
       </p>

@@ -1,5 +1,5 @@
 <template>
-  <section class="xs:mx-auto lg:mx-0">
+  <section class="mx-auto md:mx-0 lg:mx-0">
     <header class="md:mb-5">
       <h3 class="font-subtitle text-xl md:text-2xl font-bold">
         Share your files in just a few steps:
