@@ -1,9 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/pages/HomePage';
-import DownloadPage from '@/pages/DownloadPage';
-import AboutPage from '@/pages/AboutPage';
-import PrivacyPage from '@/pages/PrivacyPage';
-import TermsPage from '@/pages/TermsPage';
 
 const routes = [
   {
@@ -14,29 +10,35 @@ const routes = [
   {
     path: '/d/:id',
     name: 'Download',
-    component: DownloadPage,
+    component: () => import('@/pages/DownloadPage.vue'),
     props: true,
   },
   {
     path: '/about',
     name: 'About',
-    component: AboutPage,
+    component: () => import('@/pages/AboutPage.vue'),
   },
   {
     path: '/privacy',
     name: 'Privacy',
-    component: PrivacyPage,
+    component: () => import('@/pages/PrivacyPage.vue'),
   },
   {
     path: '/terms',
     name: 'Terms',
-    component: TermsPage,
+    component: () => import('@/pages/TermsPage.vue'),
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('@/pages/NotFound.vue'),
   },
 ];
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
+  linkActiveClass: 'navigation-active-link',
   scrollBehavior() {
     return {
       top: 0,
