@@ -5,13 +5,13 @@
         <a href="https://github.com/D10f/bytes-and-pipes">Source Code</a>
       </li>
       <li class="footer__link">
-        <a href="#">About</a>
+        <router-link :to="{ name: 'About' }">About</router-link>
       </li>
       <li class="footer__link">
-        <a href="#">Privacy</a>
+        <router-link :to="{ name: 'Privacy' }">Privacy</router-link>
       </li>
       <li class="footer__link">
-        <a href="#">Terms</a>
+        <router-link :to="{ name: 'Terms' }">Terms</router-link>
       </li>
     </ul>
   </footer>

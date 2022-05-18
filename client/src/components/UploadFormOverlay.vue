@@ -13,9 +13,10 @@
         <span class="block text-gray-600 italic text-sm"
           >Your Download Link:</span
         >
-        <span class="inline-block my-2 md:my-4 border-b-2 border-primary-500">{{
-          url
-        }}</span>
+        <span
+          class="inline-block my-2 md:my-4 border-2 border-dashed p-2 border-primary-400 bg-primary-400/10"
+          >{{ url }}</span
+        >
       </p>
       <p class="text-gray-600 italic text-left text-sm mb-4">
         You can now copy this link and share with anyone you want. Make sure to
