@@ -20,6 +20,10 @@
   @apply hover:text-primary-500;
 }
 
+.footer__link .navigation-active-link {
+  @apply border-b-2 border-primary-500;
+}
+
 .options__container {
   @apply h-full py-10 flex flex-col gap-6 justify-center;
 }
