@@ -61,9 +61,9 @@ export class EncryptionService {
   async generateUrl(url) {
     switch (this.strategy) {
       case 'RANDOMLY_GENERATED':
-        return url;
-      case 'PASSWORD_BASED':
         return generateShareableUrl(url, this._key);
+      case 'PASSWORD_BASED':
+        return url;
     }
   }
 
