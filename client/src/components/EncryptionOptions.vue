@@ -20,7 +20,7 @@
       />
     </div>
     <div
-      class="flex flex-col lg:flex-row gap-4 justify-between items-center"
+      class="flex lg:flex-row gap-4 justify-between items-center"
       :class="classObject"
     >
       <label
