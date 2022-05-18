@@ -1,13 +1,13 @@
 <template>
   <li>
     <button
-      class="text-left md:text-lg w-full md:w-max md:max-w-max text-gray-500 p-2 my-2 rounded opacity-60 hover:cursor-pointer hover:opacity-100 focus:opacity-100"
+      class="text-left md:text-lg w-full md:w-max md:max-w-max text-gray-500 p-2 my-2 border-l-2 border-transparent rounded opacity-60 hover:cursor-pointer hover:opacity-100 focus:opacity-100"
       :class="classObject"
       @click="selectInstruction"
       :tabindex="this.isFocusable ? 0 : -1"
     >
-      <span class="block px-2">{{ text }}</span>
-      <span v-if="details" class="text-sm italic p-2 block">{{ details }}</span>
+      <span class="block p-1">{{ text }}</span>
+      <span v-if="details" class="text-sm p-1 italic block">{{ details }}</span>
     </button>
   </li>
 </template>
@@ -42,7 +42,7 @@ export default {
     },
     classObject() {
       return {
-        'border-l-2 opacity-100': this.isCurrent,
+        'border-l-2 border-current opacity-100': this.isCurrent,
         'border-gray-900 bg-gray-300 text-gray-900 opacity-100':
           this.isCurrent && !this.isValid && !this.isError,
         'border-green-900 bg-primary-400 text-green-900': this.isValid,
