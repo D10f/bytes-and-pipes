@@ -43,11 +43,11 @@ export class UploadService {
     }
 
     if (response.status === 201) {
-      this.responseObj = await response.json();
+      this._responseObj = await response.json();
 
       return {
         progress: 100,
-        url: this.responseObj.url,
+        url: await this._encryptionService.generateUrl(this._responseObj.url),
       };
     }
 
@@ -58,7 +58,7 @@ export class UploadService {
   }
 
   async _put(payload) {
-    let { url, id } = this.responseObj;
+    let { url, id } = this._responseObj;
 
     const endpoint = process.env.VUE_APP_BASE_URL + `/file/u/meta/${id}`;
 

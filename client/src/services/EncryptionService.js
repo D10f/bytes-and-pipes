@@ -11,29 +11,18 @@ import {
  */
 class EncryptionStrategy {
   constructor(password) {
-    this.password = password;
-    this.salt = crypto.getRandomValues(new Uint8Array(32));
-    this.key;
+    this._password = password;
     this.type;
-    // this.generatePassword();
   }
-  async encrypt(data) {
-    if (!this.key) {
-      this.key = await this.generatePassword();
-    }
-    return encryptData(data, this.key, this.salt);
-  }
+
   generatePassword() {
     throw new Error('Method not implemented!');
-  }
-  generateShareableUrl(url) {
-    return generateShareableUrl(url, this.key);
   }
 }
 
 export class RandomPasswordStrategy extends EncryptionStrategy {
-  constructor(password) {
-    super(password);
+  constructor() {
+    super();
     this.type = 'RANDOMLY_GENERATED';
   }
   generatePassword() {
@@ -46,26 +35,36 @@ export class PasswordBasedStrategy extends EncryptionStrategy {
     super(password);
     this.type = 'PASSWORD_BASED';
   }
-  generatePassword() {
-    return deriveEncryptionKey(this.password, this.salt);
+  generatePassword(salt) {
+    return deriveEncryptionKey(this._password, salt);
   }
 }
 
 export class EncryptionService {
   constructor(encryptionStrategy) {
     this._encryptionStrategy = encryptionStrategy;
+    this._salt = crypto.getRandomValues(new Uint8Array(32));
+    this._key;
   }
 
   get strategy() {
     return this._encryptionStrategy.type;
   }
 
-  async encrypt(chunk) {
-    return this._encryptionStrategy.encrypt(chunk);
+  async encrypt(data) {
+    if (!this._key) {
+      this._key = await this._encryptionStrategy.generatePassword(this._salt);
+    }
+    return encryptData(data, this._key, this._salt);
   }
 
-  async generateShareableUrl(url) {
-    return this._encryptionStrategy.generateShareableUrl(url);
+  async generateUrl(url) {
+    switch (this.strategy) {
+      case 'RANDOMLY_GENERATED':
+        return url;
+      case 'PASSWORD_BASED':
+        return generateShareableUrl(url, this._key);
+    }
   }
 
   sha256sum(data) {
