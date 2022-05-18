@@ -2,7 +2,9 @@
   <nav
     class="bg-primary-400 border-b-2 border-primary-600 rounded text-center md:text-left"
   >
-    <h1 class="font-title text-4xl p-2">Bytes And Pipes</h1>
+    <h1 class="font-title text-4xl p-2">
+      <router-link :to="{ name: 'Home' }">Bytes And Pipes</router-link>
+    </h1>
   </nav>
 </template>
 
