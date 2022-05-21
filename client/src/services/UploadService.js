@@ -1,3 +1,4 @@
+import { getFileDetails } from '@/utils/file';
 const UPLOAD_CHUNK_SIZE = Number(process.env.VUE_APP_UPLOAD_CHUNK_SIZE);
 
 export class UploadService {
@@ -43,12 +44,20 @@ export class UploadService {
     }
 
     if (response.status === 201) {
+      // const { url, id } = await response.json();
       this._responseObj = await response.json();
+      const metadataBuffer = new TextEncoder().encode(
+        getFileDetails(this._file)
+      );
+      const encryptedBuffer = await this._encryptionService.encrypt(
+        metadataBuffer
+      );
+      return this._put(encryptedBuffer);
 
-      return {
-        progress: 100,
-        url: await this._encryptionService.generateUrl(this._responseObj.url),
-      };
+      // return {
+      //   progress: 100,
+      //   url: await this._encryptionService.generateUrl(url),
+      // };
     }
 
     return {
@@ -58,7 +67,7 @@ export class UploadService {
   }
 
   async _put(payload) {
-    let { url, id } = this._responseObj;
+    const { url, id } = this._responseObj;
 
     const endpoint = process.env.VUE_APP_BASE_URL + `/file/u/meta/${id}`;
 
@@ -68,9 +77,10 @@ export class UploadService {
       headers: this._headers,
     });
 
-    return this._encryptionService.strategy === 'RANDOMLY_GENERATED'
-      ? await this._encryptionService.generateShareableUrl(url)
-      : url;
+    return {
+      progress: 100,
+      url: await this._encryptionService.generateUrl(url),
+    };
   }
 
   _readChunk() {

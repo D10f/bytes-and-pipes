@@ -1,11 +1,33 @@
 <template>
   <main class="mx-auto">
-    <AppSpinner />
-    <p v-show="!loading">{{ id }}</p>
+    <AppError v-show="error">
+      {{ error }}
+    </AppError>
+    <AppSpinner v-show="loading" />
+    <div v-show="allowDownload">
+      <DownloadFormUserInput
+        v-show="needsUserPassword && !fileMetadata"
+        @decrypt="decryptMetadata"
+      />
+
+      <DownloadFormBtn
+        v-show="fileMetadata && downloadUrl"
+        :file="fileMetadata"
+        :url="downloadUrl"
+      />
+    </div>
   </main>
 </template>
 
 <script>
+import { DownloadService } from '@/services/DownloadService';
+import DownloadFormUserInput from '@/components/DownloadFormUserInput.vue';
+import DownloadFormBtn from '@/components/DownloadFormBtn.vue';
+import {
+  PasswordBasedStrategy,
+  RandomPasswordStrategy,
+} from '@/services/DecryptionService';
+
 export default {
   name: 'DownloadPage',
   props: {
@@ -14,20 +36,56 @@ export default {
       required: true,
     },
   },
+  components: {
+    DownloadFormUserInput,
+    DownloadFormBtn,
+  },
   data() {
     return {
-      loading: true,
+      loading: false,
+      error: null,
+      downloadUrl: '',
+      fileMetadata: '',
+      allowDownload: true,
     };
   },
-  created() {
-    console.log(this.id);
-    // Check if resource exists
-    // Check encryption type i.e., password based vs randomly generated
-    //  if randomly generated check presence of router hash value
-    console.log(this.$router.currentRoute._value.hash.slice(1));
-    //  if password based prompt for password input
-    // Start download
+  computed: {
+    hash() {
+      return this.$router.currentRoute._value.hash.slice(1);
+    },
+    needsUserPassword() {
+      return !this.hash;
+    },
   },
-  // components: { AppSpinner },
+  methods: {
+    async decryptMetadata(password) {
+      try {
+        const downloadService = new DownloadService(this.id);
+        const strategy = new PasswordBasedStrategy(password);
+        this.fileMetadata = await downloadService.getFileMetadata(strategy);
+        this.downloadUrl = `http://localhost:8080/file/download/${this.id}`;
+      } catch (error) {
+        this.error = error.message;
+        setTimeout(() => {
+          this.error = null;
+        }, 2000);
+      }
+    },
+  },
+  async created() {
+    if (!this.needsUserPassword) {
+      try {
+        const downloadService = new DownloadService(this.id);
+        const strategy = new RandomPasswordStrategy(this.hash);
+        this.fileMetadata = await downloadService.getFileMetadata(strategy);
+        this.downloadUrl = `http://localhost:8080/file/download/${this.id}`;
+      } catch (error) {
+        this.error = error.message;
+        this.allowDownload = false;
+      } finally {
+        this.loading = false;
+      }
+    }
+  },
 };
 </script>

@@ -178,34 +178,52 @@ export const deriveDecryptionKey = async (password, salt) => {
  * @param  {string}  keyParam  If provided, key parameter exctracter from JWT web key
  * @return {object}            Object containing decrypted data in ArrayBuffer form, and decryption key used.
  */
-export const decryptData = async (ciphertext, password = '', keyParam = '') => {
-  const salt = ciphertext.slice(0, 32);
-  const iv = ciphertext.slice(32, 32 + 16);
-  const encryptedBytes = ciphertext.slice(32 + 16);
+// export const decryptData = async (ciphertext, password = '', keyParam = '') => {
+//   const salt = ciphertext.slice(0, 32);
+//   const iv = ciphertext.slice(32, 32 + 16);
+//   const encryptedBytes = ciphertext.slice(32 + 16);
 
-  let key;
+//   let key;
 
-  if (keyParam) {
-    key = await importKey(keyParam);
-  } else {
-    key =
-      typeof password === 'string'
-        ? await deriveDecryptionKey(password, salt)
-        : password;
-  }
+//   if (keyParam) {
+//     key = await importKey(keyParam);
+//   } else {
+//     key =
+//       typeof password === 'string'
+//         ? await deriveDecryptionKey(password, salt)
+//         : password;
+//   }
 
-  // const key = password
-  //   ? await deriveDecryptionKey(password, salt)
-  //   : await importKey(keyParam);
+//   // const key = password
+//   //   ? await deriveDecryptionKey(password, salt)
+//   //   : await importKey(keyParam);
 
-  const decryptedBuffer = await crypto.subtle.decrypt(
+//   const decryptedBuffer = await crypto.subtle.decrypt(
+//     {
+//       name: 'AES-GCM',
+//       iv,
+//     },
+//     key,
+//     encryptedBytes
+//   );
+
+//   return { decryptedBuffer, key };
+// };
+
+/**
+ * Decrypt data
+ * @param  {buffer}     ciphertext  The data to be decrypted
+ * @param  {buffer}     iv          Initialization Vector used to decrypt this ciphertext
+ * @param  {CryptoKey}  Key         Crypto Key object used for decryption
+ * @return {buffer}
+ */
+export const decryptData = async (ciphertext, iv, key) => {
+  return await crypto.subtle.decrypt(
     {
       name: 'AES-GCM',
       iv,
     },
     key,
-    encryptedBytes
+    ciphertext
   );
-
-  return { decryptedBuffer, key };
 };
