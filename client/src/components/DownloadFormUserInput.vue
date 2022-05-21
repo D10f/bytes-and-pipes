@@ -1,9 +1,5 @@
 <template>
-  <form
-    class="my-5"
-    v-show="needsUserPassword && !fileMetadata"
-    @submit.prevent="decryptPassword"
-  >
+  <form class="my-5" @submit.prevent="decryptPassword">
     <p class="text-gray-700 mb-4 lg:mb-2">
       Please enter the decryption password to continue.
     </p>

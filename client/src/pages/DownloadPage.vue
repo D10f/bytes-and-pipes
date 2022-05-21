@@ -20,13 +20,13 @@
 </template>
 
 <script>
-import { DownloadService } from '@/services/DownloadService';
 import DownloadFormUserInput from '@/components/DownloadFormUserInput.vue';
 import DownloadFormBtn from '@/components/DownloadFormBtn.vue';
 import {
   PasswordBasedStrategy,
   RandomPasswordStrategy,
 } from '@/services/DecryptionService';
+import { DownloadService } from '@/services/DownloadService';
 
 export default {
   name: 'DownloadPage',
@@ -42,10 +42,10 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       error: null,
-      downloadUrl: '',
-      fileMetadata: '',
+      downloadUrl: null,
+      fileMetadata: null,
       allowDownload: true,
     };
   },
@@ -73,18 +73,19 @@ export default {
     },
   },
   async created() {
-    if (!this.needsUserPassword) {
-      try {
-        const downloadService = new DownloadService(this.id);
-        const strategy = new RandomPasswordStrategy(this.hash);
-        this.fileMetadata = await downloadService.getFileMetadata(strategy);
-        this.downloadUrl = `http://localhost:8080/file/download/${this.id}`;
-      } catch (error) {
-        this.error = error.message;
-        this.allowDownload = false;
-      } finally {
-        this.loading = false;
+    try {
+      if (this.needsUserPassword) {
+        return;
       }
+      const downloadService = new DownloadService(this.id);
+      const strategy = new RandomPasswordStrategy(this.hash);
+      this.fileMetadata = await downloadService.getFileMetadata(strategy);
+      this.downloadUrl = `http://localhost:8080/file/download/${this.id}`;
+    } catch (error) {
+      this.error = error.message;
+      this.allowDownload = false;
+    } finally {
+      this.loading = false;
     }
   },
 };

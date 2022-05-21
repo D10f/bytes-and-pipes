@@ -1,4 +1,3 @@
-import { getFileDetails } from '@/utils/file';
 const UPLOAD_CHUNK_SIZE = Number(process.env.VUE_APP_UPLOAD_CHUNK_SIZE);
 
 export class UploadService {
@@ -44,11 +43,19 @@ export class UploadService {
     }
 
     if (response.status === 201) {
-      // const { url, id } = await response.json();
       this._responseObj = await response.json();
-      const metadataBuffer = new TextEncoder().encode(
-        getFileDetails(this._file)
-      );
+
+      const metadata = new Blob([
+        JSON.stringify({
+          name: this._file.name,
+          size: this._file.size,
+        }),
+      ]);
+
+      const metadataBuffer = await metadata.arrayBuffer();
+      // const metadataBuffer = new TextEncoder().encode(
+      //   getFileDetails(this._file)
+      // );
       const encryptedBuffer = await this._encryptionService.encrypt(
         metadataBuffer
       );

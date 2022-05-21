@@ -19,7 +19,8 @@ export class DownloadService {
       }
       const ciphertext = await response.arrayBuffer();
       const metadata = await this._decryptionService.decrypt(ciphertext);
-      return new TextDecoder().decode(metadata);
+      const decoded = new TextDecoder().decode(metadata);
+      return JSON.parse(decoded);
     } catch (error) {
       throw new Error(error.message);
     }

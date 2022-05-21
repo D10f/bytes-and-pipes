@@ -1,4 +1,7 @@
 export function getFileDetails(file) {
+  if (!file) {
+    return '';
+  }
   const truncatedFilename = shortener(file.name, {
     headLength: 20,
     tailLength: 10,
