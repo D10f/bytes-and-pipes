@@ -6,6 +6,7 @@ export class DownloadService {
     this._metadataEndpoint = `http://localhost:3000/file/d/meta/${resourceId}`;
     this._downloadEndpoint = `http://localhost:3000/file/download/${resourceId}`;
     this._decryptionService;
+    this._fileMetadata = null;
     // this._validateResourceId(resourceId);
     // this._startServiceWorker();
   }
@@ -20,7 +21,9 @@ export class DownloadService {
       const ciphertext = await response.arrayBuffer();
       const metadata = await this._decryptionService.decrypt(ciphertext);
       const decoded = new TextDecoder().decode(metadata);
-      return JSON.parse(decoded);
+      this._fileMetadata = JSON.parse(decoded);
+      this._startServiceWorker();
+      return this._fileMetadata;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -47,10 +50,18 @@ export class DownloadService {
     try {
       await navigator.serviceWorker.register('/serviceWorker.js');
 
-      // const swPingInterval = window.setInterval(() => {
-      //   navigator.serviceWorker.controller.postMessage('ping');
-      // }, process.env.VUE_APP_SW_PING_INTERVAL);
+      console.log(this._decryptionService.key);
+      navigator.serviceWorker.controller.postMessage({
+        key: this._decryptionService.key,
+        file: this._fileMetadata,
+        chunkSize: process.env.VUE_APP_UPLOAD_CHUNK_SIZE,
+      });
+
+      window.setInterval(() => {
+        navigator.serviceWorker.controller.postMessage('ping');
+      }, process.env.VUE_APP_SW_PING_INTERVAL);
     } catch (error) {
+      console.log(error.message);
       throw new Error(
         'Failed to initialize Service Worker. Please refresh the window and try again.'
       );

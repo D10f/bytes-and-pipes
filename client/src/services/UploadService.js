@@ -75,6 +75,7 @@ export class UploadService {
 
   async _put(payload) {
     const { url, id } = this._responseObj;
+    console.log(url, id);
 
     const endpoint = process.env.VUE_APP_BASE_URL + `/file/u/meta/${id}`;
 

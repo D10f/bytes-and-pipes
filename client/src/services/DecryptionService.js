@@ -38,11 +38,17 @@ export class DecryptionService {
     this._decryptionStrategy = decryptionStrategy;
   }
 
+  get key() {
+    return this._key;
+  }
+
   async decrypt(ciphertext) {
     const salt = ciphertext.slice(0, 32);
     const iv = ciphertext.slice(32, 32 + 16);
     const bytes = ciphertext.slice(32 + 16);
-    const key = await this._decryptionStrategy.deriveKey(salt);
-    return await decryptData(bytes, iv, key);
+    if (!this._key) {
+      this._key = await this._decryptionStrategy.deriveKey(salt);
+    }
+    return await decryptData(bytes, iv, this._key);
   }
 }
