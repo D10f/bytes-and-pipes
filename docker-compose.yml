@@ -1,0 +1,46 @@
+---
+version: "2.4"
+
+services:
+  client:
+    build:
+      context: ./client
+      target: development
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - frontend
+    ports:
+      - 80:80
+      - 443:443
+
+  server:
+    build:
+      context: ./server
+      target: development
+    networks:
+      - frontend
+      - backend
+    environment:
+      MONGODB_URI: mongodb://root:toor@mongo:27017/bytesandpipes?authSource=admin
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: toor
+      MONGODB_DATABASE: bytesandpipes
+      DOWNLOAD_BASE_URL: bytes.local/d/
+      MAX_FILE_SIZE: 1073741824
+
+  mongo:
+    image: mongo:5-focal
+    restart: always
+    networks:
+      - backend
+    ports:
+      - 127.0.0.1:27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+      MONGO_INITDB_DATABASE: bytesandpipes
+
+networks:
+  frontend: {}
+  backend: {}

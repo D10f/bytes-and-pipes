@@ -27,9 +27,7 @@ export class UploadService {
   }
 
   async _post(payload) {
-    const endpoint =
-      process.env.VUE_APP_BASE_URL +
-      `/file/upload/${this._uploadId}/${this._currentChunk}`;
+    const endpoint = `http://localhost:3000/file/upload/${this._uploadId}/${this._currentChunk}`;
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -75,9 +73,8 @@ export class UploadService {
 
   async _put(payload) {
     const { url, id } = this._responseObj;
-    console.log(url, id);
 
-    const endpoint = process.env.VUE_APP_BASE_URL + `/file/u/meta/${id}`;
+    const endpoint = `http://localhost:3000/file/u/meta/${id}`;
 
     await fetch(endpoint, {
       method: 'PUT',

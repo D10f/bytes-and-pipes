@@ -12,7 +12,7 @@ services:
     volumes:
       - ./:/app
       - /app/node_modules
-      - bytesandpipes_uploads:/app/tmp/uploads
+      - bytesandpipes_uploads:/app/uploads
 
   mongo:
     image: mongo:5-focal

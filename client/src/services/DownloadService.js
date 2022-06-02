@@ -8,7 +8,7 @@ export class DownloadService {
     this._decryptionService;
     this._fileMetadata = null;
     // this._validateResourceId(resourceId);
-    // this._startServiceWorker();
+    this._startServiceWorker();
   }
 
   async getFileMetadata(decryptionStrategy) {
@@ -22,7 +22,7 @@ export class DownloadService {
       const metadata = await this._decryptionService.decrypt(ciphertext);
       const decoded = new TextDecoder().decode(metadata);
       this._fileMetadata = JSON.parse(decoded);
-      this._startServiceWorker();
+      // await this._startServiceWorker();
       return this._fileMetadata;
     } catch (error) {
       throw new Error(error.message);
@@ -50,16 +50,18 @@ export class DownloadService {
     try {
       await navigator.serviceWorker.register('/serviceWorker.js');
 
-      console.log(this._decryptionService.key);
-      navigator.serviceWorker.controller.postMessage({
-        key: this._decryptionService.key,
-        file: this._fileMetadata,
-        chunkSize: process.env.VUE_APP_UPLOAD_CHUNK_SIZE,
-      });
+      setTimeout(() => {
+        console.log(this._fileMetadata);
+        navigator.serviceWorker.controller.postMessage({
+          key: this._decryptionService.key,
+          file: this._fileMetadata,
+          chunkSize: Number(process.env.VUE_APP_UPLOAD_CHUNK_SIZE),
+        });
 
-      window.setInterval(() => {
-        navigator.serviceWorker.controller.postMessage('ping');
-      }, process.env.VUE_APP_SW_PING_INTERVAL);
+        window.setInterval(() => {
+          navigator.serviceWorker.controller.postMessage('ping');
+        }, process.env.VUE_APP_SW_PING_INTERVAL);
+      }, 1000);
     } catch (error) {
       console.log(error.message);
       throw new Error(

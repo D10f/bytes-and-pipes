@@ -1,41 +1,48 @@
 /* eslint-disable */
 
-let key = null; // CryptoKey
-let file = null; // File
-let chunkSize = null; // number
+let params = {
+  key: null,
+  file: null,
+  chunkSize: null,
+};
+
+// let key = null; // CryptoKey
+// let file = null; // File
+// let chunkSize = null; // number
 
 self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', () => {
-  clients
-    .claim()
-    .then(() => console.log('Service Worker activated.'))
-    .catch(console.error);
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    clients
+      .claim()
+      .then(() => console.log('Service Worker activated.'))
+      .catch(console.error)
+  );
 });
 
-self.addEventListener('fetch', (event) => {
-  if (event.request.url.startsWith('http://localhost:3000/file/download/')) {
-    event.respondWith(downloadStream(event.request.url, event));
+self.addEventListener('fetch', function (event) {
+  if (event.request.url.includes('/file/download/')) {
+    let id = event.request.url.split('/file/download/')[1];
+    event.respondWith(
+      downloadStream(`http://localhost:3000/file/download/${id}`, event)
+    );
   }
 });
 
-self.addEventListener('message', (event) => {
+self.addEventListener('message', function (event) {
   // Keep SW alive to allow large downloads
   if (event.data === 'ping') {
-    clients.get(event.clientId).then((client) => {
-      console.log(client);
-      client.postMessage('pong');
-    });
+    // clients.get(event.clientId).then((client) => {
+    //   client.postMessage('pong');
+    // });
     return null;
   }
-
-  key = event.data.key;
-  file = event.data.file;
-  chunkSize = event.data.chunkSize;
-
-  console.log(key, file, chunkSize);
+  params.key = event.data.key;
+  params.file = event.data.file;
+  params.chunkSize = event.data.chunkSize;
 });
 
 /**
@@ -45,11 +52,12 @@ self.addEventListener('message', (event) => {
  * @return {Response}        A Response object containing the decryption stream
  */
 function downloadStream(url, event) {
-  console.log(url, event);
+  const { file } = params;
+
   const headers = {
-    'Content-Type': 'application/octet-stream; charset=utf-8',
     'Content-Disposition': `attachment; filename="${file.name}"; filename*="${file.name}"`,
     'Content-Length': file.size,
+    'Content-Type': 'application/octet-stream',
     'X-Content-Type-Options': 'nosniff',
   };
 
@@ -72,12 +80,14 @@ function downloadStream(url, event) {
  */
 function sliceStream(readable) {
   const reader = readable.getReader();
-  let chunkSize, offset, buffer;
+  let chunkSize = params.chunkSize + 64; // 32 salt + 16 iv + 16 AEAD
+  let buffer = new Uint8Array(chunkSize);
+  let offset = 0;
 
   return new ReadableStream({
     start(controller) {
-      chunkSize = chunkSize + 64; // 32 salt + 16 iv + 16 AEAD
-      buffer = new Uint8Array(chunkSize);
+      // chunkSize = params.chunkSize + 64; // 32 salt + 16 iv + 16 AEAD
+      // buffer = new Uint8Array(chunkSize);
       console.log('starting slicing...');
     },
 
@@ -111,7 +121,7 @@ function sliceStream(readable) {
           if (remainingBytes >= chunkSize) {
             const record = chunk.slice(i, i + chunkSize);
             i += chunkSize;
-            controller.enqueue(buffer);
+            controller.enqueue(record);
             offset = 0;
             buffer = new Uint8Array(chunkSize);
           } else {
@@ -151,7 +161,7 @@ function decryptionStream(readable) {
           return controller.close();
         }
 
-        const decryptedChunk = await decryptData(chunk, key);
+        const decryptedChunk = await decryptData(chunk, params.key);
         controller.enqueue(decryptedChunk);
       }
     },
@@ -159,38 +169,6 @@ function decryptionStream(readable) {
       readable.cancel(reason);
     },
   });
-}
-
-/**
- * Creates an cryptographic key used for decryption
- * @param  {string}      password  User input used to derive the encryption key
- * @param  {Uint8Array}  salt      Array of random values used to derive the key
- * @return {CryptoKey}             Cryptographic key used for decryption
- */
-async function deriveDecryptionKey(password, salt) {
-  const keyMaterial = await crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(password),
-    'PBKDF2',
-    false,
-    ['deriveKey']
-  );
-
-  return await crypto.subtle.deriveKey(
-    {
-      name: 'PBKDF2',
-      salt: salt,
-      iterations: 250000,
-      hash: 'SHA-256',
-    },
-    keyMaterial,
-    {
-      name: 'AES-GCM',
-      length: 256,
-    },
-    false,
-    ['decrypt']
-  );
 }
 
 /**
@@ -217,3 +195,35 @@ async function decryptData(ciphertext, key) {
 
   return new Uint8Array(decryptedBuffer);
 }
+
+/**
+ * Creates an cryptographic key used for decryption
+ * @param  {string}      password  User input used to derive the encryption key
+ * @param  {Uint8Array}  salt      Array of random values used to derive the key
+ * @return {CryptoKey}             Cryptographic key used for decryption
+ */
+// async function deriveDecryptionKey(password, salt) {
+//   const keyMaterial = await crypto.subtle.importKey(
+//     'raw',
+//     new TextEncoder().encode(password),
+//     'PBKDF2',
+//     false,
+//     ['deriveKey']
+//   );
+
+//   return await crypto.subtle.deriveKey(
+//     {
+//       name: 'PBKDF2',
+//       salt: salt,
+//       iterations: 250000,
+//       hash: 'SHA-256',
+//     },
+//     keyMaterial,
+//     {
+//       name: 'AES-GCM',
+//       length: 256,
+//     },
+//     false,
+//     ['decrypt']
+//   );
+// }

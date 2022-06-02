@@ -8,6 +8,7 @@ import { FileBaseDocument, FileInterface } from '../interfaces';
 const mkdir = promisify(fs.mkdir);
 const rmdir = promisify(fs.rmdir);
 const readdir = promisify(fs.readdir);
+const readfile = promisify(fs.readFile);
 const unlink = promisify(fs.unlink);
 const stat = promisify(fs.stat);
 
@@ -23,8 +24,8 @@ export default {
     filename: string,
     recursive = true,
   ): Promise<string> {
-    const location = path.resolve(os.tmpdir(), 'uploads', filename as string);
-    // await this.createDirectory(location);
+    // const location = path.resolve(os.tmpdir(), 'uploads', filename as string);
+    const location = path.resolve('/app', 'uploads', filename as string);
     await mkdir(location, { recursive });
     return location;
   },
@@ -67,16 +68,48 @@ export default {
   },
 
   // TODO: Proper typings
-  async reconstructRecord(
-    record: FileInterface | FileBaseDocument,
-  ): Promise<fs.ReadStream[]> {
-    /* eslint-disable-next-line */
-    const fileFragments = await this.readDirectory(record.directory!);
+  // async reconstructRecord(
+  //   record: FileInterface | FileBaseDocument,
+  // ): Promise<fs.ReadStream[]> {
+  //   const targetDir = record.directory as string;
 
-    return fileFragments
-      .sort((a, b) => Number(a) + Number(b)) // read from last to first
-      .map((fragment) => fs.createReadStream(fragment));
+  //   const fileFragments = await this.readDirectory(targetDir);
+
+  //   return fileFragments
+  //     .sort((a, b) => Number(a) - Number(b)) // read from last to first
+  //     .map((fragment) =>
+  //       fs.createReadStream(path.resolve(targetDir, fragment)),
+  //     );
+  // },
+  async *reconstructRecord(
+    record: FileInterface | FileBaseDocument,
+  ): AsyncGenerator<Buffer, void, unknown> {
+    const targetDir = record.directory as string;
+
+    const fragments = (await this.readDirectory(targetDir)).sort(
+      (a, b) => Number(a) - Number(b),
+    );
+
+    for (const f of fragments) {
+      yield readfile(path.resolve(targetDir, f));
+    }
   },
+
+  // async reconstructRecord(record: FileInterface | FileBaseDocument) {
+  //   const targetDir = record.directory as string;
+
+  //   const fragments = await this.readDirectory(targetDir);
+  //   const targetFile = path.resolve(targetDir, 'file');
+
+  //   fragments
+  //     .sort((a, b) => Number(a) - Number(b))
+  //     .forEach((fragment) => {
+  //       const fragmentPath = path.resolve(targetDir, fragment);
+  //       const data = fs.readFileSync(fragmentPath);
+  //       fs.writeFileSync(targetFile, data, { flag: 'a' });
+  //       fs.unlink(fragmentPath, console.log);
+  //     });
+  // },
 
   async deleteRecord(id: string) {
     const file = await this.findFileById(id);

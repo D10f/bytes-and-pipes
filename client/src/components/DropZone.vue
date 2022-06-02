@@ -58,7 +58,6 @@ export default {
       this.updateFileState(file);
     },
     updateFileState(file) {
-      console.log(file);
       this.$store.dispatch('selectFile', file);
     },
   },

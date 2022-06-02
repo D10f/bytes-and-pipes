@@ -3,7 +3,7 @@
     <p class="text-gray(-700) mb-4 lg:mb-2">
       {{ fileDetails }}
     </p>
-    <a :href="url" :download="file?.name" class="hidden" ref="downloadBtn" />
+    <!-- <a :href="url" download class="hidden" ref="downloadBtn" /> -->
     <button @click="startDownload" :disabled="disableBtn" class="action-btn">
       Start Download
     </button>
@@ -30,9 +30,17 @@ export default {
     },
   },
   methods: {
-    startDownload() {
+    async startDownload() {
       this.disableBtn = true;
-      this.$refs['downloadBtn'].click();
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = this.url;
+      // if (!window.TransformStream) {
+      //   a.download = this.file.name;
+      // }
+      a.download = this.file.name;
+      a.click();
+      // this.$refs['downloadBtn'].click();
     },
   },
 };

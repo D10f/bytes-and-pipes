@@ -1,5 +1,7 @@
+import { createReadStream } from 'fs';
+import { resolve } from 'path';
+import { pipeline, Readable } from 'stream';
 import { RequestHandler } from 'express';
-import { pipeline } from 'stream';
 import config from '../../config';
 import FileService from '../../services/FileService';
 import { BadRequestError } from '../../services/ErrorService';
@@ -90,16 +92,22 @@ export const downloadFile: RequestHandler = async (req, res, next) => {
       return;
     }
 
+    // await FileService.reconstructRecord(file!);
+
     res.set('Content-Type', 'application/octet-stream');
 
     /* eslint-disable-next-line */
-    pipeline(await FileService.reconstructRecord(file!), res, async (err) => {
-      if (err) {
-        next(err);
-      }
-      /* eslint-disable-next-line */
-      await FileService.deleteRecord(file!._id);
-    });
+    pipeline(
+      Readable.from(FileService.reconstructRecord(file!)),
+      res,
+      async (err) => {
+        if (err) {
+          return next(err);
+        }
+        /* eslint-disable-next-line */
+        await FileService.deleteRecord(file!._id);
+      },
+    );
   } catch (err) {
     next(err);
   }
