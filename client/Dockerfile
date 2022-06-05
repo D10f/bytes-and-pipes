@@ -1,30 +1,33 @@
-FROM node:16-buster-slim AS build
-ENV NODE_ENV=production
-ENV PATH=/usr/share/app/node_modules/.bin:/usr/share/app/node_modules/@vue:$PATH
+FROM node:16-buster-slim AS development
+ENV NODE_ENV=development
 WORKDIR /usr/share/app
-COPY ./package*.json ./
+COPY package*.json ./
 RUN npm install
+EXPOSE 3000
+CMD ["npm", "run", "serve"]
+
+FROM development AS build
+ARG DOMAIN_NAME
+ENV VUE_APP_BASE_URL=$DOMAIN_NAME
+ENV NODE_ENV=production
 COPY . .
 RUN npm run build
 
 FROM nginx:1.21 AS production
 WORKDIR /usr/share/nginx/html
-COPY --from=build /usr/share/app/dist/ .
 EXPOSE 80 443
+COPY --from=build /usr/share/app/dist/ .
+CMD ["nginx", "-g", "daemon off;"]
 
-FROM production AS development
-ENV DOMAIN=bytes.local
-
-# Create self-signed certificate accepting default input and: custom domain:
+FROM production AS https-dev
+ARG DOMAIN_NAME
 RUN openssl req \
   -x509 \
   -nodes \
   -days 365 \
-  -subj "/C=AU/ST=TX/O=ACME/CN=${DOMAIN}" \
-  -addext "subjectAltName=DNS:${DOMAIN}" \
+  -subj "/C=AU/ST=TX/O=ACME/CN=${DOMAIN_NAME}" \
+  -addext "subjectAltName=DNS:${DOMAIN_NAME}" \
   -newkey rsa:2048 \
   -keyout /etc/ssl/private/nginx-selfsigned.key \
   -out /etc/ssl/certs/nginx-selfsigned.crt
-
-# Diffie-Helman group
 RUN openssl dhparam -out /etc/nginx/dhparam.pem 2048

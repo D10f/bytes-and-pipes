@@ -3,8 +3,8 @@ import { DecryptionService } from './DecryptionService';
 export class DownloadService {
   constructor(resourceId) {
     this._id = resourceId;
-    this._metadataEndpoint = `http://localhost:3000/file/d/meta/${resourceId}`;
-    this._downloadEndpoint = `http://localhost:3000/file/download/${resourceId}`;
+    this._metadataEndpoint = `/file/d/meta/${resourceId}`;
+    this._downloadEndpoint = `/file/download/${resourceId}`;
     this._decryptionService;
     this._fileMetadata = null;
     // this._validateResourceId(resourceId);
@@ -51,7 +51,6 @@ export class DownloadService {
       await navigator.serviceWorker.register('/serviceWorker.js');
 
       setTimeout(() => {
-        console.log(this._fileMetadata);
         navigator.serviceWorker.controller.postMessage({
           key: this._decryptionService.key,
           file: this._fileMetadata,

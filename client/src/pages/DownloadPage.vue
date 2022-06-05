@@ -63,7 +63,7 @@ export default {
         const downloadService = new DownloadService(this.id);
         const strategy = new PasswordBasedStrategy(password);
         this.fileMetadata = await downloadService.getFileMetadata(strategy);
-        this.downloadUrl = `http://localhost:8080/file/download/${this.id}`;
+        this.downloadUrl = `/file/download/${this.id}`;
       } catch (error) {
         this.error = error.message;
         setTimeout(() => {
@@ -80,7 +80,7 @@ export default {
       const downloadService = new DownloadService(this.id);
       const strategy = new RandomPasswordStrategy(this.hash);
       this.fileMetadata = await downloadService.getFileMetadata(strategy);
-      this.downloadUrl = `http://localhost:8080/file/download/${this.id}`;
+      this.downloadUrl = `/file/download/${this.id}`;
     } catch (error) {
       this.error = error.message;
       this.allowDownload = false;
