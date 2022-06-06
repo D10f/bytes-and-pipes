@@ -4,7 +4,10 @@ import { pipeline, Readable } from 'stream';
 import { RequestHandler } from 'express';
 import config from '../../config';
 import FileService from '../../services/FileService';
-import { BadRequestError } from '../../services/ErrorService';
+import {
+  BadRequestError,
+  RequestEntityTooLarge,
+} from '../../services/ErrorService';
 
 /**
  * Receives a chunk of a file and saves it to the file system.
@@ -20,7 +23,7 @@ export const uploadFile: RequestHandler = async (req, res, next) => {
   }
 
   if (Number(contentFilesize) > config.MAX_FILE_SIZE) {
-    next(new BadRequestError('Files larger than 1GB are not allowed.'));
+    next(new RequestEntityTooLarge('Files larger than 1GB are not allowed.'));
     return;
   }
 

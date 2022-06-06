@@ -35,6 +35,12 @@ export class RequestTimeoutError extends ErrorService {
   }
 }
 
+export class RequestEntityTooLarge extends ErrorService {
+  constructor(public message: string) {
+    super(413, message);
+  }
+}
+
 export class TooManyRequests extends ErrorService {
   constructor(public message: string) {
     super(429, message);
