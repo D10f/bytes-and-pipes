@@ -1,40 +1,3 @@
-// import { get, set } from 'idb-keyval';
-
-/**
- * Creates a password using a cryptographically strong random generator function
- * @param  {integer} length  Length of the password, defaults to 16
- * @return {string}          Password.
- */
-export const generateRandomPassword = (length = 16) => {
-  const decoder = new TextDecoder();
-  let password = '';
-
-  while (password.length < length) {
-    const byte = crypto.getRandomValues(new Uint8Array(1));
-    if (byte[0] < 33 || byte[0] > 126) {
-      continue;
-    }
-    password += decoder.decode(byte);
-  }
-
-  return password;
-};
-
-/**
- * Creates a checksum of a message using a hash function
- * @param  {string} msg  Message to be computed into a hash
- * @return {string}      Hexadecimal hash digest of 64 characters in length
- */
-export const sha256sum = async (msg) => {
-  const msgUint8 = new TextEncoder().encode(msg);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-  return hashHex;
-};
-
 /**
  * Exports a key into its JWT form and appends it to the URL string provided.
  * @param  {string}    url A string representing the download url for a resource
@@ -170,45 +133,6 @@ export const deriveDecryptionKey = async (password, salt) => {
     ['decrypt']
   );
 };
-
-/**
- * Decrypt data
- * @param  {buffer}  plaintext Data to be encrypted in ArrayBuffer, TypedArray of ArrayBufferView form
- * @param  {string}  password  User input used to derive the encryption key
- * @param  {string}  keyParam  If provided, key parameter exctracter from JWT web key
- * @return {object}            Object containing decrypted data in ArrayBuffer form, and decryption key used.
- */
-// export const decryptData = async (ciphertext, password = '', keyParam = '') => {
-//   const salt = ciphertext.slice(0, 32);
-//   const iv = ciphertext.slice(32, 32 + 16);
-//   const encryptedBytes = ciphertext.slice(32 + 16);
-
-//   let key;
-
-//   if (keyParam) {
-//     key = await importKey(keyParam);
-//   } else {
-//     key =
-//       typeof password === 'string'
-//         ? await deriveDecryptionKey(password, salt)
-//         : password;
-//   }
-
-//   // const key = password
-//   //   ? await deriveDecryptionKey(password, salt)
-//   //   : await importKey(keyParam);
-
-//   const decryptedBuffer = await crypto.subtle.decrypt(
-//     {
-//       name: 'AES-GCM',
-//       iv,
-//     },
-//     key,
-//     encryptedBytes
-//   );
-
-//   return { decryptedBuffer, key };
-// };
 
 /**
  * Decrypt data

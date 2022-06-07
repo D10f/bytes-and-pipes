@@ -25,7 +25,7 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', function (event) {
   if (event.request.url.includes('/file/download/')) {
-    let [baseUrl, id] = event.request.url.split('/file/download/')[1];
+    let [baseUrl, id] = event.request.url.split('/file/download/');
     baseUrl =
       baseUrl === 'http://localhost:8080'
         ? baseUrl.replace('8080', '3000/')

@@ -11,7 +11,6 @@ export class DownloadService {
     this._downloadEndpoint = `${BASE_URL}file/download/${resourceId}`;
     this._decryptionService;
     this._fileMetadata = null;
-    // this._validateResourceId(resourceId);
     this._startServiceWorker();
   }
 
@@ -30,16 +29,6 @@ export class DownloadService {
       return this._fileMetadata;
     } catch (error) {
       throw new Error(error.message);
-    }
-  }
-
-  /**
-   * Validates the argument id is a valid BSON ObjectId.
-   * @param {string} id
-   */
-  _validateResourceId(id) {
-    if (typeof id !== 'string' || new TextEncoder().encode(id).length !== 12) {
-      throw new Error('Invalid resource id.');
     }
   }
 
