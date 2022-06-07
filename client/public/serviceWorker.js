@@ -25,10 +25,12 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', function (event) {
   if (event.request.url.includes('/file/download/')) {
-    let id = event.request.url.split('/file/download/')[1];
-    event.respondWith(
-      downloadStream(`http://localhost:3000/file/download/${id}`, event)
-    );
+    let [baseUrl, id] = event.request.url.split('/file/download/')[1];
+    baseUrl =
+      baseUrl === 'http://localhost:8080'
+        ? baseUrl.replace('8080', '3000/')
+        : '/';
+    event.respondWith(downloadStream(`${baseUrl}file/download/${id}`, event));
   }
 });
 

@@ -1,11 +1,14 @@
 import { DecryptionService } from './DecryptionService';
 import { parse } from '@/utils/byte_size_parser';
 
+const BASE_URL =
+  process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : '/';
+
 export class DownloadService {
   constructor(resourceId) {
     this._id = resourceId;
-    this._metadataEndpoint = `/file/d/meta/${resourceId}`;
-    this._downloadEndpoint = `/file/download/${resourceId}`;
+    this._metadataEndpoint = `${BASE_URL}file/d/meta/${resourceId}`;
+    this._downloadEndpoint = `${BASE_URL}file/download/${resourceId}`;
     this._decryptionService;
     this._fileMetadata = null;
     // this._validateResourceId(resourceId);

@@ -1,6 +1,7 @@
 import { parse } from '@/utils/byte_size_parser';
 const UPLOAD_CHUNK_SIZE = parse(process.env.VUE_APP_UPLOAD_CHUNK_SIZE);
-// const BASE_URL = process.env.VUE_APP_BASE_URL || 'localhost:3000';
+const BASE_URL =
+  process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : '/';
 
 export class UploadService {
   constructor(file, encryptionService) {
@@ -30,7 +31,7 @@ export class UploadService {
 
   async _post(payload) {
     // const endpoint = `http://localhost:3000/file/upload/${this._uploadId}/${this._currentChunk}`;
-    const endpoint = `/file/upload/${this._uploadId}/${this._currentChunk}`;
+    const endpoint = `${BASE_URL}file/upload/${this._uploadId}/${this._currentChunk}`;
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -78,7 +79,7 @@ export class UploadService {
     const { url, id } = this._responseObj;
 
     // const endpoint = `http://localhost:3000/file/u/meta/${id}`;
-    const endpoint = `/file/u/meta/${id}`;
+    const endpoint = `${BASE_URL}file/u/meta/${id}`;
 
     await fetch(endpoint, {
       method: 'PUT',

@@ -35,10 +35,10 @@ export default {
       const a = document.createElement('a');
       document.body.appendChild(a);
       a.href = this.url;
-      // if (!window.TransformStream) {
-      //   a.download = this.file.name;
-      // }
-      a.download = this.file.name;
+      // TODO: Find a better way to check for firefox vs chromium
+      if (!window.TransformStream) {
+        a.download = this.file.name;
+      }
       a.click();
       // this.$refs['downloadBtn'].click();
     },
