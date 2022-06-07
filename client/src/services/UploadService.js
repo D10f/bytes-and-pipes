@@ -1,4 +1,5 @@
-const UPLOAD_CHUNK_SIZE = Number(process.env.VUE_APP_UPLOAD_CHUNK_SIZE);
+import { parse } from '@/utils/byte_size_parser';
+const UPLOAD_CHUNK_SIZE = parse(process.env.VUE_APP_UPLOAD_CHUNK_SIZE);
 // const BASE_URL = process.env.VUE_APP_BASE_URL || 'localhost:3000';
 
 export class UploadService {

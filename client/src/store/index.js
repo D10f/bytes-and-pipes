@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import { getFileDetails } from '@/utils/file';
+import { parse as parseFileSize } from '@/utils/byte_size_parser';
 
 export const store = createStore({
   state: {
@@ -18,7 +19,7 @@ export const store = createStore({
     instructions: [
       {
         title: 'SELECT_FILE',
-        text: 'Select a file of up to 1GB.',
+        text: 'Select a file of up to 1GiB.',
         isCurrent: true,
         status: 'IDLE',
         details: '',
@@ -94,7 +95,8 @@ export const store = createStore({
       commit('setCurrentInstruction', instruction);
     },
     selectFile({ getters, commit }, file) {
-      const error = file.size > process.env.VUE_APP_MAX_FILE_SIZE;
+      const error =
+        file.size > parseFileSize(process.env.VUE_APP_MAX_FILE_SIZE);
 
       commit('setFile', error ? null : file);
       commit('setInstructionStatus', {

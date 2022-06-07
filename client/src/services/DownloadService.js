@@ -1,4 +1,5 @@
 import { DecryptionService } from './DecryptionService';
+import { parse } from '@/utils/byte_size_parser';
 
 export class DownloadService {
   constructor(resourceId) {
@@ -54,7 +55,7 @@ export class DownloadService {
         navigator.serviceWorker.controller.postMessage({
           key: this._decryptionService.key,
           file: this._fileMetadata,
-          chunkSize: Number(process.env.VUE_APP_UPLOAD_CHUNK_SIZE),
+          chunkSize: parse(process.env.VUE_APP_UPLOAD_CHUNK_SIZE),
         });
 
         window.setInterval(() => {
