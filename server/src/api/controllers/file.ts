@@ -88,6 +88,7 @@ export const updateFileMetadata: RequestHandler = async (req, res, next) => {
 // TODO: Proper typings
 export const downloadFile: RequestHandler = async (req, res, next) => {
   try {
+    console.log('file.ts line 91:', req.params.id);
     const file = await FileService.findFileById(req.params.id);
 
     if (!file) {
