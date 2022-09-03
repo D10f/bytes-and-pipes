@@ -8,7 +8,7 @@
  * @param   {string} input string representing an amount of storage capacity eg., 10GB, 2Megabytes
  * @returns {number}       value in bytes of the parsed string
  */
-export function parse(input) {
+export function parse(input = '1mb') {
   const match = input.match(_re);
 
   if (match === null) {
