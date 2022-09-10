@@ -7,8 +7,13 @@ services:
       target: development
     ports:
       - 3000:3000
-    env_file:
-      - .env
+    environment:
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: toor
+      MONGODB_DATABASE: bytesandpipes
+      UPLOAD_LOCATION: /app/uploads
+      MAX_FILE_SIZE: 1gib 
+      PORT: 3000
     volumes:
       - ./:/app
       - /app/node_modules
