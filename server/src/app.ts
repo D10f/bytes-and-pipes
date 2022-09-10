@@ -1,8 +1,8 @@
-import { Express } from "express";
-import mongoose from "mongoose";
-import bunyan from "bunyan";
-import init from "./lib";
-import config from "./config";
+import { Express } from 'express';
+import mongoose from 'mongoose';
+import bunyan from 'bunyan';
+import init from './lib';
+import config from './config';
 
 const startServer = async () => {
   /**
@@ -14,11 +14,11 @@ const startServer = async () => {
   /**
    *  Register healthcheck routes
    */
-  app.get("/alive", (_req, res) => {
+  app.get('/alive', (_req, res) => {
     res.status(200).end();
   });
 
-  app.get("/health", (_req, res) => {
+  app.get('/health', (_req, res) => {
     // Check connection to db, check for certain files, etc.
     res.status(200).end();
   });
@@ -26,7 +26,7 @@ const startServer = async () => {
   /**
    * Start listening for connections
    */
-  const server = app.listen(+config.PORT, config.HOST, () => {
+  const server = app.listen(+config.PORT, '0.0.0.0', () => {
     log.info(`Listening on port ${config.PORT}`);
   });
 
@@ -34,14 +34,14 @@ const startServer = async () => {
    *  Initialize signal listeners for graceful shutdown
    */
   const shutdown = () => {
-    log.info("Shutting down server...");
+    log.info('Shutting down server...');
     server.close(async (err) => {
       if (err) {
         log.error(err);
         process.exitCode = 1;
       }
 
-      log.info("Disconnecting from database...");
+      log.info('Disconnecting from database...');
       await db.disconnect();
 
       log.info(`Server shutdown [${process.exitCode}]`);
@@ -49,18 +49,18 @@ const startServer = async () => {
     });
   };
 
-  process.on("SIGINT", () => {
+  process.on('SIGINT', () => {
     log.warn(
-      "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",
-      new Date().toISOString()
+      'Got SIGINT (aka ctrl-c in docker). Graceful shutdown ',
+      new Date().toISOString(),
     );
     shutdown();
   });
 
-  process.on("SIGTERM", () => {
+  process.on('SIGTERM', () => {
     log.warn(
-      "Got SIGTERM (docker container stop). Graceful shutdown ",
-      new Date().toISOString()
+      'Got SIGTERM (docker container stop). Graceful shutdown ',
+      new Date().toISOString(),
     );
     shutdown();
   });
