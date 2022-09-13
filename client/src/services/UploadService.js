@@ -3,6 +3,8 @@ const UPLOAD_CHUNK_SIZE = parse(process.env.VUE_APP_UPLOAD_CHUNK_SIZE);
 const BASE_URL =
   process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : '/';
 
+// TODO: Check lintin rules for function spaces on generator functions
+
 export class UploadService {
   constructor(file, encryptionService) {
     this._file = file;
