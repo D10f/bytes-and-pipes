@@ -76,7 +76,7 @@ export class UploadService {
   }
 
   async _put(payload) {
-    const { url, id } = this._responseObj;
+    const id = this._responseObj;
 
     // const endpoint = `http://localhost:3000/file/u/meta/${id}`;
     const endpoint = `${BASE_URL}file/u/meta/${id}`;
@@ -89,12 +89,13 @@ export class UploadService {
 
     return {
       progress: 100,
-      url: await this._encryptionService.generateUrl(url),
+      url: await this._encryptionService.generateUrl(id),
     };
   }
 
   _readChunk() {
     let offset = 0;
+    // eslint-disable-next-line
     return async function* () {
       while (offset <= this._file.size) {
         const chunk = this._file.slice(offset, offset + UPLOAD_CHUNK_SIZE);
@@ -105,6 +106,7 @@ export class UploadService {
   }
 
   _encryptChunk(g) {
+    // eslint-disable-next-line
     return async function* () {
       for await (const chunk of g()) {
         yield this._encryptionService.encrypt(chunk);
@@ -113,6 +115,7 @@ export class UploadService {
   }
 
   _uploadChunk(g) {
+    // eslint-disable-next-line
     return async function* () {
       for await (const chunk of g()) {
         yield this._post(chunk);
